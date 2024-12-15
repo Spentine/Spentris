@@ -91,17 +91,17 @@ The script most core to the program is the stacker.js script, which hosts the co
     - Initialization Settings
       - Variable Overrides
         - *...*
-      - Variables
-        - *...*
       - Parameters
         - *...*
     - Values
       - *Contains the values of various variables such as the current score, level, and other important counters.*
       - *Stores internal values that may be used across scripts.*
 
+The functions and values will be a direct key of the object, whereas the other settings will remain in the `settings` key.
+
 The modular Stacker class allows for swappable functions and mods to the game. To use the Stacker class, pass an object into the Stacker class specifying the functions and prespecified variables.
 
-The other main component to the game is the script that hosts the majority of the functions that execute the game’s processes, which can be found in the standardRules.js script. To ensure the game runs properly and without refactoring errors down the line, the structure of standardRules.js will be provided below:
+The other main component to the game is the script that hosts the majority of the functions that execute the game's processes, which can be found in the standardRules.js script. To ensure the game runs properly and without refactoring errors down the line, the structure of standardRules.js will be provided below:
 
 - `standardRules.js`
   - Functions
