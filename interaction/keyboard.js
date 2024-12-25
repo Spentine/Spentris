@@ -12,7 +12,7 @@ const keybinds = {
     keyCode: 40,
     code: "ArrowDown"
   }],
-  placePieceInput: [{
+  hardDropInput: [{
     keyCode: 32,
     code: "Space"
   }],

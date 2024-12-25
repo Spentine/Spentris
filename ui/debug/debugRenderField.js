@@ -172,7 +172,7 @@ class DebugBoardState {
 
 const minoColors = {
   Z: "#ff0000",
-  L: "#ff4400",
+  L: "#ff8800",
   O: "#ffff00",
   S: "#00ff00",
   I: "#00ffff",
