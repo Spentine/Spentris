@@ -56,3 +56,4 @@ Routine
 - Calculate timestamps for next ARR and Gravity movements.
 - Attempt to execute the current movement.
   - If the ARR flag is `true`, then use ARR rather than Gravity with the timestamp at the current time. Have it alternate with another flag `currentAffect` = `true` on start.
+  
