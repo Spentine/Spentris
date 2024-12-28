@@ -2,6 +2,7 @@ import { renderState, demoStates } from "./ui/debug/debugRenderField.js";
 import { addKeyboardListeners, keybinds } from "./interaction/keyboard.js";
 import { Stacker } from "./engine/stacker.js";
 import { standardFunctions } from "./engine/standardRules.js";
+import { functionLocationAccessor } from "./engine/util.js";
 
 function main() {
   const renderCanvas = document.getElementById("renderCanvas");
@@ -38,19 +39,21 @@ function main() {
   );
   */
   
+  const functionLocations = {
+    update: {file: "standardRules.js", name: "update"},
+    tick: {file: "standardRules.js", name: "tick"},
+    initialize: {file: "standardRules.js", name: "initialize"},
+    lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},
+    validPiecePosition: {file: "standardRules.js", name: "validPiecePosition"},
+    generateNext: {file: "standardRules.js", name: "generateNext"},
+    spawnPiece: {file: "standardRules.js", name: "spawnPiece"},
+  };
+  
   const game = new Stacker({
     version: 1,
-    functions: {
-      update: standardFunctions.update,
-      tick: standardFunctions.tick,
-      initialize: standardFunctions.initialize,
-    },
+    functions: functionLocationAccessor(functionLocations),
     settings: {
-      functionLocations: {
-        update: {file: "standardFules.js", name: "update"},
-        tick: {file: "standardFules.js", name: "tick"},
-        initialize: {file: "standardFules.js", name: "initialize"},
-      },
+      functionLocations: functionLocations,
       initialization: {
         variableOverrides: {
           

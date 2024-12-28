@@ -20,10 +20,21 @@ const tick = function (time, inputs) {
  * @param {object} params
  */
 const initialize = function (params) {
+  params = params ?? {};
+  
   this.score = 0;
   this.lines = 0;
-  this.board = new Board(params.width, params.height);
-  this.next = [];
+  this.board = new Board(
+    params.width ?? 10,
+    params.height ?? 40
+  );
+  this.nextQueue = [];
+  this.rng = this.lehmerRNG(params.seed ?? 0);
+  
+  this.generateNext("7-bag");
+  
+  this.currentPiece = null;
+  this.spawnPiece(this.nextQueue.shift());
 }
 
 const values = {
@@ -50,7 +61,7 @@ const validPiecePosition = function(piece, board) {
     const row = piece.matrix[i];
     for (let j=0; j<row.length; j++) {
       // if this index is a mino
-      if (row[j]) {
+      if (row[j].type) {
         // calculate the position of this mino
         const x = piece.position.x + j;
         const y = piece.position.y + i;
@@ -72,13 +83,15 @@ const validPiecePosition = function(piece, board) {
       }
     }
   }
+  
+  return true;
 };
 
 /**
  * @param {number} seed
  * @returns {object}
  */
-const rng = function(seed) {
+const lehmerRNG = function(seed) {
   // https://github.com/Poyo-SSB/tetrio-bot-docs/blob/master/Piece_RNG.md
   let t = seed % 2147483647;
 
@@ -113,12 +126,46 @@ const rng = function(seed) {
  */
 const generateNext = function(mode) {
   if (mode === "7-bag") {
-    this.next.push(this.rng.shuffleArray(["Z", "L", "O", "S", "I", "J", "T"]));
+    this.nextQueue.push(...this.rng.shuffleArray(["Z", "L", "O", "S", "I", "J", "T"]));
   }
 };
 
+// super rotation system
+const SRS = function(piece, board) {
+  
+}
+
+
+const rotationSystem = function(piece, board) {
+  return SRS(piece, board);
+}
+
+/**
+ * @param {string} piece
+ * @param {object} settings
+ * @param {object} settings.position
+ * @param {number} settings.rotation
+ * @returns {boolean} whether the piece was successfully spawned
+ */
+const spawnPiece = function(piece, settings) {
+  settings = settings ?? {};
+  const newPiece = new Piece({
+    type: piece,
+    position: settings.position ?? {x: 3, y: 22},
+    rotation: settings.rotation ?? 0,
+  });
+  
+  if (!validPiecePosition(newPiece, this.board)) {
+    return false;
+  }
+  
+  this.currentPiece = newPiece;
+  
+  return true;
+}
+
 // all the functions to export
-const functions = [update, tick, initialize, validPiecePosition];
+const functions = [update, tick, initialize, lehmerRNG, validPiecePosition, generateNext, spawnPiece];
 
 // create a map from string to function using their name
 const standardFunctions = {};
