@@ -78,9 +78,14 @@ class Piece {
     this.rotation = settings.rotation ?? 0; // the rotation of the piece
     this.matrix = null; // the matrix representing the piece
     
-    this.updateMatrix();
+    if (settings.updateMatrix ?? true) {
+      this.updateMatrix();
+    }
   }
   
+  /**
+   * Only update the matrix when the rotation changes.
+   */
   updateMatrix() {
     this.matrix = SRSData.matrices[this.type][this.rotation];
     
@@ -89,10 +94,22 @@ class Piece {
         if (row[i] === 0) {
           row[i] = new PieceMino(0, 0, this.rotation);
         } else if (row[i] === 1) {
-          row[i] = new PieceMino(this.type, 1, this.rotation);
+          row[i] = new PieceMino(1, this.type, this.rotation);
         }
       }
     }
+  }
+  
+  /**
+   * @returns {Piece}
+   */
+  copy(settings) {
+    settings = settings ?? {};
+    return new Piece({
+      type: settings.type ?? this.type,
+      position: settings.position ?? {x: this.position.x, y: this.position.y},
+      rotation: settings.rotation ?? this.rotation
+    });
   }
 }
 

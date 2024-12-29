@@ -1,12 +1,15 @@
 /*
   Handles events from (a, b] where a is the previous event and b is the current event
+  
+  I don't know whether to reset arrOffset on arrPrioritization success
+  please research and prove whether it is necessary
 */
 
 class gaEventHandler {
   constructor(gravOffset, gravSpeed, arrOffset, arrSpeed, time) {
     // initialize parameters
     this.gravOffset = gravOffset;
-    this.gravSpeed = gravSpeed; // ms / drop
+    this.gravSpeed = gravSpeed;
     this.arrOffset = arrOffset;
     this.arrSpeed = arrSpeed;
     this.time = time;
@@ -29,6 +32,20 @@ class gaEventHandler {
     this.skipped = false;
   }
   
+  override(gravOffset, gravSpeed, arrOffset, arrSpeed, time) {
+    this.gravOffset = gravOffset;
+    this.gravSpeed = gravSpeed;
+    this.arrOffset = arrOffset;
+    this.arrSpeed = arrSpeed;
+    this.time = time;
+    
+    this.gravMin = this.gravityEvent(0);
+    this.arrMin = this.arrEvent(0);
+    
+    this.calculateNextGrav();
+    this.calculateNextArr();
+  }
+  
   gravityEvent(n) {
     return this.gravSpeed * n + this.gravOffset;
   }
@@ -38,15 +55,15 @@ class gaEventHandler {
   }
   
   calculateNextGrav() {
-    if (this.gravSpeed === 0) return Infinity;
-    if (this.gravSpeed === Infinity) return Math.max(this.time, this.gravOffset);
+    if (this.gravSpeed === Infinity) return Infinity;
+    if (this.gravSpeed === 0) return Math.max(this.time, this.gravOffset);
     
     return Math.max(this.gravMin, this.gravityEvent(Math.floor((this.time - this.gravOffset) / this.gravSpeed) + 1));
   }
   
   calculateNextArr() {
-    if (this.arrSpeed === 0) return Infinity;
-    if (this.arrSpeed === Infinity) return Math.max(this.time, this.arrOffset);
+    if (this.arrSpeed === Infinity) return Infinity;
+    if (this.arrSpeed === 0) return Math.max(this.time, this.arrOffset);
     
     return Math.max(this.arrMin, this.arrEvent(Math.floor((this.time - this.arrOffset) / this.arrSpeed) + 1));
   }
@@ -78,7 +95,7 @@ class gaEventHandler {
     const gravNext = this.calculateNextGrav();
     const arrNext = this.calculateNextArr();
     
-    if (arrNext === gravNext && this.gravSpeed !== Infinity) { // arr next guaranteed
+    if (arrNext === gravNext && this.gravSpeed !== 0) { // arr next guaranteed
       this.arrPriority = true;
       return this.createEvent("gravity", arrNext);
     } else if (arrNext < gravNext) {

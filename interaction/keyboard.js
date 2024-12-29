@@ -38,21 +38,23 @@ const keybinds = {
 }
 
 /**
-  @param {object} data // contains mappings from actions to functions
+  @param {object} inputForward // contains mappings from actions to functions
+  @param {object} keybinds // contains mappings from actions to keys
 */
-function addKeyboardListeners(data, keybinds) {
+function addKeyboardListeners(inputForward, keybinds) {
   // which one to use (better for compatibility)
   const internalKey = "keyCode";
   
   // keyboard input as key rather than action
   const keybindMap = {};
   
-  for (let action in data) {
+  // create a map of keybinds to actions
+  for (let action in inputForward) {
     const keys = keybinds[action];
     for (let key of keys) {
       keybindMap[key[internalKey]] = {
-        keyDown: data[action].keyDown,
-        keyUp: data[action].keyUp
+        keyDown: inputForward[action].keyDown,
+        keyUp: inputForward[action].keyUp
       };
     }
   }
@@ -76,5 +78,14 @@ function addKeyboardListeners(data, keybinds) {
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
 }
+
+/*
+  example of inputForward:
+  
+  {
+    moveLeftInput: {keyDown: () => {console.log("left")}, keyUp: () => {console.log("left up"}},
+    moveRightInput: {keyDown: () => {console.log("right")}, keyUp: () => {console.log("right up"}}
+  }
+*/
 
 export { addKeyboardListeners, keybinds };

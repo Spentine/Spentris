@@ -27,6 +27,7 @@ Primary Functions
 - `holdPiece`
   - `spawnPiece` to fetch the hold / next piece
 
+** make sure to cover keyup and keydown **
 - `moveLeftInput`
 - `moveRightInput`
 - `softDropInput`
@@ -36,7 +37,7 @@ Primary Functions
 - `rotate180Input`
 - `holdPieceInput`
 
-Secondary Functions
+Secondary Functions (DONE)
 
 - `placePiece`
   - `spawnPiece` to spawn the next piece

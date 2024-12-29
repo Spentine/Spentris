@@ -33,9 +33,9 @@ const pieces = {
       [0, 0, 1]
     ],
     [
+      [0, 1, 1],
       [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0]
+      [0, 1, 0]
     ],
     [
       [1, 0, 0],
@@ -43,9 +43,9 @@ const pieces = {
       [0, 0, 0]
     ],
     [
-      [0, 1, 1],
       [0, 1, 0],
-      [0, 1, 0]
+      [0, 1, 0],
+      [1, 1, 0]
     ],
   ],
   O: [
@@ -78,8 +78,8 @@ const pieces = {
       [0, 1, 0]
     ],
     [
-      [0, 1, 1],
       [1, 1, 0],
+      [0, 1, 1],
       [0, 0, 0]
     ],
     [
@@ -96,10 +96,10 @@ const pieces = {
       [0, 0, 0, 0]
     ],
     [
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0]
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 0, 1, 0]
     ],
     [
       [0, 0, 0, 0],
@@ -108,10 +108,10 @@ const pieces = {
       [0, 0, 0, 0]
     ],
     [
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0]
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0]
     ],
   ],
   J: [
@@ -121,9 +121,9 @@ const pieces = {
       [1, 0, 0]
     ],
     [
-      [1, 1, 0],
       [0, 1, 0],
-      [0, 1, 0]
+      [0, 1, 0],
+      [0, 1, 1]
     ],
     [
       [0, 0, 1],
@@ -131,9 +131,9 @@ const pieces = {
       [0, 0, 0]
     ],
     [
+      [1, 1, 0],
       [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 1]
+      [0, 1, 0]
     ],
   ],
   T: [
@@ -144,7 +144,7 @@ const pieces = {
     ],
     [
       [0, 1, 0],
-      [1, 1, 0],
+      [0, 1, 1],
       [0, 1, 0]
     ],
     [
@@ -154,7 +154,7 @@ const pieces = {
     ],
     [
       [0, 1, 0],
-      [0, 1, 1],
+      [1, 1, 0],
       [0, 1, 0]
     ],
   ]
@@ -359,4 +359,39 @@ const demoStates = [
   })
 ];
 
-export { renderState, demoStates };
+function createDemoState(stacker) {
+  // convert BoardMino[][] to string[][]
+  const board = [];
+  for (let i=0; i<stacker.board.height; i++) {
+    board.push([]);
+    for (let j=0; j<stacker.board.width; j++) {
+      const tile = stacker.board.matrix[i][j];
+      if (tile.type === 0) {
+        board[i].push("");
+      } else {
+        board[i].push(tile.texture);
+      }
+    }
+  }
+  
+  return new DebugBoardState({
+    board: board,
+    hold: {
+      piece: stacker.hold.piece,
+      allowed: stacker.hold.allowed,
+    },
+    next: stacker.nextQueue.slice(0, 5),
+    current: {
+      piece: stacker.currentPiece.type,
+      position: [stacker.currentPiece.position.x, stacker.currentPiece.position.y],
+      rotation: stacker.currentPiece.rotation,
+      lockdown: stacker.lockdown,
+    },
+    values: {
+      score: stacker.score,
+      time: stacker.time
+    }
+  });
+}
+
+export { renderState, createDemoState, demoStates };
