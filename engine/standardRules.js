@@ -3,21 +3,173 @@ import { Board, Piece, BoardMino } from "./stackerObjects.js";
 import { SRSData } from "./rsData.js";
 
 /**
- * @param {number} time // number of time to elapse
+ * updates the game state from (a, b] where a is the previous time and b is the current time
+ * @param {number} tDelta // number of time to elapse
+ * @param {object} iter // the number of iterations
  */
-const update = function(time) {
-  // if the left and right key isn't pressed
-  // then set the arr data to be 0 speed, 0 offset
-  this.gaEventHandler.override({
+const update = function(tDelta, iter=0) {
+  // TODO: make sure the lock delay works because i'm not completely sure if i did it properly
+  
+  // if tDelta is null then calculate it with Date.now();
+  tDelta = tDelta ?? Date.now() - this.startTime - this.time;
+  
+  // update time
+  const endTime = this.time + tDelta;
+  const beginningTime = this.time;
+  
+  const overrides = {
+    time: beginningTime,
+  }
+  
+  var arrDirection = null;
+  if (!this.leftInput && !this.rightInput) {
+    // if the left and right key isn't pressed don't regard arr
+    overrides.arrSpeed = Infinity;
+    overrides.arrOffset = 0;
+    this.gaEventHandler.arrPriority = false;
+  } else {
+    // calculate the arr values
+    overrides.arrSpeed = this.state.arr;
     
-  });
+    // prioritize the later input
+    if (this.leftInput && this.rightInput) {
+      if (this.leftInput > this.rightInput) {
+        overrides.arrOffset = this.leftInput;
+        arrDirection = -1;
+      } else {
+        overrides.arrOffset = this.rightInput;
+        arrDirection = 1;
+      }
+    } else if (this.leftInput) {
+      overrides.arrOffset = this.leftInput;
+      arrDirection = -1;
+    } else if (this.rightInput) {
+      overrides.arrOffset = this.rightInput;
+      arrDirection = 1;
+    }
+    
+    // add das
+    overrides.arrOffset += this.state.das;
+  }
+  
+  // gravity
+  this.gaEventHandler.gravSpeed = this.gravity;
+  
+  // override values
+  this.gaEventHandler.override(overrides);
+  
+  var touchingGround = this.isTouchingGround(this.currentPiece, this.board);
+  
+  if (!touchingGround) {
+    this.currentPieceLockdown = 0;
+  }
+  
+  var pieceLockedDown = false;
+  
+  // handle gravity and arr
+  var nextEvent = this.gaEventHandler.next();
+  var lastTime = beginningTime;
+  
+  let maxIterations = 100;
+  while (endTime >= nextEvent.time) {
+    if (nextEvent.action === "finish") {
+      break;
+    }
+    
+    if (touchingGround) {
+      // add the difference in time to the current piece lockdown
+      this.currentPieceLockdown += nextEvent.time - beginningTime;
+      
+      // check if the piece locks in place
+      if (this.currentPieceLockdown >= this.lockDelay) {
+        pieceLockedDown = true;
+        break;
+      }
+    }
+    
+    lastTime = nextEvent.time;
+    if (nextEvent.action === "gravity") {
+      // move down once
+      const movement = this.movePiece(
+        this.currentPiece,
+        {x: 0, y: -1},
+        this.board
+      );
+      
+      // properly decide next event
+      if (movement) {
+        nextEvent = this.gaEventHandler.next();
+        this.currentPieceLockdown = 0;
+        touchingGround = false;
+      } else {
+        nextEvent = this.gaEventHandler.skip();
+        touchingGround = true;
+      }
+    } else if (nextEvent.action === "arr") {
+      // move in the correct direction once
+      const movement = this.movePiece(
+        this.currentPiece,
+        {x: arrDirection, y: 0},
+        this.board
+      );
+      
+      // properly decide next event
+      if (movement) {
+        nextEvent = this.gaEventHandler.next();
+        this.currentPieceLockdown = 0;
+      } else {
+        nextEvent = this.gaEventHandler.skip();
+      }
+      touchingGround = this.isTouchingGround(this.currentPiece, this.board);
+    }
+    
+    maxIterations--;
+    if (maxIterations <= 0) {
+      console.error("max iterations reached");
+      break;
+    }
+  }
+  
+  this.time = lastTime;
+  
+  if (touchingGround) {
+    const elapsedTime = Math.min(
+      endTime - lastTime,
+      this.lockDelay - this.currentPieceLockdown
+    );
+    
+    // add the difference in time to the current piece lockdown
+    this.currentPieceLockdown += elapsedTime;
+    this.time += elapsedTime;
+    
+    // check if the piece locks in place
+    if (this.currentPieceLockdown >= this.lockDelay) {
+      pieceLockedDown = true;
+    }
+  }
+  
+  if (pieceLockedDown) {
+    const placement = this.placePiece(this.currentPiece, this.board);
+    
+    if (placement) {
+      if (this.time !== endTime) {
+        if (iter > 10) {
+          console.error("too many iterations");
+        } else {
+          this.update(endTime - this.time, iter+1);
+        }
+      }
+    }
+  }
+  
+  this.time = endTime;
 };
 
 /**
- * @param {number} time // number of time to elapse
+ * @param {number} tDelta // number of time to elapse
  * @param {object} inputs // the inputs for the game
  */
-const tick = function(time, inputs) {
+const tick = function(tDelta, inputs) {
   
 };
 
@@ -27,6 +179,31 @@ const tick = function(time, inputs) {
 const initialize = function(params) {
   // get parameters
   params = params ?? {};
+  
+  // set beginning game state data (constant)
+  this.state = params.state ?? {
+    // delayed auto shift
+    das: 83, // ms
+    
+    // auto repeat rate
+    arr: 0, // ms
+    
+    // soft drop factor
+    sdf: Infinity, // gravity is multiplied by this
+    // well it's actually divided by this, but it's easier to think of it as multiplication
+    
+    // minimum sdf gravity
+    msg: 1000, // min ms / block for sdf
+    
+    // gravity
+    gravity: Infinity, // ms / block
+    
+    // lock delay
+    lockDelay: 500, // ms
+  };
+  
+  this.gravity = this.state.gravity;
+  this.lockDelay = this.state.lockDelay;
   
   // set basic information
   this.score = 0;
@@ -76,6 +253,7 @@ const initialize = function(params) {
   // create the current piece lockdown
   this.currentPieceLockdown = 0;
   
+  // debug
   window.game = this;
 };
 
@@ -127,6 +305,23 @@ const validPiecePosition = function(piece, board) {
   }
   
   return true;
+};
+
+/**
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {boolean}
+ */
+const isTouchingGround = function(piece, board) {
+  let touching = false;
+  // test position
+  if (!this.movePiece(piece, {x: 0, y: -1}, board)) {
+    touching = true;
+  } else {
+    // move piece back
+    piece.position.y++;
+  }
+  return touching;
 };
 
 /**
@@ -189,7 +384,11 @@ const clearLines = function(board) {
   }
   
   for (let i=0; i<lineClears; i++) {
-    board.matrix.push(new Array(board.width).fill(new BoardMino()));
+    const newRow = [];
+    for (let j=0; j<board.width; j++) {
+      newRow.push(new BoardMino());
+    }
+    board.matrix.push(newRow);
   }
   
   return lineClears;
@@ -257,7 +456,9 @@ const spawnPiece = function(piece, settings) {
   settings = settings ?? {};
   const newPiece = new Piece({
     type: piece,
-    position: settings.position ?? {x: 3, y: 22},
+    position: settings.position ?? (
+      piece === "O" ? {x: 4, y: 22} : {x: 3, y: 22}
+    ),
     rotation: settings.rotation ?? 0,
   });
   
@@ -266,6 +467,7 @@ const spawnPiece = function(piece, settings) {
   }
   
   this.currentPiece = newPiece;
+  this.currentPieceLockdown = 0;
   
   return true;
 };
@@ -305,6 +507,7 @@ const movePiece = function(piece, direction, board) {
 /**
  * @param {Piece} piece
  * @param {Board} board
+ * @returns {boolean} whether the next piece was successfully spawned
  */
 const placePiece = function(piece, board) {
   // change the board matrix to reflect the piece placement
@@ -327,12 +530,14 @@ const placePiece = function(piece, board) {
   this.clearLines(this.board);
   
   // spawn piece
-  this.spawnPiece(this.nextQueue.shift());
+  const spawn = this.spawnPiece(this.nextQueue.shift());
   
   this.refillNextQueue();
   
   // make hold piece available
   this.hold.allowed = true;
+  
+  return spawn;
 };
 
 /**
@@ -346,6 +551,8 @@ const moveLeft = function() {
     this.gaEventHandler.arrPriority = true;
     return false;
   }
+  
+  this.currentPieceLockdown = 0;
   
   return true;
 };
@@ -362,6 +569,7 @@ const moveRight = function() {
     return false;
   }
   
+  this.currentPieceLockdown = 0;
   
   return true;
 };
@@ -370,11 +578,13 @@ const moveRight = function() {
  * doesn't do anything at the moment
  */
 const softDrop = function() {
-  // temprary
+  // temporary
+  /*
   let movement = true;
   while (movement) {
     movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
   }
+  */
 };
 
 /**
@@ -402,6 +612,10 @@ const rotate = function(newRotation) {
     newRotation: newRotation,
   });
   
+  if (rotation) {
+    this.currentPieceLockdown = 0;
+  }
+  
   return rotation;
 }
 
@@ -428,34 +642,43 @@ const holdPiece = function() {
 
 // inputs
 
-const moveLeftInputDown = function() {
+const moveLeftInputDown = function(time) {
+  this.update();
   this.moveLeft();
   this.leftInput = Date.now() - this.startTime;
 };
 
 const moveLeftInputUp = function() {
+  this.update();
   this.leftInput = null;
 };
 
 const moveRightInputDown = function() {
+  this.update();
   this.moveRight();
   this.rightInput = Date.now() - this.startTime;
 };
 
 const moveRightInputUp = function() {
+  this.update();
   this.rightInput = null;
 };
 
 const softDropInputDown = function() {
+  this.update();
   this.softDrop();
-  this.softDropFlag = true;
+  this.softDropFlag = true; // unsure if this is needed
+  this.gravity = Math.min(this.state.msg, this.gravity) / this.state.sdf;
 };
 
 const softDropInputUp = function() {
+  this.update();
   this.softDropFlag = false;
+  this.gravity = this.state.gravity;
 };
 
 const hardDropInputDown = function() {
+  this.update();
   this.hardDrop();
 };
 
@@ -464,6 +687,7 @@ const hardDropInputUp = function() {
 };
 
 const rotateCWInputDown = function() {
+  this.update();
   const newRotation = (this.currentPiece.rotation + 1) % 4;
   this.rotate(newRotation);
 };
@@ -473,6 +697,7 @@ const rotateCWInputUp = function() {
 };
 
 const rotateCCWInputDown = function() {
+  this.update();
   const newRotation = (this.currentPiece.rotation + 3) % 4;
   this.rotate(newRotation);
 };
@@ -482,6 +707,7 @@ const rotateCCWInputUp = function() {
 };
 
 const rotate180InputDown = function() {
+  this.update();
   const newRotation = (this.currentPiece.rotation + 2) % 4;
   this.rotate(newRotation);
 };
@@ -491,12 +717,32 @@ const rotate180InputUp = function() {
 };
 
 const holdPieceInputDown = function() {
+  this.update();
   this.holdPiece();
 };
 
 const holdPieceInputUp = function() {
   // Don't do anything
 };
+
+// supplementary functions
+
+/**
+ * calculate the ghost piece position
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {object} the ghost piece position
+ */
+const calculateGhostPiece = function(piece, board) {
+  const ghostPiece = piece.copy();
+  
+  let movement = true;
+  while (movement) {
+    movement = movePiece(ghostPiece, {x: 0, y: -1}, board);
+  }
+  
+  return ghostPiece;
+}
 
 // all the functions to export
 const functions = [
@@ -507,6 +753,7 @@ const functions = [
   lehmerRNG,
   
   validPiecePosition,
+  isTouchingGround,
   generateNext,
   clearLines,
   spawnPiece,
@@ -539,6 +786,9 @@ const functions = [
   rotate180InputUp,
   holdPieceInputDown,
   holdPieceInputUp,
+  
+  // supplementary functions
+  calculateGhostPiece,
 ];
 
 // create a map from string to function using their name

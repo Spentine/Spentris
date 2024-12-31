@@ -13,6 +13,7 @@ function main() {
     updateCanvasDimensions();
     
     // render the current board state
+    game.update();
     ctx.drawImage(renderState(createDemoState(game)), 0, 0);
     
     window.requestAnimationFrame(render);
@@ -37,6 +38,7 @@ function main() {
     lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},
     
     validPiecePosition: {file: "standardRules.js", name: "validPiecePosition"},
+    isTouchingGround: {file: "standardRules.js", name: "isTouchingGround"},
     generateNext: {file: "standardRules.js", name: "generateNext"},
     clearLines: {file: "standardRules.js", name: "clearLines"},
     spawnPiece: {file: "standardRules.js", name: "spawnPiece"},
@@ -69,6 +71,9 @@ function main() {
     rotate180InputUp: {file: "standardRules.js", name: "rotate180InputUp"},
     holdPieceInputDown: {file: "standardRules.js", name: "holdPieceInputDown"},
     holdPieceInputUp: {file: "standardRules.js", name: "holdPieceInputUp"},
+    
+    // supplementary functions
+    calculateGhostPiece: {file: "standardRules.js", name: "calculateGhostPiece"},
   };
   
   const gameFunctions = functionLocationAccessor(functionLocations);

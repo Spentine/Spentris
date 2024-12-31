@@ -32,12 +32,12 @@ class gaEventHandler {
     this.skipped = false;
   }
   
-  override(gravOffset, gravSpeed, arrOffset, arrSpeed, time) {
-    this.gravOffset = gravOffset;
-    this.gravSpeed = gravSpeed;
-    this.arrOffset = arrOffset;
-    this.arrSpeed = arrSpeed;
-    this.time = time;
+  override(settings) {
+    this.gravOffset = settings.gravOffset ?? this.gravOffset;
+    this.gravSpeed = settings.gravSpeed ?? this.gravSpeed;
+    this.arrOffset = settings.arrOffset ?? this.arrOffset;
+    this.arrSpeed = settings.arrSpeed ?? this.arrSpeed;
+    this.time = settings.time ?? this.time;
     
     this.gravMin = this.gravityEvent(0);
     this.arrMin = this.arrEvent(0);
@@ -88,7 +88,7 @@ class gaEventHandler {
     // arr prioritization
     if (this.arrPriority) {
       this.arrPriority = false;
-      return this.createEvent("arr", this.time);
+      return this.createEvent("arr", Math.max(this.time, this.arrOffset));
     }
     
     // prioritize gravity over arr

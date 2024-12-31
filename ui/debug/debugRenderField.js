@@ -249,12 +249,30 @@ function renderState(state) {
     state.current.position[1]
   );
   
+  ctx.filter = `brightness(${1 - state.current.lockdown * 0.8})`;
+  
   // render current piece
   renderPiece(
     state.current.piece,
     state.current.rotation,
     currentPiecePos.x,
     currentPiecePos.y
+  );
+  
+  const ghostPiecePos = getBoardPosition(
+    state.current.ghost.position.x,
+    state.current.ghost.position.y
+  );
+  
+  ctx.filter = "none";
+  
+  // render ghost piece
+  ctx.globalAlpha = 0.3;
+  renderPiece(
+    state.current.ghost.type,
+    state.current.ghost.rotation,
+    ghostPiecePos.x,
+    ghostPiecePos.y
   );
   
   // mark index
@@ -385,7 +403,8 @@ function createDemoState(stacker) {
       piece: stacker.currentPiece.type,
       position: [stacker.currentPiece.position.x, stacker.currentPiece.position.y],
       rotation: stacker.currentPiece.rotation,
-      lockdown: stacker.lockdown,
+      lockdown: stacker.currentPieceLockdown / stacker.state.lockDelay,
+      ghost: stacker.calculateGhostPiece(stacker.currentPiece, stacker.board),
     },
     values: {
       score: stacker.score,
