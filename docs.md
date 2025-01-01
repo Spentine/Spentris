@@ -8,9 +8,11 @@ Spentris is a game of the Block Stacker genre. It will contain a variety of feat
 -	Lessons to teach new strategies
 -	Ability to play generic game modes
 -	Multiplayer over WebSocket
+  If not, create 1v1 vs bots
 -	Separability of UI and Game Engine
   - Allows for separate refactoring
   - More expandability
+- As a passive finesse trainer
 
 Of all the features, the most important is to allow for expandability. This will allow for the program to continually be improved without refactoring. Addon / mod support will be implemented to assist and streamline the process of extending the program beyond its original intended purposes. The file structure will be as follows:
 

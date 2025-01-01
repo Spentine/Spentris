@@ -1,5 +1,5 @@
 import { gaEventHandler } from "./nextEvent.js";
-import { Board, Piece, BoardMino } from "./stackerObjects.js";
+import { Board, Piece, BoardMino, PieceMino } from "./stackerObjects.js";
 import { SRSData } from "./rsData.js";
 
 /**
@@ -77,7 +77,7 @@ const update = function(tDelta, iter=0) {
     }
     
     if (touchingGround) {
-      // add the difference in time to the current piece lockdown
+      // add the time elapsed to the current piece lockdown
       this.currentPieceLockdown += nextEvent.time - beginningTime;
       
       // check if the piece locks in place
@@ -100,7 +100,8 @@ const update = function(tDelta, iter=0) {
       if (movement) {
         nextEvent = this.gaEventHandler.next();
         this.currentPieceLockdown = 0;
-        touchingGround = false;
+        this.spin = null;
+        touchingGround = this.isTouchingGround(this.currentPiece, this.board);
       } else {
         nextEvent = this.gaEventHandler.skip();
         touchingGround = true;
@@ -117,6 +118,7 @@ const update = function(tDelta, iter=0) {
       if (movement) {
         nextEvent = this.gaEventHandler.next();
         this.currentPieceLockdown = 0;
+        this.spin = null;
       } else {
         nextEvent = this.gaEventHandler.skip();
       }
@@ -152,10 +154,13 @@ const update = function(tDelta, iter=0) {
     const placement = this.placePiece(this.currentPiece, this.board);
     
     if (placement) {
+      // if the full time hasn't elapsed
       if (this.time !== endTime) {
         if (iter > 10) {
+          // if the number of iterations is too high then stop
           console.error("too many iterations");
         } else {
+          // use recursion to update the game state again
           this.update(endTime - this.time, iter+1);
         }
       }
@@ -244,6 +249,11 @@ const initialize = function(params) {
   this.leftInput = null;
   this.rightInput = null;
   
+  // the current spin of the piece
+  // null, "full", "mini"
+  // consider replacing with numbers 0, 1, 2
+  this.spin = null;
+  
   // create hold piece
   this.hold = {
     piece: null,
@@ -272,6 +282,48 @@ const values = {
 };
 
 /**
+ * determines if a board mino is solid (can intersect with anything)
+ * @param {BoardMino} mino
+ * @returns {boolean}
+ */
+const isBoardMinoSolid = function(mino) {
+  // if an error occurred just assume it's solid
+  if (typeof mino !== "object") return true;
+  
+  return Boolean(mino.type);
+}
+
+/**
+ * determines if a piece mino is solid (can intersect with anything)
+ * @param {PieceMino} mino
+ * @returns {boolean}
+ */
+const isPieceMinoSolid = function(mino) {
+  if (typeof mino !== "object") return true;
+  
+  return Boolean(mino.type);
+}
+
+/**
+ * determines if a board mino and piece mino intersect
+ * @param {BoardMino} boardMino
+ * @param {PieceMino} pieceMino
+ * @returns {boolean}
+ */
+const boardPieceMinoIntersect = function(boardMino, pieceMino) {
+  return this.isBoardMinoSolid(boardMino) && this.isPieceMinoSolid(pieceMino);
+}
+
+/**
+ * determines if a position is in bounds
+ * @param {object} position
+ * @param {Board} board
+ */
+const inBounds = function(position, board) {
+  return position.x >= 0 && position.x < board.width && position.y >= 0 && position.y < board.height;
+}
+
+/**
  * @param {Piece} piece
  * @param {Board} board
  */
@@ -280,24 +332,19 @@ const validPiecePosition = function(piece, board) {
   for (let i=0; i<piece.matrix.length; i++) {
     const row = piece.matrix[i];
     for (let j=0; j<row.length; j++) {
-      // if this index is a mino
-      if (row[j].type) {
+      // if this index is a solid mino
+      if (this.isPieceMinoSolid(row[j])) {
         // calculate the position of this mino
         const x = piece.position.x + j;
         const y = piece.position.y + i;
         
         // if this mino is out of bounds
-        if (
-          x < 0 ||
-          x >= board.width ||
-          y >= board.height ||
-          y < 0
-        ) {
+        if (!this.inBounds({x, y}, board)) {
           return false;
         }
         
         // if this mino is colliding with a board mino
-        if (board.matrix[y][x].type) {
+        if (this.boardPieceMinoIntersect(row[j], board.matrix[y][x])) {
           return false;
         }
       }
@@ -376,7 +423,10 @@ const clearLines = function(board) {
   var lineClears = 0;
   
   for (let i=0; i<board.matrix.length; i++) {
-    if (board.matrix[i].every(mino => mino.type)) {
+    // isBoardMinoSolid assumes that every mino is solid to clear
+    // however this may not just be the case, for example,
+    // bomb mode will have solid minos that wouldn't actually clear
+    if (board.matrix[i].every(mino => this.isBoardMinoSolid(mino))) {
       board.matrix.splice(i, 1);
       lineClears++;
       i--;
@@ -414,17 +464,24 @@ const SRS = function(piece, board, newRotation) {
   const kicks = SRSData.kicks[piece.type][previousRotation][newRotation];
   
   // loop over kick data
-  for (let kick of kicks) {
+  for (let kickIndex=0; kickIndex<kicks.length; kickIndex++) {
+    const kick = kicks[kickIndex];
+    
     // apply kick
     newPiece.position.x += kick.x;
     newPiece.position.y += kick.y;
     
-    if (validPiecePosition(newPiece, board)) {
+    if (this.validPiecePosition(newPiece, board)) {
       piece.position = newPiece.position;
       piece.rotation = newPiece.rotation;
       piece.updateMatrix();
       
-      return true;
+      return {
+        success: true,
+        kick: kickIndex,
+        previousRotation: previousRotation,
+        newRotation: newRotation,
+      };
     }
     
     // undo kick
@@ -432,17 +489,38 @@ const SRS = function(piece, board, newRotation) {
     newPiece.position.y -= kick.y;
   }
   
-  return false;
+  return {
+    success: false,
+    previousRotation: previousRotation,
+    newRotation: newRotation,
+  };
 };
 
-
+/**
+ * 
+ */
 const rotationSystem = function(data) {
-  // function forwarder
-  return SRS(
+  // calculate the spin
+  const spin = this.SRS(
     data.piece,
     data.board,
     data.newRotation
   );
+  
+  if (spin.success) {
+    // calculate the spin
+    
+    if (
+      // correct spin directions
+      (spin.previousRotation === 0 || spin.previousRotation === 2) &&
+      (spin.newRotation === 1 || spin.newRotation === 3) &&
+      (spin.kick === 4) // kick index 4 is the spin
+    ) {
+      spin.spin = "full";
+    }
+  }
+  
+  return spin;
 };
 
 /**
@@ -462,12 +540,13 @@ const spawnPiece = function(piece, settings) {
     rotation: settings.rotation ?? 0,
   });
   
-  if (!validPiecePosition(newPiece, this.board)) {
+  if (!this.validPiecePosition(newPiece, this.board)) {
     return false;
   }
   
   this.currentPiece = newPiece;
   this.currentPieceLockdown = 0;
+  this.spin = null;
   
   return true;
 };
@@ -483,18 +562,16 @@ const refillNextQueue = function() {
 
 /**
  * Modifies piece in place.
- * 
  * @param {Piece} piece
  * @param {object} direction
  * @param {Board} board
- * 
  * @returns {boolean} whether the piece was successfully moved
  */
 const movePiece = function(piece, direction, board) {
   piece.position.x += direction.x;
   piece.position.y += direction.y;
   
-  if (!validPiecePosition(piece, board)) {
+  if (!this.validPiecePosition(piece, board)) {
     piece.position.x -= direction.x;
     piece.position.y -= direction.y;
     
@@ -515,6 +592,8 @@ const placePiece = function(piece, board) {
     const row = piece.matrix[i];
     for (let j=0; j<row.length; j++) {
       const pMino = row[j] // piece mino
+      
+      // note that this doesn't necessarily mean it has to be solid
       if (pMino.type) {
         const x = piece.position.x + j;
         const y = piece.position.y + i;
@@ -546,13 +625,14 @@ const placePiece = function(piece, board) {
 const moveLeft = function() {
   if (!this.currentPiece) return false;
   
-  const movement = movePiece(this.currentPiece, {x: -1, y: 0}, this.board);
+  const movement = this.movePiece(this.currentPiece, {x: -1, y: 0}, this.board);
   if (!movement) {
     this.gaEventHandler.arrPriority = true;
     return false;
   }
   
   this.currentPieceLockdown = 0;
+  this.spin = null;
   
   return true;
 };
@@ -570,6 +650,7 @@ const moveRight = function() {
   }
   
   this.currentPieceLockdown = 0;
+  this.spin = null;
   
   return true;
 };
@@ -591,13 +672,89 @@ const softDrop = function() {
  * hard drops the piece
  */
 const hardDrop = function() {
-  let movement = true;
-  while (movement) {
-    movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+  let movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+  if (movement) {
+    this.spin = null;
+    while (movement) {
+      movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+    }
   }
   
   this.placePiece(this.currentPiece, this.board);
 };
+
+/**
+ * handles typical t-spin detection (3-corner and 2-corner rule)
+ * referenced from section 9.1
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {string | null} the type of t-spin or null if it isn't a t-spin
+ */
+const isTspin = function(piece, board) {
+  if (piece.type !== "T") return null;
+  
+  // unrotated corner positions (ignoring rotation)
+  const uCornerPos = [
+    {x: piece.position.x, y: piece.position.y + 2}, // top left
+    {x: piece.position.x + 2, y: piece.position.y + 2}, // top right
+    {x: piece.position.x, y: piece.position.y}, // bottom left
+    {x: piece.position.x + 2, y: piece.position.y}, // bottom right
+  ]
+  
+  const checkSolidity = (pos) => {
+    return this.inBounds(pos, board)
+        // in bounds so check solidity
+      ? this.isBoardMinoSolid(board.matrix[pos.y][pos.x])
+        // out of bounds so assume solid
+      : null;
+  }
+  
+  const unrotatedCorners = [
+    checkSolidity(uCornerPos[0]), // A
+    checkSolidity(uCornerPos[1]), // B
+    checkSolidity(uCornerPos[2]), // C
+    checkSolidity(uCornerPos[3]), // D
+  ];
+  
+  // mapping of corners to the correct rotation
+  const cornerMappings = [
+    [0, 1, 2, 3], // rotation 0
+    [1, 3, 0, 2], // rotation 1
+    [3, 2, 1, 0], // rotation 2
+    [2, 0, 3, 1], // rotation 3
+  ];
+  
+  const cornerMap = cornerMappings[piece.rotation];
+  
+  const corners = [
+    unrotatedCorners[cornerMap[0]], // A
+    unrotatedCorners[cornerMap[1]], // B
+    unrotatedCorners[cornerMap[2]], // C
+    unrotatedCorners[cornerMap[3]], // D
+  ];
+  
+  // full t-spin detection
+  // check if sides A and B and (C or D) are filled
+  if (
+    corners[0] &&
+    corners[1] &&
+    (corners[2] || corners[3])
+  ) {
+    return "full";
+  }
+  
+  // mini t-spin detection
+  // check if sides C and D and (A or B) are filled
+  if (
+    corners[2] &&
+    corners[3] &&
+    (corners[0] || corners[1])
+  ) {
+    return "mini";
+  }
+  
+  return null;
+}
 
 /**
  * @param {number} newRotation
@@ -606,14 +763,22 @@ const hardDrop = function() {
 const rotate = function(newRotation) {
   if (!this.currentPiece) return false;
   
-  const rotation = rotationSystem({
+  const rotation = this.rotationSystem({
     piece: this.currentPiece,
     board: this.board,
     newRotation: newRotation,
   });
   
-  if (rotation) {
+  if (rotation.success) {
     this.currentPieceLockdown = 0;
+  
+    if (rotation.spin) {
+      this.spin = rotation.spin;
+    } else {
+      this.spin = this.isTspin(this.currentPiece, this.board);
+    }
+    
+    // if (this.spin) console.log(this.spin);
   }
   
   return rotation;
@@ -738,7 +903,7 @@ const calculateGhostPiece = function(piece, board) {
   
   let movement = true;
   while (movement) {
-    movement = movePiece(ghostPiece, {x: 0, y: -1}, board);
+    movement = this.movePiece(ghostPiece, {x: 0, y: -1}, board);
   }
   
   return ghostPiece;
@@ -752,10 +917,17 @@ const functions = [
   
   lehmerRNG,
   
+  isBoardMinoSolid,
+  isPieceMinoSolid,
+  boardPieceMinoIntersect,
+  inBounds,
+  
   validPiecePosition,
   isTouchingGround,
   generateNext,
   clearLines,
+  SRS,
+  rotationSystem,
   spawnPiece,
   refillNextQueue,
   
@@ -766,6 +938,7 @@ const functions = [
   moveRight,
   softDrop,
   hardDrop,
+  isTspin,
   rotate,
   holdPiece,
   

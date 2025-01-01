@@ -37,10 +37,17 @@ function main() {
     
     lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},
     
+    isBoardMinoSolid: {file: "standardRules.js", name: "isBoardMinoSolid"},
+    isPieceMinoSolid: {file: "standardRules.js", name: "isPieceMinoSolid"},
+    boardPieceMinoIntersect: {file: "standardRules.js", name: "boardPieceMinoIntersect"},
+    inBounds: {file: "standardRules.js", name: "inBounds"},
+    
     validPiecePosition: {file: "standardRules.js", name: "validPiecePosition"},
     isTouchingGround: {file: "standardRules.js", name: "isTouchingGround"},
     generateNext: {file: "standardRules.js", name: "generateNext"},
     clearLines: {file: "standardRules.js", name: "clearLines"},
+    SRS: {file: "standardRules.js", name: "SRS"},
+    rotationSystem: {file: "standardRules.js", name: "rotationSystem"},
     spawnPiece: {file: "standardRules.js", name: "spawnPiece"},
     refillNextQueue: {file: "standardRules.js", name: "refillNextQueue"},
     
@@ -51,6 +58,7 @@ function main() {
     moveRight: {file: "standardRules.js", name: "moveRight"},
     softDrop: {file: "standardRules.js", name: "softDrop"},
     hardDrop: {file: "standardRules.js", name: "hardDrop"},
+    isTspin: {file: "standardRules.js", name: "isTspin"},
     rotate: {file: "standardRules.js", name: "rotate"},
     holdPiece: {file: "standardRules.js", name: "holdPiece"},
     

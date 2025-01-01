@@ -312,6 +312,24 @@ function renderState(state) {
     );
   }
   
+  const fontScaling = 0.8;
+  ctx.font = `${tileSize * fontScaling}px monospace`;
+  ctx.fillStyle = "#ffffff";
+  
+  const values = [];
+  for (const key in state.values) {
+    values.push([key, state.values[key]]);
+  }
+  
+  for (let i=0; i<values.length; i++) {
+    ctx.fillText(
+      `${values[i][0]}: ${values[i][1]}`,
+      tileSize * 0.2,
+      tileSize * (boardHeight - (values.length - i) * fontScaling)
+    );
+  }
+  
+  
   return canvas;
 }
 
@@ -408,7 +426,8 @@ function createDemoState(stacker) {
     },
     values: {
       score: stacker.score,
-      time: stacker.time
+      time: stacker.time,
+      spin: stacker.spin
     }
   });
 }
