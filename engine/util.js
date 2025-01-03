@@ -1,11 +1,16 @@
-import { standardFunctions } from "./standardRules.js";
+/**
+ * create a map from string to function using their name
+ * @param {object} functions
+ */
+function functionMap(functions) {
+  const standardFunctions = {};
+  for (let fn of functions) {
+    standardFunctions[fn.name] = fn;
+  }
+  return standardFunctions;
+}
 
-const files = {
-  "standardRules.js": standardFunctions,
-  // files to functions
-};
-
-function functionLocationAccessor(locations) {
+function functionLocationAccessor(locations, files) {
   const functions = {};
   for (let i in locations) {
     const fn = files[locations[i].file][locations[i].name];
@@ -14,4 +19,4 @@ function functionLocationAccessor(locations) {
   return functions;
 }
 
-export { functionLocationAccessor };
+export { functionMap, functionLocationAccessor };

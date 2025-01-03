@@ -1,7 +1,7 @@
 import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
 import { addKeyboardListeners, keybinds } from "./interaction/keyboard.js";
 import { Stacker } from "./engine/stacker.js";
-import { standardFunctions } from "./engine/standardRules.js";
+import { files } from "./engine/fnLAc.js";
 import { functionLocationAccessor } from "./engine/util.js";
 
 function main() {
@@ -34,13 +34,17 @@ function main() {
     update: {file: "standardRules.js", name: "update"},
     tick: {file: "standardRules.js", name: "tick"},
     initialize: {file: "standardRules.js", name: "initialize"},
+    resetGame: {file: "standardRules.js", name: "resetGame"},
     
     lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},
+    calculateDropSpeed: {file: "standardRules.js", name: "calculateDropSpeed"},
     
     isBoardMinoSolid: {file: "standardRules.js", name: "isBoardMinoSolid"},
     isPieceMinoSolid: {file: "standardRules.js", name: "isPieceMinoSolid"},
     boardPieceMinoIntersect: {file: "standardRules.js", name: "boardPieceMinoIntersect"},
     inBounds: {file: "standardRules.js", name: "inBounds"},
+    transferPieceToBoard: {file: "standardRules.js", name: "transferPieceToBoard"},
+    lineClearHandler: {file: "standardRules.js", name: "lineClearHandler"},
     
     validPiecePosition: {file: "standardRules.js", name: "validPiecePosition"},
     isTouchingGround: {file: "standardRules.js", name: "isTouchingGround"},
@@ -59,6 +63,10 @@ function main() {
     softDrop: {file: "standardRules.js", name: "softDrop"},
     hardDrop: {file: "standardRules.js", name: "hardDrop"},
     isTspin: {file: "standardRules.js", name: "isTspin"},
+    immobilityRule: {file: "allSpin.js", name: "immobilityRule"},
+    // isSpin: {file: "standardRules.js", name: "isSpin"},
+    // isSpin: {file: "allSpin.js", name: "isAllSpin"},
+    isSpin: {file: "allSpin.js", name: "isMiniSpin"},
     rotate: {file: "standardRules.js", name: "rotate"},
     holdPiece: {file: "standardRules.js", name: "holdPiece"},
     
@@ -79,12 +87,14 @@ function main() {
     rotate180InputUp: {file: "standardRules.js", name: "rotate180InputUp"},
     holdPieceInputDown: {file: "standardRules.js", name: "holdPieceInputDown"},
     holdPieceInputUp: {file: "standardRules.js", name: "holdPieceInputUp"},
+    resetGameInputDown: {file: "standardRules.js", name: "resetGameInputDown"},
+    resetGameInputUp: {file: "standardRules.js", name: "resetGameInputUp"},
     
     // supplementary functions
     calculateGhostPiece: {file: "standardRules.js", name: "calculateGhostPiece"},
   };
   
-  const gameFunctions = functionLocationAccessor(functionLocations);
+  const gameFunctions = functionLocationAccessor(functionLocations, files);
   
   // create game
   const game = new Stacker({
@@ -136,12 +146,37 @@ function main() {
     holdPieceInput: {
       keyDown: game.holdPieceInputDown.bind(game),
       keyUp: game.holdPieceInputUp.bind(game)
-    }
+    },
+    
+    resetInput: {
+      keyDown: game.resetGameInputDown.bind(game),
+      keyUp: game.resetGameInputUp.bind(game)
+    },
   };
   
   // add keyboard listeners
   addKeyboardListeners(inputForward, keybinds);
   console.log(game);
+  
+  const addListeners = () => {
+    // add game listeners
+    const listeners = [
+      "move", "drop", "place", "rotate", "spin", "hold", "clear", "end"
+    ];
+    for (let i of listeners) {
+      game.event.on(i, (e) => {
+        if (e.success) {
+          console.log(i, e);
+        }
+      });
+    }
+    game.event.on("reset", (e) => {
+      console.log(e);
+      addListeners();
+    });
+  }
+  
+  addListeners();
   
   window.requestAnimationFrame(render);
 }

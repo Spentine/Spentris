@@ -1,6 +1,8 @@
 import { gaEventHandler } from "./nextEvent.js";
 import { Board, Piece, BoardMino, PieceMino } from "./stackerObjects.js";
 import { SRSData } from "./rsData.js";
+import { EventEmitter } from "./eventEmitter.js";
+import { functionMap } from "./util.js";
 
 /**
  * updates the game state from (a, b] where a is the previous time and b is the current time
@@ -79,9 +81,13 @@ const update = function(tDelta, iter=0) {
     if (touchingGround) {
       // add the time elapsed to the current piece lockdown
       this.currentPieceLockdown += nextEvent.time - beginningTime;
+      this.maxCurrentPieceLockdown += nextEvent.time - beginningTime;
       
       // check if the piece locks in place
-      if (this.currentPieceLockdown >= this.lockDelay) {
+      if (
+        this.currentPieceLockdown >= this.lockDelay ||
+        this.maxCurrentPieceLockdown >= this.maxLockDelay
+      ) {
         pieceLockedDown = true;
         break;
       }
@@ -99,12 +105,59 @@ const update = function(tDelta, iter=0) {
       // properly decide next event
       if (movement) {
         nextEvent = this.gaEventHandler.next();
-        this.currentPieceLockdown = 0;
+        
+        // it would not have been touching the ground already
+        // this.currentPieceLockdown = 0;
+        
+        // if it moves then spin is invalidated
         this.spin = null;
+        
+        // even though it moved down and there was no barrier
+        // there could be another floor beneath it
         touchingGround = this.isTouchingGround(this.currentPiece, this.board);
+        
+        // add to the score if soft drop is enabled
+        if (this.softDropFlag) {
+          this.score += 1;
+          
+          this.event.emit("drop", {
+            time: this.time,
+            type: "gravity",
+            origin: "userInput",
+            speed: this.gravity,
+            success: true,
+          });
+        } else {
+          this.event.emit("drop", {
+            time: this.time,
+            type: "gravity",
+            origin: "gravity",
+            speed: this.gravity,
+            success: true,
+          });
+        }
       } else {
         nextEvent = this.gaEventHandler.skip();
         touchingGround = true;
+        
+        // consider combining both into one and using a ternary for the origin, also for the success
+        if (this.softDropFlag) {
+          this.event.emit("drop", {
+            time: this.time,
+            type: "gravity",
+            origin: "userInput",
+            speed: this.gravity,
+            success: false,
+          });
+        } else {
+          this.event.emit("drop", {
+            time: this.time,
+            type: "gravity",
+            origin: "arr",
+            speed: this.gravity,
+            success: false,
+          });
+        }
       }
     } else if (nextEvent.action === "arr") {
       // move in the correct direction once
@@ -117,10 +170,35 @@ const update = function(tDelta, iter=0) {
       // properly decide next event
       if (movement) {
         nextEvent = this.gaEventHandler.next();
+        
+        // in this case it could have been touching the ground already
+        // so it is necessary to reset the piece lockdown
         this.currentPieceLockdown = 0;
+        
+        // the spin is invalidated
+        // this was a bug on TETR.IO most apparent with stupid spins enabled
+        
+        // emit event
+        this.event.emit("move", {
+          time: this.time,
+          direction: arrDirection,
+          origin: "arr",
+          speed: this.state.arr,
+          success: true,
+        });
+        
         this.spin = null;
       } else {
         nextEvent = this.gaEventHandler.skip();
+        
+        // emit event
+        this.event.emit("move", {
+          time: this.time,
+          direction: arrDirection,
+          origin: "arr",
+          speed: this.state.arr,
+          success: false,
+        });
       }
       touchingGround = this.isTouchingGround(this.currentPiece, this.board);
     }
@@ -137,21 +215,33 @@ const update = function(tDelta, iter=0) {
   if (touchingGround) {
     const elapsedTime = Math.min(
       endTime - lastTime,
-      this.lockDelay - this.currentPieceLockdown
+      this.lockDelay - this.currentPieceLockdown,
+      this.maxLockDelay - this.maxCurrentPieceLockdown
     );
     
     // add the difference in time to the current piece lockdown
     this.currentPieceLockdown += elapsedTime;
+    this.maxCurrentPieceLockdown += elapsedTime;
     this.time += elapsedTime;
     
     // check if the piece locks in place
-    if (this.currentPieceLockdown >= this.lockDelay) {
+    if (
+      this.currentPieceLockdown >= this.lockDelay ||
+      this.maxCurrentPieceLockdown >= this.maxLockDelay
+    ) {
       pieceLockedDown = true;
     }
   }
   
   if (pieceLockedDown) {
     const placement = this.placePiece(this.currentPiece, this.board);
+    
+    this.event.emit("place", {
+      time: this.time,
+      type: "lockDelay",
+      origin: "lockDelay",
+      success: true,
+    });
     
     if (placement) {
       // if the full time hasn't elapsed
@@ -205,16 +295,26 @@ const initialize = function(params) {
     
     // lock delay
     lockDelay: 500, // ms
+    
+    // prevent infinite stalling
+    maxLockDelay: 5000, // ms
+    
+    startingLevel: 1,
+    levelling: false,
   };
-  
-  this.gravity = this.state.gravity;
-  this.lockDelay = this.state.lockDelay;
   
   // set basic information
   this.score = 0;
   this.lines = 0;
   this.time = 0; // Date.now() - this.startTime
+  this.level = this.state.startingLevel;
   this.startTime = Date.now();
+  
+  this.gravity = this.state.levelling
+    ? this.calculateDropSpeed(this.level)
+    : this.state.gravity;
+  this.lockDelay = this.state.lockDelay;
+  this.maxLockDelay = this.state.maxLockDelay;
   
   // create the board
   this.board = new Board(
@@ -262,9 +362,32 @@ const initialize = function(params) {
   
   // create the current piece lockdown
   this.currentPieceLockdown = 0;
+  this.maxCurrentPieceLockdown = 0;
+  
+  // combo counter (starts at 0)
+  this.combo = 0;
+  
+  // b2b
+  this.b2b = 0;
+  
+  // event emitter
+  this.event = new EventEmitter();
   
   // debug
-  window.game = this;
+  // window.game = this;
+};
+
+const resetGame = function() {
+  const prevEvent = this.event;
+  
+  this.initialize();
+  
+  prevEvent.emit("reset", {
+    time: this.time,
+    type: "initialization",
+    origin: "userInput",
+    success: true,
+  });
 };
 
 const values = {
@@ -279,6 +402,15 @@ const values = {
     height: 40,
     // other stuff
   }
+};
+
+/**
+ * referenced from section 7
+ * @param {number} level
+ * @returns {number} ms / line
+ */
+const calculateDropSpeed = function(level) {
+  return Math.pow(0.8 - (level - 1) * 0.007, level - 1) * 1000;
 };
 
 /**
@@ -378,30 +510,31 @@ const isTouchingGround = function(piece, board) {
 const lehmerRNG = function(seed) {
   // https://github.com/Poyo-SSB/tetrio-bot-docs/blob/master/Piece_RNG.md
   let t = seed % 2147483647;
-
+  
   if (t <= 0) {
-      t += 2147483646;
+    t += 2147483646;
   }
-
+  
   return {
-      next: function () {
-          return t = 16807 * t % 2147483647;
-      },
-      nextFloat: function () {
-          return (this.next() - 1) / 2147483646;
-      },
-      shuffleArray: function (array) {
-          if (array.length == 0) {
-              return array;
-          }
-
-          for (let i = array.length - 1; i != 0; i--) {
-              const r = Math.floor(this.nextFloat() * (i + 1));
-              [array[i], array[r]] = [array[r], array[i]];
-          }
-
-          return array;
+    next: function () {
+      return t = 16807 * t % 2147483647;
+    },
+    
+    nextFloat: function () {
+      return (this.next() - 1) / 2147483646;
+    },
+    
+    shuffleArray: function (array) {
+      if (array.length === 0) {
+        return array;
       }
+      
+      for (let i = array.length - 1; i != 0; i--) {
+        const r = Math.floor(this.nextFloat() * (i + 1));
+        [array[i], array[r]] = [array[r], array[i]];
+      }
+      return array;
+    }
   }
 };
 
@@ -497,7 +630,8 @@ const SRS = function(piece, board, newRotation) {
 };
 
 /**
- * 
+ * handle the rotation system and calculate the spin
+ * @param {object} data
  */
 const rotationSystem = function(data) {
   // calculate the spin
@@ -512,6 +646,7 @@ const rotationSystem = function(data) {
     
     if (
       // correct spin directions
+      (data.piece.type === "T") &&
       (spin.previousRotation === 0 || spin.previousRotation === 2) &&
       (spin.newRotation === 1 || spin.newRotation === 3) &&
       (spin.kick === 4) // kick index 4 is the spin
@@ -535,7 +670,7 @@ const spawnPiece = function(piece, settings) {
   const newPiece = new Piece({
     type: piece,
     position: settings.position ?? (
-      piece === "O" ? {x: 4, y: 22} : {x: 3, y: 22}
+      structuredClone(SRSData.spawnPositions[piece]) ?? {x: 0, y: 0}
     ),
     rotation: settings.rotation ?? 0,
   });
@@ -546,6 +681,7 @@ const spawnPiece = function(piece, settings) {
   
   this.currentPiece = newPiece;
   this.currentPieceLockdown = 0;
+  this.maxCurrentPieceLockdown = 0;
   this.spin = null;
   
   return true;
@@ -561,7 +697,7 @@ const refillNextQueue = function() {
 };
 
 /**
- * Modifies piece in place.
+ * modifies piece in place.
  * @param {Piece} piece
  * @param {object} direction
  * @param {Board} board
@@ -582,12 +718,94 @@ const movePiece = function(piece, direction, board) {
 };
 
 /**
+ * handles actions and values after line clears
+ * referenced from section 8 and https://tetris.wiki/Scoring
+ */
+const lineClearHandler = function(linesCleared) {
+  var scoreIncrease = 0;
+  var perfectClear = false;
+  
+  if (linesCleared === 0) {
+    this.combo = 0;
+    if (this.spin === "full") {
+      scoreIncrease += 400;
+    } else if (this.spin === "mini") {
+      scoreIncrease += 100;
+    }
+  } else {
+    this.combo++;
+    
+    if (this.spin === "full") {
+      scoreIncrease += 400 * (1 + linesCleared);
+      this.b2b++;
+    } else if (this.spin === "mini") {
+      scoreIncrease += 200 * (linesCleared);
+      this.b2b++;
+    } else {
+      const lineScores = [
+        0, // 0 lines (not possible)
+        100, 300, 500, 800, // standard values for 1-4 lines
+        1200, 2400, 3600, 4800, // extra values for 5-8 lines
+      ];
+      
+      scoreIncrease += lineScores[linesCleared];
+      
+      if (linesCleared >= 4) {
+        this.b2b++;
+      } else {
+        this.b2b = 0;
+      }
+    }
+    
+    // add 1 to account for the change in b2b afterwards
+    if (this.b2b > 1) {
+      scoreIncrease *= 1.5;
+    }
+    
+    // combo greater than or equal to 1 (visually)
+    // add 1 more to account for the change in combo afterwards
+    if (this.combo >= 3) {
+      scoreIncrease += 50 * (this.combo - 1);
+    }
+    
+    // check if board is a perfect clear
+    // all minos are empty (doesn't mean not solid)
+    perfectClear = this.board.matrix.every(
+      row => row.every(mino => !Boolean(mino.type))
+    );
+    
+    if (perfectClear) {
+      const pcLineScores = [
+        0, // 0 lines (not possible)
+        800, 1200, 2000, 3200, // more recent standard values for 1-4 lines
+        4000, 4800, 5600, 6400, // extra values for 5-8 lines
+      ];
+      
+      scoreIncrease += pcLineScores[linesCleared];
+    }
+  }
+  
+  this.score += scoreIncrease * this.level;
+  this.lines += linesCleared;
+  
+  this.event.emit("clear", {
+    time: this.time,
+    lines: linesCleared,
+    spin: this.spin,
+    b2b: this.b2b,
+    combo: this.combo,
+    piece: this.currentPiece.type,
+    perfectClear: perfectClear,
+    success: linesCleared > 0,
+  });
+};
+
+/**
+ * changes the board matrix to reflect the piece placement
  * @param {Piece} piece
  * @param {Board} board
- * @returns {boolean} whether the next piece was successfully spawned
  */
-const placePiece = function(piece, board) {
-  // change the board matrix to reflect the piece placement
+const transferPieceToBoard = function(piece, board) {
   for (let i=0; i<piece.matrix.length; i++) {
     const row = piece.matrix[i];
     for (let j=0; j<row.length; j++) {
@@ -604,9 +822,30 @@ const placePiece = function(piece, board) {
       }
     }
   }
+}
+
+/**
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {boolean} whether the next piece was successfully spawned
+ */
+const placePiece = function(piece, board) {
+  // change the board matrix to reflect the piece placement
+  this.transferPieceToBoard(piece, board);
   
   // clear lines
-  this.clearLines(this.board);
+  const linesCleared = this.clearLines(this.board);
+  
+  // handle line clears
+  this.lineClearHandler(linesCleared);
+  
+  // update gravity and level if necessary
+  if (this.state.levelling) {
+    // calculate level
+    this.level = Math.floor(this.lines / 10) + 1;
+    
+    this.gravity = this.calculateDropSpeed(this.level);
+  }
   
   // spawn piece
   const spawn = this.spawnPiece(this.nextQueue.shift());
@@ -615,6 +854,14 @@ const placePiece = function(piece, board) {
   
   // make hold piece available
   this.hold.allowed = true;
+  
+  if (!spawn) {
+    this.event.emit("end", {
+      time: this.time,
+      type: "blockOut", // 10.1.7
+      success: true,
+    });
+  }
   
   return spawn;
 };
@@ -628,11 +875,26 @@ const moveLeft = function() {
   const movement = this.movePiece(this.currentPiece, {x: -1, y: 0}, this.board);
   if (!movement) {
     this.gaEventHandler.arrPriority = true;
+    
+    this.event.emit("move", {
+      time: this.time,
+      direction: -1,
+      origin: "userInput",
+      success: false,
+    });
+    
     return false;
   }
   
   this.currentPieceLockdown = 0;
   this.spin = null;
+  
+  this.event.emit("move", {
+    time: this.time,
+    direction: -1,
+    origin: "userInput",
+    success: true,
+  });
   
   return true;
 };
@@ -646,11 +908,26 @@ const moveRight = function() {
   const movement = this.movePiece(this.currentPiece, {x: 1, y: 0}, this.board);
   if (!movement) {
     this.gaEventHandler.arrPriority = true;
+    
+    this.event.emit("move", {
+      time: this.time,
+      direction: 1,
+      origin: "userInput",
+      success: false,
+    });
+    
     return false;
   }
   
   this.currentPieceLockdown = 0;
   this.spin = null;
+  
+  this.event.emit("move", {
+    time: this.time,
+    direction: 1,
+    origin: "userInput",
+    success: true,
+  });
   
   return true;
 };
@@ -673,14 +950,26 @@ const softDrop = function() {
  */
 const hardDrop = function() {
   let movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+  var movements = 0;
   if (movement) {
     this.spin = null;
     while (movement) {
+      movements++;
       movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
     }
   }
   
+  // add to the score
+  this.score += movements * 2;
+  
   this.placePiece(this.currentPiece, this.board);
+  
+  this.event.emit("place", {
+    time: this.time,
+    type: "hardDrop",
+    origin: "userInput",
+    success: true,
+  });
 };
 
 /**
@@ -757,11 +1046,23 @@ const isTspin = function(piece, board) {
 }
 
 /**
+ * functionally similar to isTspin
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {string | null} the type of t-spin or null if it isn't a t-spin
+ */
+const isSpin = function(piece, board) {
+  return this.isTspin(piece, board);
+};
+
+/**
  * @param {number} newRotation
  * @returns {boolean} whether the piece was successfully rotated
  */
 const rotate = function(newRotation) {
   if (!this.currentPiece) return false;
+  
+  const oldRotation = this.currentPiece.rotation;
   
   const rotation = this.rotationSystem({
     piece: this.currentPiece,
@@ -775,20 +1076,38 @@ const rotate = function(newRotation) {
     if (rotation.spin) {
       this.spin = rotation.spin;
     } else {
-      this.spin = this.isTspin(this.currentPiece, this.board);
+      this.spin = this.isSpin(this.currentPiece, this.board);
     }
     
     // if (this.spin) console.log(this.spin);
   }
   
+  this.event.emit("rotate", {
+    time: this.time,
+    oldRotation: oldRotation,
+    newRotation: newRotation,
+    spin: this.spin,
+    origin: "userInput",
+    success: rotation.success,
+  });
+  
   return rotation;
-}
+};
 
 /**
- * 
+ * hold piece
  */
 const holdPiece = function() {
-  if (!this.hold.allowed) return false;
+  if (!this.hold.allowed) {
+    
+    this.event.emit("hold", {
+      time: this.time,
+      origin: "userInput",
+      success: false,
+    });
+    
+    return false;
+  };
   
   if (!this.hold.piece) {
     this.hold.piece = this.currentPiece.type;
@@ -802,6 +1121,13 @@ const holdPiece = function() {
   }
   
   this.hold.allowed = false;
+  
+  this.event.emit("hold", {
+    time: this.time,
+    origin: "userInput",
+    success: true,
+  });
+  
   return true;
 };
 
@@ -890,6 +1216,14 @@ const holdPieceInputUp = function() {
   // Don't do anything
 };
 
+const resetGameInputDown = function() {
+  this.resetGame();
+}
+
+const resetGameInputUp = function() {
+  // Don't do anything
+}
+
 // supplementary functions
 
 /**
@@ -914,13 +1248,17 @@ const functions = [
   update,
   tick,
   initialize,
+  resetGame,
   
   lehmerRNG,
+  calculateDropSpeed,
   
   isBoardMinoSolid,
   isPieceMinoSolid,
   boardPieceMinoIntersect,
   inBounds,
+  transferPieceToBoard,
+  lineClearHandler,
   
   validPiecePosition,
   isTouchingGround,
@@ -939,6 +1277,7 @@ const functions = [
   softDrop,
   hardDrop,
   isTspin,
+  isSpin,
   rotate,
   holdPiece,
   
@@ -959,15 +1298,14 @@ const functions = [
   rotate180InputUp,
   holdPieceInputDown,
   holdPieceInputUp,
+  resetGameInputDown,
+  resetGameInputUp,
   
   // supplementary functions
   calculateGhostPiece,
 ];
 
 // create a map from string to function using their name
-const standardFunctions = {};
-for (let fn of functions) {
-  standardFunctions[fn.name] = fn;
-}
+const standardFunctions = functionMap(functions);
 
-export { standardFunctions, values };
+export { standardFunctions };

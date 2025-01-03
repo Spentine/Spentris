@@ -426,8 +426,12 @@ function createDemoState(stacker) {
     },
     values: {
       score: stacker.score,
+      lines: stacker.lines,
+      level: stacker.level,
       time: stacker.time,
-      spin: stacker.spin
+      spin: stacker.spin,
+      cpl: stacker.currentPieceLockdown,
+      mcpl: stacker.maxCurrentPieceLockdown,
     }
   });
 }

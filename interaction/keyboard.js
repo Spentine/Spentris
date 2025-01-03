@@ -34,7 +34,11 @@ const keybinds = {
   holdPieceInput: [{
     keyCode: 67,
     code: "KeyC"
-  }]
+  }],
+  resetInput: [{
+    keyCode: 82,
+    code: "KeyR"
+  }],
 }
 
 /**
