@@ -1,6 +1,15 @@
+// render
 import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
+import { gameRender } from "./ui/gameRenderV1/renderer.js";
+import { tetrioSkin } from './ui/gameRenderV1/skin.js';
+
+// handle inputs
 import { addKeyboardListeners, keybinds } from "./interaction/keyboard.js";
+
+// game engine
 import { Stacker } from "./engine/stacker.js";
+
+// utilities
 import { files } from "./engine/fnLAc.js";
 import { functionLocationAccessor } from "./engine/util.js";
 
@@ -12,9 +21,15 @@ function main() {
     // ensure the canvas is the same size as the screen
     updateCanvasDimensions();
     
-    // render the current board state
     game.update();
-    ctx.drawImage(renderState(createDemoState(game)), 0, 0);
+    
+    // render the game (debug)
+    const debugRender = renderState(createDemoState(game));
+    ctx.drawImage(debugRender, 0, 0);
+    
+    // render the game
+    // const gameRender = gameRenderer.render(game);
+    // ctx.drawImage(gameRender, 0, 0);
     
     window.requestAnimationFrame(render);
   }
@@ -113,6 +128,11 @@ function main() {
     }
   });
   
+  const gameRenderer = new gameRender({
+    time: 0,
+    skin: tetrioSkin,
+  });
+  
   // set input functions
   const inputForward = {
     moveLeftInput: {
@@ -179,6 +199,18 @@ function main() {
   addListeners();
   
   window.requestAnimationFrame(render);
+  document.addEventListener("keydown", (e) => {
+    // if it's the p key
+    if (e.code === "KeyP") {
+      console.log("Rendering");
+      const gameRender = gameRenderer.render(game);
+      // download render
+      const a = document.createElement("a");
+      a.href = gameRender.toDataURL();
+      a.download = "gameRender.png";
+      a.click();
+    }
+  });
 }
 
 if (document.readyState === "loading") {

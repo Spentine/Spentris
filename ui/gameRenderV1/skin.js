@@ -1,9 +1,9 @@
-import { EventEmitter } from "../../eventEmitter";
+import { EventEmitter } from "../../eventEmitter.js";
 
 // handle skin data
 
 // from previous version
-const tilePositions = {
+const tileMapData = {
   minos_0: {
     tiles: {
       Z: {x: 0, y: 0},
@@ -19,7 +19,8 @@ const tilePositions = {
     },
     ids: {
       0: {x: 0, y: 0},
-    }
+    },
+    tileSize: 96,
   },
   ghost_0: {
     tiles: {
@@ -28,7 +29,8 @@ const tilePositions = {
     },
     ids: {
       0: {x: 0, y: 0},
-    }
+    },
+    tileSize: 96,
   },
   connectedMinos_0: {
     tiles: {
@@ -68,7 +70,8 @@ const tilePositions = {
       21: {x: 96, y: 480},
       22: {x: 192, y: 480},
       23: {x: 288, y: 480},
-    }
+    },
+    tileSize: 96,
   },
   connectedGhost_0: {
     tiles: {
@@ -100,7 +103,8 @@ const tilePositions = {
       21: {x: 96, y: 480},
       22: {x: 192, y: 480},
       23: {x: 288, y: 480},
-    }
+    },
+    tileSize: 96,
   },
 };
 
@@ -116,7 +120,7 @@ class TileMap {
     
     // tilemap type
     this.type = settings.type ?? null;
-    this.tilePositions = tilePositions[this.type];
+    this.tileMapData = tileMapData[this.type];
     
     // image of tilemap
     this.image = settings.image ?? null;
@@ -139,7 +143,7 @@ class TileMap {
         });
       });
       
-      // fucked
+      // error
       this.image.addEventListener("error", (error) => {
         this.event.emit("loadError", {
           time: Date.now(),
@@ -152,6 +156,75 @@ class TileMap {
       this.image.src = this.imageURL;
     }
   }
+  
+  /**
+   * return array with: [image, sx, sy, sWidth, sHeight]
+   * @param {String} tile
+   * @param {Number} id
+   * @returns {Array}
+   */
+  getTile(tile, id) {
+    const mainTile = this.tileMapData.tiles[tile];
+    const idTile = this.tileMapData.ids[id];
+    const size = this.tileMapData.tileSize;
+    
+    return [
+      this.image,
+      mainTile.x + idTile.x,
+      mainTile.y + idTile.y,
+      size,
+      size,
+    ];
+  }
 }
 
-export { TileMap };
+class GameSkin {
+  constructor(settings) {
+    settings = settings ?? {};
+    
+    // name of skin
+    this.name = settings.name ?? null;
+    
+    // create tilemaps
+    this.tilemaps = settings.tilemaps ?? {};
+    
+    // create event emitter
+    this.event = new EventEmitter();
+    
+    // create event for skin loading
+    const keys = Object.keys(this.tilemaps);
+    let loaded = 0;
+    for (let key of keys) {
+      this.tilemaps[key].event.on("load", () => {
+        loaded++;
+        if (loaded === keys.length) {
+          this.event.emit("load", {
+            time: Date.now(),
+            skin: this,
+          });
+        }
+      });
+    }
+  }
+}
+
+// locate to Spentris folder
+const urlPrefix = new URL("../..", import.meta.url).href;
+
+const tetrioSkin = new GameSkin({
+  "name": "TETRIO",
+  "tilemaps": {
+    "minos": new TileMap({
+      "name": "minos",
+      "type": "minos_0",
+      "imageURL": `${urlPrefix}ui/skins/TETRIO/minos.png`,
+    }),
+    "ghost": new TileMap({
+      "name": "ghost",
+      "type": "ghost_0",
+      "imageURL": `${urlPrefix}ui/skins/TETRIO/ghost.png`,
+    }),
+  },
+});
+
+export { TileMap, GameSkin, tetrioSkin };
