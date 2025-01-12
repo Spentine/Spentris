@@ -1,6 +1,7 @@
 // render
 import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
-import { gameRender } from "./ui/gameRenderV1/renderer.js";
+import { RenderGameState } from "./ui/gameRenderV1/converter.js";
+import { GameRenderer } from "./ui/gameRenderV1/renderer.js";
 import { tetrioSkin } from './ui/gameRenderV1/skin.js';
 
 // handle inputs
@@ -23,13 +24,20 @@ function main() {
     
     game.update();
     
+    // clear the canvas
+    ctx.clearRect(0, 0, renderCanvas.width, renderCanvas.height);
+    
     // render the game (debug)
-    const debugRender = renderState(createDemoState(game));
-    ctx.drawImage(debugRender, 0, 0);
+    const debugRenderCanvas = renderState(createDemoState(game));
+    ctx.drawImage(debugRenderCanvas, 10, 10);
     
     // render the game
-    // const gameRender = gameRenderer.render(game);
-    // ctx.drawImage(gameRender, 0, 0);
+    const visualGameState = rState.update();
+    const gameRenderCanvas = gRender.render(visualGameState, {
+      position: {x: 372, y: 100},
+      tileSize: 24,
+    });
+    ctx.drawImage(gameRenderCanvas, 0, 0);
     
     window.requestAnimationFrame(render);
   }
@@ -128,9 +136,16 @@ function main() {
     }
   });
   
-  const gameRenderer = new gameRender({
+  // render state
+  const rState = new RenderGameState({
+    game: game,
+  });
+  
+  // game render
+  const gRender = new GameRenderer({
     time: 0,
     skin: tetrioSkin,
+    canvas: renderCanvas,
   });
   
   // set input functions
@@ -196,19 +211,21 @@ function main() {
     });
   }
   
-  addListeners();
+  // addListeners();
   
   window.requestAnimationFrame(render);
   document.addEventListener("keydown", (e) => {
     // if it's the p key
     if (e.code === "KeyP") {
-      console.log("Rendering");
-      const gameRender = gameRenderer.render(game);
-      // download render
-      const a = document.createElement("a");
-      a.href = gameRender.toDataURL();
-      a.download = "gameRender.png";
-      a.click();
+      // console.log("Rendering");
+      // const gameRender = gameRenderer.render(game);
+      // // download render
+      // const a = document.createElement("a");
+      // a.href = gameRender.toDataURL();
+      // a.download = "gameRender.png";
+      // a.click();
+      
+      console.log(rState.update());
     }
   });
 }

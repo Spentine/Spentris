@@ -21,7 +21,6 @@ const immobilityRule = function(piece, board) {
     piece.position.y += direction.y;
     
     const validPosition = this.validPiecePosition(piece, board);
-    console.log(direction, validPosition);
     
     piece.position.x -= direction.x;
     piece.position.y -= direction.y;
@@ -41,7 +40,6 @@ const immobilityRule = function(piece, board) {
  * @returns {string | null} the type of t-spin or null if it isn't a t-spin
  */
 const isMiniSpin = function(piece, board) {
-  console.log(piece);
   if (piece.type === "T") {
     return this.isTspin(piece, board);
   } else {

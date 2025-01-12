@@ -660,19 +660,19 @@ const rotationSystem = function(data) {
 
 /**
  * @param {string} piece
- * @param {object} settings
- * @param {object} settings.position
- * @param {number} settings.rotation
+ * @param {object} data
+ * @param {object} data.position
+ * @param {number} data.rotation
  * @returns {boolean} whether the piece was successfully spawned
  */
-const spawnPiece = function(piece, settings) {
-  settings = settings ?? {};
+const spawnPiece = function(piece, data) {
+  data = data ?? {};
   const newPiece = new Piece({
     type: piece,
-    position: settings.position ?? (
+    position: data.position ?? (
       structuredClone(SRSData.spawnPositions[piece]) ?? {x: 0, y: 0}
     ),
-    rotation: settings.rotation ?? 0,
+    rotation: data.rotation ?? 0,
   });
   
   if (!this.validPiecePosition(newPiece, this.board)) {

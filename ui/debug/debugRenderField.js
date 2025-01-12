@@ -2,6 +2,9 @@
 // This is only intended to provide information for programmers, but not as the main UI.
 // It also also not well thought-out, just going with the flow.
 
+// Spentine 9 January 2025
+// Created replacement for the debug render field, which would actually be the renderer.
+
 // flipped vertically (lower index appears higher on text)
 const pieces = {
   Z: [
@@ -181,7 +184,7 @@ const minoColors = {
 };
 
 function renderState(state) {
-  const tileSize = 24;
+  const tileSize = 16;
   
   const boardHeight = state.board.length;
   const boardWidth = state.board[0].length;

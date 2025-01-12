@@ -70,15 +70,15 @@ class Board {
 
 // The Block Stacker Piece
 class Piece {
-  constructor(settings) {
-    settings = settings ?? {};
+  constructor(data) {
+    data = data ?? {};
     
-    this.type = settings.type ?? null; // the type of the piece
-    this.position = settings.position ?? {x: 0, y: 0}; // the position of the piece
-    this.rotation = settings.rotation ?? 0; // the rotation of the piece
+    this.type = data.type ?? null; // the type of the piece
+    this.position = data.position ?? {x: 0, y: 0}; // the position of the piece
+    this.rotation = data.rotation ?? 0; // the rotation of the piece
     this.matrix = null; // the matrix representing the piece
     
-    if (settings.updateMatrix ?? true) {
+    if (data.updateMatrix ?? true) {
       this.updateMatrix();
     }
   }
@@ -103,12 +103,12 @@ class Piece {
   /**
    * @returns {Piece}
    */
-  copy(settings) {
-    settings = settings ?? {};
+  copy(data) {
+    data = data ?? {};
     return new Piece({
-      type: settings.type ?? this.type,
-      position: settings.position ?? {x: this.position.x, y: this.position.y},
-      rotation: settings.rotation ?? this.rotation
+      type: data.type ?? this.type,
+      position: data.position ?? {x: this.position.x, y: this.position.y},
+      rotation: data.rotation ?? this.rotation
     });
   }
 }

@@ -110,23 +110,23 @@ const tileMapData = {
 
 class TileMap {
   /**
-   * @param {Object} settings
+   * @param {Object} data
    */
-  constructor(settings) {
-    settings = settings ?? {};
+  constructor(data) {
+    data = data ?? {};
     
     // name of tilemap
-    this.name = settings.name ?? null;
+    this.name = data.name ?? null;
     
     // tilemap type
-    this.type = settings.type ?? null;
+    this.type = data.type ?? null;
     this.tileMapData = tileMapData[this.type];
     
     // image of tilemap
-    this.image = settings.image ?? null;
+    this.image = data.image ?? null;
     
     // tilemap image url
-    this.imageURL = settings.imageURL ?? null;
+    this.imageURL = data.imageURL ?? null;
     
     // create event emitter
     this.event = new EventEmitter();
@@ -179,14 +179,14 @@ class TileMap {
 }
 
 class GameSkin {
-  constructor(settings) {
-    settings = settings ?? {};
+  constructor(data) {
+    data = data ?? {};
     
     // name of skin
-    this.name = settings.name ?? null;
+    this.name = data.name ?? null;
     
     // create tilemaps
-    this.tilemaps = settings.tilemaps ?? {};
+    this.tilemaps = data.tilemaps ?? {};
     
     // create event emitter
     this.event = new EventEmitter();
