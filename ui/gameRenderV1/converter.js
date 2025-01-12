@@ -100,13 +100,46 @@ class RenderGameState {
     this.ghost = RenderGameState.convertPiece(
       ghostPiece
     );
-    this.values = {
-      "score": this.game.score,
-      "lines": this.game.lines,
-      "level": this.game.level,
-      "time": this.game.time,
-      "spin": this.game.spin,
-    };
+    this.values = [
+      {
+        title: "score",
+        value: this.game.score,
+        
+        side: "left",
+        height: 0,
+      },
+      {
+        title: "lines",
+        value: this.game.lines,
+        
+        side: "left",
+        height: 1,
+      },
+      {
+        title: "level",
+        value: this.game.level,
+        
+        side: "left",
+        height: 2,
+      },
+      {
+        title: "time",
+        value: this.game.time,
+        
+        side: "left",
+        height: 3,
+      },
+      {
+        title: "spin",
+        value: this.game.spin,
+        
+        side: "right",
+        height: 0,
+      },
+    ];
+    this.textTitleSize = 20;
+    this.textValueSize = 24;
+    this.textMargin = 5;
     this.rs = SRSData; // rs = rotation system
     
     return this;

@@ -322,6 +322,43 @@ class GameRenderer {
       });
     }
     
+    // set font
+    this.ctx.font = `${state.textTitleSize}px Bloxyl`;
+    this.ctx.fillStyle = "#FFFFFF";
+    
+    const sideValuesMap = {
+      "left": {
+        align: "right",
+        x: metrics.boardMetrics.x - state.textMargin,
+      },
+      "right": {
+        align: "left",
+        x: metrics.boardMetrics.xEnd + state.textMargin,
+      },
+    }
+    // render titles for values
+    for (let value of state.values) {
+      const sideValues = sideValuesMap[value.side];
+      this.ctx.textAlign = sideValues.align;
+      this.ctx.fillText(
+        value.title,
+        sideValues.x,
+        metrics.canvasMetrics.yEnd - tileSize * (2.5 + 2.5 * value.height),
+      );
+    }
+    
+    // render values for values
+    this.ctx.font = `${state.textValueSize}px Bloxyl`;
+    for (let value of state.values) {
+      const sideValues = sideValuesMap[value.side];
+      this.ctx.textAlign = sideValues.align;
+      this.ctx.fillText(
+        value.value,
+        sideValues.x,
+        metrics.canvasMetrics.yEnd - tileSize * (1.5 + 2.5 * value.height),
+      );
+    }
+    
     // return canvas
     return this.canvas;
   }

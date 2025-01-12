@@ -195,6 +195,7 @@ function main() {
   
   const addListeners = () => {
     // add game listeners
+    /*
     const listeners = [
       "move", "drop", "place", "rotate", "spin", "hold", "clear", "end"
     ];
@@ -205,13 +206,16 @@ function main() {
         }
       });
     }
+    */
     game.event.on("reset", (e) => {
-      console.log(e);
       addListeners();
+    });
+    game.event.on("clear", (e) => {
+      if (e.lines > 0) console.log(e);
     });
   }
   
-  // addListeners();
+  addListeners();
   
   window.requestAnimationFrame(render);
   document.addEventListener("keydown", (e) => {
