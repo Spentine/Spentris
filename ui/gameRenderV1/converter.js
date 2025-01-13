@@ -1,6 +1,7 @@
 // converts Stacker object to renderGameState object
 
 import { SRSData } from "./rsData.js";
+import { languages, currentLanguage } from "../../localization/language.js";
 
 // texture type map
 const ttMap = {
@@ -31,11 +32,39 @@ class RenderGameState {
     this.current = null;
     this.ghost = null;
     this.values = null;
+    this.clears = [];
     
-    this.update();
+    this.addListeners();
+  }
+  
+  addListeners() {
+    // add clear event listeners
+    this.game.event.on("clear", (e) => {
+      if (e.lines > 0) {
+        // console.log(e);
+        const convertedClear = RenderGameState.convertClear(e);
+        // console.log(convertedClear);
+        this.clears.push(convertedClear);
+      };
+    });
     
-    // for effects or animations that persist across multiple frames
-    // this.persistentValues = {};
+    // when the game is reset
+    this.game.event.on("reset", (e) => {
+      this.clears = [];
+    });
+  }
+  
+  /**
+   * converts a clear object into a renderer-digestible format
+   * @param {object} clear - clear object
+   * @returns {object} - digestible clear object
+   */
+  static convertClear(clear) {
+    return {
+      time: clear.time, // for expiry
+      original: clear, // for debugging
+      text: languages[currentLanguage].translations.clearConvert(clear),
+    }
   }
   
   static convertPiece(piece) {
@@ -100,47 +129,61 @@ class RenderGameState {
     this.ghost = RenderGameState.convertPiece(
       ghostPiece
     );
-    this.values = [
-      {
-        title: "score",
+    this.values = {
+      score: {
+        title: languages[currentLanguage].translations.gameScoreTitle,
         value: this.game.score,
         
         side: "left",
         height: 0,
       },
-      {
-        title: "lines",
+      lines: {
+        title: languages[currentLanguage].translations.gameLinesTitle,
         value: this.game.lines,
         
         side: "left",
         height: 1,
       },
-      {
-        title: "level",
+      level: {
+        title: languages[currentLanguage].translations.gameLevelTitle,
         value: this.game.level,
         
         side: "left",
         height: 2,
       },
-      {
-        title: "time",
+      time: {
+        title: languages[currentLanguage].translations.gameTimeTitle,
         value: this.game.time,
         
         side: "left",
         height: 3,
       },
-      {
-        title: "spin",
+      spin: {
+        title: languages[currentLanguage].translations.gameSpinTitle,
         value: this.game.spin,
         
         side: "right",
         height: 0,
       },
-    ];
-    this.textTitleSize = 20;
-    this.textValueSize = 24;
-    this.textMargin = 5;
+    };
+    
+    this.textTitleSize = 20 / 24;
+    this.textValueSize = 24 / 24;
+    this.textMargin = 5 / 24;
+    
+    this.textClearPrimarySize = 20 / 24;
+    this.textClearSecondarySize = 16 / 24;
+    this.textClearMargin = 10 / 24;
+    
     this.rs = SRSData; // rs = rotation system
+    
+    this.time = this.game.time;
+    this.clearRemovalTime = 3000;
+    
+    // remove outdated clears
+    while (this.clears[0] && this.clears[0].time < this.time - this.clearRemovalTime) {
+      this.clears.shift();
+    }
     
     return this;
   }

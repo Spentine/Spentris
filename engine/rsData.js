@@ -272,13 +272,13 @@ const SRSData = {
     T: pieceKicks,
   },
   spawnPositions: {
-    Z: {x: 3, y: 22},
-    L: {x: 3, y: 22},
-    O: {x: 4, y: 23},
-    S: {x: 3, y: 22},
-    I: {x: 3, y: 21},
-    J: {x: 3, y: 22},
-    T: {x: 3, y: 22},
+    Z: {x: 3, y: 20},
+    L: {x: 3, y: 20},
+    O: {x: 4, y: 20},
+    S: {x: 3, y: 20},
+    I: {x: 3, y: 19},
+    J: {x: 3, y: 20},
+    T: {x: 3, y: 20},
   }
 };
 

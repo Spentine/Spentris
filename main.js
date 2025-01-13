@@ -28,14 +28,63 @@ function main() {
     ctx.clearRect(0, 0, renderCanvas.width, renderCanvas.height);
     
     // render the game (debug)
-    const debugRenderCanvas = renderState(createDemoState(game));
-    ctx.drawImage(debugRenderCanvas, 10, 10);
+    // const debugRenderCanvas = renderState(createDemoState(game));
+    // ctx.drawImage(debugRenderCanvas, 10, 10);
     
     // render the game
+    
     const visualGameState = rState.update();
+    
+    // calculate size of visual game
+    const unscaledGameBounds = gRender.gameMetrics(visualGameState, {
+      position: {x: 0, y: 0},
+      tileSize: 1,
+    });
+    
+    // visual rectangle
+    const visRect = {
+      min: {
+        x: unscaledGameBounds.boardMetrics.x - 12,
+        y: unscaledGameBounds.boardMetrics.y - 3,
+      },
+      max: {
+        x: unscaledGameBounds.boardMetrics.xEnd + 12,
+        y: unscaledGameBounds.boardMetrics.yEnd + 3,
+      },
+    };
+    visRect.width = visRect.max.x - visRect.min.x;
+    visRect.height = visRect.max.y - visRect.min.y;
+    
+    // scale the game to fit the screen
+    const scale = Math.min(
+      renderCanvas.width / visRect.width,
+      renderCanvas.height / visRect.height
+    );
+    
+    // use tilesize = scale
+    const tileSize = scale;
+    
+    // center game
+    const gameBounds = gRender.gameMetrics(visualGameState, {
+      position: {x: 0, y: 0},
+      tileSize: tileSize,
+    });
+    const boardCenter = {
+      x: gameBounds.boardMetrics.x + gameBounds.boardMetrics.width / 2,
+      y: gameBounds.boardMetrics.y + gameBounds.boardMetrics.height / 2,
+    };
+    const screenCenter = {
+      x: renderCanvas.width / 2,
+      y: renderCanvas.height / 2,
+    };
+    const offset = {
+      x: screenCenter.x - boardCenter.x,
+      y: screenCenter.y - boardCenter.y,
+    };
+    
     const gameRenderCanvas = gRender.render(visualGameState, {
-      position: {x: 372, y: 100},
-      tileSize: 24,
+      position: offset,
+      tileSize: tileSize,
     });
     ctx.drawImage(gameRenderCanvas, 0, 0);
     
@@ -209,10 +258,13 @@ function main() {
     */
     game.event.on("reset", (e) => {
       addListeners();
+      rState.addListeners();
     });
+    /*
     game.event.on("clear", (e) => {
       if (e.lines > 0) console.log(e);
     });
+    */
   }
   
   addListeners();

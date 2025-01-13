@@ -1,4 +1,5 @@
 import { TileMap, GameSkin, tetrioSkin } from './skin.js';
+import { humanTime } from '../util.js';
 
 class GameRenderer {
   constructor(data) {
@@ -241,6 +242,19 @@ class GameRenderer {
     const tileSize = metrics.tileSize;
     const sideMargin = metrics.sideMargin;
     
+    // multiply by tileSize
+    const mTileSize = [
+      "textTitleSize",
+      "textValueSize",
+      "textMargin",
+      "textClearPrimarySize",
+      "textClearSecondarySize",
+      "textClearMargin",
+    ];
+    for (let i of mTileSize) {
+      state[i] = Math.floor(state[i] * tileSize);
+    }
+    
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(
       metrics.canvasMetrics.x,
@@ -322,41 +336,100 @@ class GameRenderer {
       });
     }
     
-    // set font
-    this.ctx.font = `${state.textTitleSize}px Bloxyl`;
+    // render values
     this.ctx.fillStyle = "#FFFFFF";
-    
-    const sideValuesMap = {
-      "left": {
-        align: "right",
-        x: metrics.boardMetrics.x - state.textMargin,
-      },
-      "right": {
-        align: "left",
-        x: metrics.boardMetrics.xEnd + state.textMargin,
-      },
-    }
-    // render titles for values
-    for (let value of state.values) {
-      const sideValues = sideValuesMap[value.side];
+    for (let id in state.values) {
+      const sideValuesMap = {
+        "left": {
+          align: "right",
+          x: metrics.boardMetrics.x - state.textMargin,
+        },
+        "right": {
+          align: "left",
+          x: metrics.boardMetrics.xEnd + state.textMargin,
+        },
+      };
+      
+      const valuePair = state.values[id];
+      const sideValues = sideValuesMap[valuePair.side];
       this.ctx.textAlign = sideValues.align;
+      
+      // calculate y position
+      const y = metrics.canvasMetrics.yEnd - tileSize * (2 + 2 * valuePair.height);
+      
+      const title = valuePair.title;
+      
+      this.ctx.font = `${state.textTitleSize}px Bloxyl`;
+      
+      // should sit right on top of y
+      const titleMeasure = this.ctx.measureText(title);
+      
       this.ctx.fillText(
-        value.title,
+        title,
         sideValues.x,
-        metrics.canvasMetrics.yEnd - tileSize * (2.5 + 2.5 * value.height),
+        y + titleMeasure.actualBoundingBoxDescent - state.textMargin / 2,
+      );
+      
+      var value = valuePair.value;
+      switch (id) {
+        case "time":
+          value = humanTime(value);
+          break;
+        default:
+          break;
+      }
+      
+      this.ctx.font = `${state.textValueSize}px Bloxyl`;
+      
+      // should sit right below y
+      const valueMeasure = this.ctx.measureText(value);
+      
+      this.ctx.fillText(
+        value,
+        sideValues.x,
+        y + valueMeasure.actualBoundingBoxAscent + state.textMargin / 2,
       );
     }
     
-    // render values for values
-    this.ctx.font = `${state.textValueSize}px Bloxyl`;
-    for (let value of state.values) {
-      const sideValues = sideValuesMap[value.side];
-      this.ctx.textAlign = sideValues.align;
+    // render clear text
+    this.ctx.textAlign = "right";
+    var y = metrics.canvasMetrics.y + tileSize * 6;
+    for (let i=0; i<state.clears.length; i++) {
+      const itemIndex = state.clears.length-i-1;
+      const clear = state.clears[itemIndex];
+      
+      const text = clear.text;
+      
+      // set opacity
+      this.ctx.globalAlpha = 1 - (state.time - clear.time) / state.clearRemovalTime;
+      
+      this.ctx.font = `${state.textClearPrimarySize}px Bloxyl`;
+      
+      // should sit right on top of y
+      const primaryMeasure = this.ctx.measureText(text.primary);
+      
       this.ctx.fillText(
-        value.value,
-        sideValues.x,
-        metrics.canvasMetrics.yEnd - tileSize * (1.5 + 2.5 * value.height),
+        text.primary,
+        metrics.boardMetrics.x - state.textMargin,
+        y + primaryMeasure.actualBoundingBoxDescent - state.textClearMargin / 2,
       );
+      
+      if (text.secondary !== "") {
+        this.ctx.font = `${state.textClearSecondarySize}px Bloxyl`;
+        
+        // should sit right below y
+        const secondaryMeasure = this.ctx.measureText(text.secondary);
+        
+        this.ctx.fillText(
+          text.secondary,
+          metrics.boardMetrics.x - state.textMargin,
+          y + secondaryMeasure.actualBoundingBoxAscent + state.textClearMargin / 2,
+        );
+      }
+      
+      this.ctx.globalAlpha = 1;
+      
+      y += 2 * tileSize;
     }
     
     // return canvas
