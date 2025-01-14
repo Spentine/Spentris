@@ -158,9 +158,53 @@ class RenderGameState {
         side: "left",
         height: 3,
       },
+      
+      // debug
+      
+      /*
       spin: {
         title: languages[currentLanguage].translations.gameSpinTitle,
         value: this.game.spin,
+        
+        side: "right",
+        height: 0,
+      },
+      */
+      /*
+      leftInput: {
+        title: "left",
+        value: this.game.leftInput,
+        
+        side: "right",
+        height: 0,
+      },
+      rightInput: {
+        title: "right",
+        value: this.game.rightInput,
+        
+        side: "right",
+        height: 1,
+      },
+      */
+      /*
+      gravity: {
+        title: "gravity",
+        value: this.game.gravity,
+        
+        side: "right",
+        height: 0,
+      },
+      arrOffset: {
+        title: "arr",
+        value: this.game.gaEventHandler.arrOffset,
+        
+        side: "right",
+        height: 1,
+      },
+      */
+      lockDelay: {
+        title: "lockDelay",
+        value: this.game.lockDelay,
         
         side: "right",
         height: 0,
@@ -169,7 +213,7 @@ class RenderGameState {
     
     this.textTitleSize = 20 / 24;
     this.textValueSize = 24 / 24;
-    this.textMargin = 5 / 24;
+    this.textMargin = 6 / 24;
     
     this.textClearPrimarySize = 20 / 24;
     this.textClearSecondarySize = 16 / 24;

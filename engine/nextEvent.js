@@ -14,6 +14,9 @@ class gaEventHandler {
     this.arrSpeed = arrSpeed;
     this.time = time;
     
+    // floor all the numbers to fix weird errors
+    this.floor();
+    
     // calculate the minimum value
     this.gravMin = this.gravityEvent(0);
     this.arrMin = this.arrEvent(0);
@@ -39,11 +42,31 @@ class gaEventHandler {
     this.arrSpeed = settings.arrSpeed ?? this.arrSpeed;
     this.time = settings.time ?? this.time;
     
+    this.floor();
+    
     this.gravMin = this.gravityEvent(0);
     this.arrMin = this.arrEvent(0);
     
     this.calculateNextGrav();
     this.calculateNextArr();
+  }
+  
+  /**
+   * weird errors crop up when trying to do math with shitty numbers like 355.19692825600004 (floor 5) so i'm just going to floor all the numbers to hopefully fix it
+   */
+  floor() {
+    const values = [
+      "gravOffset", "gravSpeed", "arrOffset", "arrSpeed",
+      // "time", // dont want to interfere with this
+    ];
+    
+    // powers of 2 are my pookie bears
+    const precision = 1 << 8;
+    // note: IEEE 754 uses 2^53 for the mantissa (52 bits) but my values might be much larger so i'm going to stay safe and use 1 << 8. i'm not sure if this is the right choice but it's the best i can do for now
+    
+    for (let value of values) {
+      this[value] = Math.floor(this[value] * precision) / precision;
+    }
   }
   
   gravityEvent(n) {

@@ -16,7 +16,7 @@ class Stacker {
         this[functionName] = data.functions[functionName];
       }
       
-      this.initialize();
+      this.initialize(this.settings.initialization.parameters);
     }
   }
   

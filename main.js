@@ -110,6 +110,7 @@ function main() {
     
     lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},
     calculateDropSpeed: {file: "standardRules.js", name: "calculateDropSpeed"},
+    calculateLockDelay: {file: "standardRules.js", name: "calculateLockDelay"},
     
     isBoardMinoSolid: {file: "standardRules.js", name: "isBoardMinoSolid"},
     isPieceMinoSolid: {file: "standardRules.js", name: "isPieceMinoSolid"},
@@ -179,7 +180,12 @@ function main() {
           
         },
         parameters: {
-          
+          seed: "random",
+          // state: {
+          //   das: 100, arr: 16.67, sdf: 30, msg: 1000,
+          //   gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+          //   startingLevel: 1, levelling: true, masterLevels: true,
+          // }
         }
       }
     }

@@ -55,6 +55,11 @@ const update = function(tDelta, iter=0) {
   }
   
   // gravity
+  if (this.softDropFlag) {
+    this.gravity = Math.min(this.state.msg, this.currentGravity) / this.state.sdf;
+  } else {
+    this.gravity = this.currentGravity;
+  }
   this.gaEventHandler.gravSpeed = this.gravity;
   
   // override values
@@ -301,6 +306,7 @@ const initialize = function(params) {
     
     startingLevel: 1,
     levelling: false,
+    masterLevels: false,
   };
   
   // set basic information
@@ -310,10 +316,11 @@ const initialize = function(params) {
   this.level = this.state.startingLevel;
   this.startTime = Date.now();
   
-  this.gravity = this.state.levelling
-    ? this.calculateDropSpeed(this.level)
-    : this.state.gravity;
-  this.lockDelay = this.state.lockDelay;
+  this.currentGravity = this.state.levelling
+  ? this.calculateDropSpeed(this.level)
+  : this.state.gravity;
+  this.gravity = this.currentGravity;
+  this.lockDelay = this.calculateLockDelay();
   this.maxLockDelay = this.state.maxLockDelay;
   
   // create the board
@@ -380,7 +387,7 @@ const initialize = function(params) {
 const resetGame = function() {
   const prevEvent = this.event;
   
-  this.initialize();
+  this.initialize(this.settings.initialization.parameters);
   
   prevEvent.emit("reset", {
     time: this.time,
@@ -411,6 +418,27 @@ const values = {
  */
 const calculateDropSpeed = function(level) {
   return Math.pow(0.8 - (level - 1) * 0.007, level - 1) * 1000;
+};
+
+/**
+ * ripped from old code
+ * https://github.com/Spentine/Block-Stacker/blob/main/stacker/stacker.js (line 728)
+ * https://www.desmos.com/calculator/dwmr2i5ton
+ * @param {number} level
+ */
+const calculateLockDelay = function(level) {
+  /*
+    creates 1/(ax + b) formula based on two points it has to intersect:
+    
+    a = (1/y2 - 1/y1)/(x2 - x1)
+    b = (1/y1) - ax1
+  */
+  if (this.state.masterLevels && level > 20) {
+    // return (1 / (0.0004 * level - 0.006)); // (40, 100)
+    return (1 / (0.00023333333333333333 * level - 0.0026666666666666666)); // (40, 150)
+  } else {
+    return this.state.lockDelay;
+  }
 };
 
 /**
@@ -504,15 +532,21 @@ const isTouchingGround = function(piece, board) {
 };
 
 /**
- * @param {number} seed
+ * @param {number | "random"} seed
  * @returns {object}
  */
 const lehmerRNG = function(seed) {
   // https://github.com/Poyo-SSB/tetrio-bot-docs/blob/master/Piece_RNG.md
-  let t = seed % 2147483647;
   
-  if (t <= 0) {
-    t += 2147483646;
+  let t;
+  if (seed === "random") {
+    t = Math.floor(Math.random() * 2147483645) + 1;
+  } else {
+    t = seed % 2147483647;
+    
+    if (t <= 0) {
+      t += 2147483646;
+    }
   }
   
   return {
@@ -534,7 +568,7 @@ const lehmerRNG = function(seed) {
         [array[i], array[r]] = [array[r], array[i]];
       }
       return array;
-    }
+    },
   }
 };
 
@@ -842,9 +876,10 @@ const placePiece = function(piece, board) {
   // update gravity and level if necessary
   if (this.state.levelling) {
     // calculate level
-    this.level = Math.floor(this.lines / 10) + 1;
+    this.level = Math.floor(this.lines / 10) + this.state.startingLevel;
     
-    this.gravity = this.calculateDropSpeed(this.level);
+    this.currentGravity = this.calculateDropSpeed(this.level);
+    this.lockDelay = this.calculateLockDelay(this.level);
   }
   
   // spawn piece
@@ -1142,6 +1177,15 @@ const moveLeftInputDown = function(time) {
 const moveLeftInputUp = function() {
   this.update();
   this.leftInput = null;
+  
+  // reset cycle for opposing input if it's longer
+  if (this.rightInput !== null) {
+    // cycle start
+    const timeCandidate = Date.now() - this.startTime - this.state.das + this.state.arr;
+    
+    // if it's past cycle start then reset
+    this.rightInput = Math.max(this.rightInput, timeCandidate);
+  }
 };
 
 const moveRightInputDown = function() {
@@ -1153,19 +1197,25 @@ const moveRightInputDown = function() {
 const moveRightInputUp = function() {
   this.update();
   this.rightInput = null;
+  
+  // same logic but with other input
+  if (this.leftInput !== null) {
+    const timeCandidate = Date.now() - this.startTime - this.state.das + this.state.arr;
+    
+    this.leftInput = Math.max(this.leftInput, timeCandidate);
+  }
 };
 
 const softDropInputDown = function() {
   this.update();
   this.softDrop();
   this.softDropFlag = true; // unsure if this is needed
-  this.gravity = Math.min(this.state.msg, this.gravity) / this.state.sdf;
 };
 
 const softDropInputUp = function() {
   this.update();
   this.softDropFlag = false;
-  this.gravity = this.state.gravity;
+  this.gravity = this.currentGravity;
 };
 
 const hardDropInputDown = function() {
@@ -1252,6 +1302,7 @@ const functions = [
   
   lehmerRNG,
   calculateDropSpeed,
+  calculateLockDelay,
   
   isBoardMinoSolid,
   isPieceMinoSolid,
