@@ -323,6 +323,11 @@ const initialize = function(params) {
   this.lockDelay = this.calculateLockDelay();
   this.maxLockDelay = this.state.maxLockDelay;
   
+  // rotation system (may NOT be constant)
+  this.currentRotationSystem = structuredClone(
+    params.rotationSystem ?? SRSData
+  );
+  
   // create the board
   this.board = new Board(
     params.width ?? 10,
@@ -612,14 +617,15 @@ const clearLines = function(board) {
 };
 
 /**
- * uses the Super Rotation System to rotate the piece
+ * uses a rotation system (usually Super Rotation System) to rotate the piece
+ * implements the "kick system" of the rotation system
  * calculates the piece position after rotation
  * @param {Piece} piece
  * @param {Board} board
  * @param {number} newRotation
  * @returns {boolean} whether the piece was successfully rotated
  */
-const SRS = function(piece, board, newRotation) {
+const kickSystem = function(piece, board, newRotation) {
   const previousRotation = piece.rotation;
   
   // copy the piece with new rotation
@@ -628,7 +634,7 @@ const SRS = function(piece, board, newRotation) {
   });
   
   // retrieve kick data
-  const kicks = SRSData.kicks[piece.type][previousRotation][newRotation];
+  const kicks = this.currentRotationSystem.kicks[piece.type][previousRotation][newRotation];
   
   // loop over kick data
   for (let kickIndex=0; kickIndex<kicks.length; kickIndex++) {
@@ -669,7 +675,7 @@ const SRS = function(piece, board, newRotation) {
  */
 const rotationSystem = function(data) {
   // calculate the spin
-  const spin = this.SRS(
+  const spin = this.kickSystem(
     data.piece,
     data.board,
     data.newRotation
@@ -704,7 +710,7 @@ const spawnPiece = function(piece, data) {
   const newPiece = new Piece({
     type: piece,
     position: data.position ?? (
-      structuredClone(SRSData.spawnPositions[piece]) ?? {x: 0, y: 0}
+      structuredClone(this.currentRotationSystem.spawnPositions[piece]) ?? {x: 0, y: 0}
     ),
     rotation: data.rotation ?? 0,
   });
@@ -1315,7 +1321,7 @@ const functions = [
   isTouchingGround,
   generateNext,
   clearLines,
-  SRS,
+  kickSystem,
   rotationSystem,
   spawnPiece,
   refillNextQueue,

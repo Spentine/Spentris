@@ -13,6 +13,7 @@ import { Stacker } from "./engine/stacker.js";
 // utilities
 import { files } from "./engine/fnLAc.js";
 import { functionLocationAccessor } from "./engine/util.js";
+import { SRSPlusData } from "./engine/rsData.js";
 
 function main() {
   const renderCanvas = document.getElementById("renderCanvas");
@@ -123,7 +124,7 @@ function main() {
     isTouchingGround: {file: "standardRules.js", name: "isTouchingGround"},
     generateNext: {file: "standardRules.js", name: "generateNext"},
     clearLines: {file: "standardRules.js", name: "clearLines"},
-    SRS: {file: "standardRules.js", name: "SRS"},
+    kickSystem: {file: "standardRules.js", name: "kickSystem"},
     rotationSystem: {file: "standardRules.js", name: "rotationSystem"},
     spawnPiece: {file: "standardRules.js", name: "spawnPiece"},
     refillNextQueue: {file: "standardRules.js", name: "refillNextQueue"},
@@ -181,11 +182,12 @@ function main() {
         },
         parameters: {
           seed: "random",
-          // state: {
-          //   das: 100, arr: 16.67, sdf: 30, msg: 1000,
-          //   gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-          //   startingLevel: 1, levelling: true, masterLevels: true,
-          // }
+          rotationSystem: SRSPlusData,
+          state: {
+            das: 100, arr: 16.67, sdf: 60, msg: 1000,
+            gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+            startingLevel: 1, levelling: true, masterLevels: true,
+          },
         }
       }
     }
