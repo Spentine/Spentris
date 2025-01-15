@@ -34,12 +34,57 @@ const keybinds = {
   holdPieceInput: [{
     keyCode: 67,
     code: "KeyC"
+  }, {
+    keyCode: 16,
+    code: "ShiftLeft"
   }],
   resetInput: [{
     keyCode: 82,
     code: "KeyR"
   }],
 }
+
+// const keybinds = {
+//   moveLeftInput: [{
+//     keyCode: 65,
+//     code: "KeyA"
+//   }],
+//   moveRightInput: [{
+//     keyCode: 68,
+//     code: "KeyD"
+//   }],
+//   softDropInput: [{
+//     keyCode: 83,
+//     code: "KeyS"
+//   }],
+//   hardDropInput: [{
+//     keyCode: 87,
+//     code: "KeyW"
+//   }],
+//   rotateCCWInput: [{
+//     keyCode: 37,
+//     code: "ArrowLeft"
+//   }],
+//   rotateCWInput: [{
+//     keyCode: 39,
+//     code: "ArrowRight"
+//   }],
+//   rotate180Input: [{
+//     keyCode: 40,
+//     code: "ArrowDown"
+//   }],
+//   holdPieceInput: [{
+//     keyCode: 38,
+//     code: "ArrowUp"
+//   }],
+//   resetInput: [{
+//     keyCode: 107,
+//     code: "NumpadAdd"
+//   }, {
+//     keyCode: 13,
+//     code: "NumpadEnter"
+//   }],
+// }
 
 /**
   @param {object} inputForward // contains mappings from actions to functions

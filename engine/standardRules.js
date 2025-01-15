@@ -283,7 +283,7 @@ const initialize = function(params) {
   // set beginning game state data (constant)
   this.state = params.state ?? {
     // delayed auto shift
-    das: 83, // ms
+    das: 83.33, // ms
     
     // auto repeat rate
     arr: 0, // ms
@@ -314,6 +314,7 @@ const initialize = function(params) {
   this.lines = 0;
   this.time = 0; // Date.now() - this.startTime
   this.level = this.state.startingLevel;
+  this.piecesPlaced = 0;
   this.startTime = Date.now();
   
   this.currentGravity = this.state.levelling
@@ -903,6 +904,8 @@ const placePiece = function(piece, board) {
       success: true,
     });
   }
+  
+  this.piecesPlaced++;
   
   return spawn;
 };

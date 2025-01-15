@@ -204,11 +204,19 @@ class RenderGameState {
       */
       lockDelay: {
         title: "lockDelay",
-        value: this.game.lockDelay,
+        // master level lock delay numbers are not clean
+        value: Math.round(this.game.lockDelay * 1000) / 1000,
         
         side: "right",
         height: 0,
       },
+      piecesPlaced: {
+        title: "pps",
+        value: Math.round(1000000 * this.game.piecesPlaced / this.game.time) / 1000,
+        
+        side: "right",
+        height: 1,
+      }
     };
     
     this.textTitleSize = 20 / 24;

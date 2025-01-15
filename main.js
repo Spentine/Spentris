@@ -19,9 +19,13 @@ function main() {
   const renderCanvas = document.getElementById("renderCanvas");
   const ctx = renderCanvas.getContext("2d");
   
+  var gameEnd = false;
+  
   function render() {
     // ensure the canvas is the same size as the screen
     updateCanvasDimensions();
+    
+    if (gameEnd) return;
     
     game.update();
     
@@ -183,11 +187,16 @@ function main() {
         parameters: {
           seed: "random",
           rotationSystem: SRSPlusData,
-          state: {
-            das: 100, arr: 16.67, sdf: 60, msg: 1000,
-            gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-            startingLevel: 1, levelling: true, masterLevels: true,
-          },
+          // state: {
+          //   das: 133.33, arr: 16.67, sdf: 60, msg: 1000,
+          //   gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+          //   startingLevel: 1, levelling: true, masterLevels: true,
+          // },
+          // state: {
+          //   das: 100, arr: 0, sdf: Infinity, msg: 1000,
+          //   gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+          //   startingLevel: 1, levelling: true, masterLevels: true,
+          // },
         }
       }
     }
@@ -265,14 +274,20 @@ function main() {
     }
     */
     game.event.on("reset", (e) => {
+      gameEnd = false;
       addListeners();
       rState.addListeners();
+      window.requestAnimationFrame(render);
     });
     /*
     game.event.on("clear", (e) => {
       if (e.lines > 0) console.log(e);
     });
     */
+    game.event.on("end", (e) => {
+      gameEnd = true;
+      console.log("Game Over");
+    });
   }
   
   addListeners();
