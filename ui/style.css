@@ -12,3 +12,7 @@ body {
   margin: 0px;
   overflow: hidden;
 }
+
+.menu {
+  display: none;
+}

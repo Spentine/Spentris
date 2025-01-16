@@ -86,46 +86,54 @@ const keybinds = {
 //   }],
 // }
 
-/**
-  @param {object} inputForward // contains mappings from actions to functions
-  @param {object} keybinds // contains mappings from actions to keys
-*/
-function addKeyboardListeners(inputForward, keybinds) {
-  // which one to use (better for compatibility)
-  const internalKey = "keyCode";
-  
-  // keyboard input as key rather than action
-  const keybindMap = {};
-  
-  // create a map of keybinds to actions
-  for (let action in inputForward) {
-    const keys = keybinds[action];
-    for (let key of keys) {
-      keybindMap[key[internalKey]] = {
-        keyDown: inputForward[action].keyDown,
-        keyUp: inputForward[action].keyUp
-      };
-    }
-  }
-  
-  const keyDown = function(e) {
-    if (e.repeat) return;
+class KeyboardInput {
+  /**
+    @param {object} inputForward // contains mappings from actions to functions
+    @param {object} keybinds // contains mappings from actions to keys
+  */
+  constructor(inputForward, keybinds) {
+    this.internalKey = "keyCode";
+    this.keybindMap = {};
     
-    if (e[internalKey] in keybindMap) {
-      keybindMap[e[internalKey]].keyDown();
+    // create a map of keybinds to actions
+    for (let action in inputForward) {
+      const keys = keybinds[action];
+      for (let key of keys) {
+        this.keybindMap[key[this.internalKey]] = {
+          keyDown: inputForward[action].keyDown,
+          keyUp: inputForward[action].keyUp
+        };
+      }
     }
-  }
-  
-  const keyUp = function(e) {
-    if (e.repeat) return;
     
-    if (e[internalKey] in keybindMap) {
-      keybindMap[e[internalKey]].keyUp();
-    }
+    this.keyDown = (e) => {
+      if (e.repeat) return;
+      
+      const identifier = e[this.internalKey];
+      if (identifier in this.keybindMap) {
+        this.keybindMap[identifier].keyDown();
+      }
+    };
+    
+    this.keyUp = (e) => {
+      if (e.repeat) return;
+      
+      const identifier = e[this.internalKey];
+      if (identifier in this.keybindMap) {
+        this.keybindMap[identifier].keyUp();
+      }
+    };
   }
   
-  document.addEventListener("keydown", keyDown);
-  document.addEventListener("keyup", keyUp);
+  addListeners() {
+    document.addEventListener("keydown", this.keyDown);
+    document.addEventListener("keyup", this.keyUp);
+  }
+  
+  removeListeners() {
+    document.removeEventListener("keydown", this.keyDown);
+    document.removeEventListener("keyup", this.keyUp);
+  }
 }
 
 /*
@@ -137,4 +145,4 @@ function addKeyboardListeners(inputForward, keybinds) {
   }
 */
 
-export { addKeyboardListeners, keybinds };
+export { keybinds, KeyboardInput };

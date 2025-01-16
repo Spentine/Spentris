@@ -435,6 +435,71 @@ class GameRenderer {
     // return canvas
     return this.canvas;
   }
+  
+  /**
+   * will use the specified width and height to calculate the containing tilesize
+   * @param {object} state - the game state
+   * @param {number} width - the width of the screen
+   * @param {number} height - the height of the screen
+   * @returns {number} - the tileSize / scale of the game
+   */
+  getContainingScale(state, width, height) {
+    // calculate size of visual game
+    const unscaledGameBounds = this.gameMetrics(state, {
+      position: {x: 0, y: 0},
+      tileSize: 1,
+    });
+    
+    // visual rectangle
+    const visRect = {
+      min: {
+        x: unscaledGameBounds.boardMetrics.x - 12,
+        y: unscaledGameBounds.boardMetrics.y - 3,
+      },
+      max: {
+        x: unscaledGameBounds.boardMetrics.xEnd + 12,
+        y: unscaledGameBounds.boardMetrics.yEnd + 3,
+      },
+    };
+    visRect.width = visRect.max.x - visRect.min.x;
+    visRect.height = visRect.max.y - visRect.min.y;
+    
+    // scale the game to fit the screen
+    const scale = Math.min(
+      width / visRect.width,
+      height / visRect.height
+    );
+    
+    return scale;
+  }
+  
+  /**
+   * will use the specified width and height to calculate the center offset
+   * @param {object} state - the game state
+   * @param {number} width - the width of the screen
+   * @param {number} height - the height of the screen
+   * @returns {object} - the offset to center the game
+   */
+  getCenterOffset(state, width, height, tileSize) {
+    const gameBounds = this.gameMetrics(state, {
+      position: {x: 0, y: 0},
+      tileSize: tileSize,
+    });
+    const boardCenter = {
+      x: gameBounds.boardMetrics.x + gameBounds.boardMetrics.width / 2,
+      y: gameBounds.boardMetrics.y + gameBounds.boardMetrics.height / 2,
+    };
+    const screenCenter = {
+      x: width / 2,
+      y: height / 2,
+    };
+    const offset = {
+      x: screenCenter.x - boardCenter.x,
+      y: screenCenter.y - boardCenter.y,
+    };
+    
+    return offset;
+  }
 }
 
 export { GameRenderer };

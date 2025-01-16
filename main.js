@@ -1,11 +1,11 @@
 // render
-import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
+// import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
 import { RenderGameState } from "./ui/gameRenderV1/converter.js";
 import { GameRenderer } from "./ui/gameRenderV1/renderer.js";
 import { tetrioSkin } from './ui/gameRenderV1/skin.js';
 
 // handle inputs
-import { addKeyboardListeners, keybinds } from "./interaction/keyboard.js";
+import { KeyboardInput, keybinds } from "./interaction/keyboard.js";
 
 // game engine
 import { Stacker } from "./engine/stacker.js";
@@ -15,16 +15,22 @@ import { files } from "./engine/fnLAc.js";
 import { functionLocationAccessor } from "./engine/util.js";
 import { SRSPlusData } from "./engine/rsData.js";
 
+// menus
+import { menus, MenuHandler } from "./ui/menu/menu.js";
+
 function main() {
   const renderCanvas = document.getElementById("renderCanvas");
   const ctx = renderCanvas.getContext("2d");
   
+  // temporary solution
   var gameEnd = false;
   
   function render() {
     // ensure the canvas is the same size as the screen
     updateCanvasDimensions();
     
+    // if the game has ended, don't render
+    // if the game ends then the screen won't respond to size changes
     if (gameEnd) return;
     
     game.update();
@@ -32,60 +38,25 @@ function main() {
     // clear the canvas
     ctx.clearRect(0, 0, renderCanvas.width, renderCanvas.height);
     
-    // render the game (debug)
-    // const debugRenderCanvas = renderState(createDemoState(game));
-    // ctx.drawImage(debugRenderCanvas, 10, 10);
-    
     // render the game
     
+    // get the visual game state
     const visualGameState = rState.update();
     
-    // calculate size of visual game
-    const unscaledGameBounds = gRender.gameMetrics(visualGameState, {
-      position: {x: 0, y: 0},
-      tileSize: 1,
-    });
-    
-    // visual rectangle
-    const visRect = {
-      min: {
-        x: unscaledGameBounds.boardMetrics.x - 12,
-        y: unscaledGameBounds.boardMetrics.y - 3,
-      },
-      max: {
-        x: unscaledGameBounds.boardMetrics.xEnd + 12,
-        y: unscaledGameBounds.boardMetrics.yEnd + 3,
-      },
-    };
-    visRect.width = visRect.max.x - visRect.min.x;
-    visRect.height = visRect.max.y - visRect.min.y;
-    
-    // scale the game to fit the screen
-    const scale = Math.min(
-      renderCanvas.width / visRect.width,
-      renderCanvas.height / visRect.height
+    // get the tile size
+    const tileSize = gRender.getContainingScale(
+      visualGameState,
+      renderCanvas.width,
+      renderCanvas.height
     );
     
-    // use tilesize = scale
-    const tileSize = scale;
-    
     // center game
-    const gameBounds = gRender.gameMetrics(visualGameState, {
-      position: {x: 0, y: 0},
-      tileSize: tileSize,
-    });
-    const boardCenter = {
-      x: gameBounds.boardMetrics.x + gameBounds.boardMetrics.width / 2,
-      y: gameBounds.boardMetrics.y + gameBounds.boardMetrics.height / 2,
-    };
-    const screenCenter = {
-      x: renderCanvas.width / 2,
-      y: renderCanvas.height / 2,
-    };
-    const offset = {
-      x: screenCenter.x - boardCenter.x,
-      y: screenCenter.y - boardCenter.y,
-    };
+    const offset = gRender.getCenterOffset(
+      visualGameState,
+      renderCanvas.width,
+      renderCanvas.height,
+      tileSize // dependent on the tile size
+    );
     
     const gameRenderCanvas = gRender.render(visualGameState, {
       position: offset,
@@ -256,34 +227,21 @@ function main() {
   };
   
   // add keyboard listeners
-  addKeyboardListeners(inputForward, keybinds);
+  const keyboardListener = new KeyboardInput(
+    inputForward, keybinds
+  );
+  keyboardListener.addListeners();
   console.log(game);
   
   const addListeners = () => {
     // add game listeners
-    /*
-    const listeners = [
-      "move", "drop", "place", "rotate", "spin", "hold", "clear", "end"
-    ];
-    for (let i of listeners) {
-      game.event.on(i, (e) => {
-        if (e.success) {
-          console.log(i, e);
-        }
-      });
-    }
-    */
     game.event.on("reset", (e) => {
       gameEnd = false;
       addListeners();
       rState.addListeners();
       window.requestAnimationFrame(render);
     });
-    /*
-    game.event.on("clear", (e) => {
-      if (e.lines > 0) console.log(e);
-    });
-    */
+    
     game.event.on("end", (e) => {
       gameEnd = true;
       console.log("Game Over");
@@ -293,20 +251,6 @@ function main() {
   addListeners();
   
   window.requestAnimationFrame(render);
-  document.addEventListener("keydown", (e) => {
-    // if it's the p key
-    if (e.code === "KeyP") {
-      // console.log("Rendering");
-      // const gameRender = gameRenderer.render(game);
-      // // download render
-      // const a = document.createElement("a");
-      // a.href = gameRender.toDataURL();
-      // a.download = "gameRender.png";
-      // a.click();
-      
-      console.log(rState.update());
-    }
-  });
 }
 
 if (document.readyState === "loading") {

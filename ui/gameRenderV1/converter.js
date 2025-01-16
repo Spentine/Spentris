@@ -160,7 +160,7 @@ class RenderGameState {
       },
       
       // debug
-      
+      // i will keep these ones for future debugging
       /*
       spin: {
         title: languages[currentLanguage].translations.gameSpinTitle,
