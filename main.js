@@ -11,7 +11,7 @@ import { KeyboardInput, keybinds } from "./interaction/keyboard.js";
 import { Stacker } from "./engine/stacker.js";
 
 // utilities
-import { files } from "./engine/fnLAc.js";
+import { files } from "./engine/functionLibrary.js";
 import { functionLocationAccessor } from "./engine/util.js";
 import { SRSPlusData } from "./engine/rsData.js";
 
