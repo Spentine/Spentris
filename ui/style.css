@@ -12,6 +12,8 @@
 /* body */
 
 body {
+  font-family: "Bloxyl", sans-serif;
+  
   background-color: #222222;
   color: #ffffff;
   margin: 0px;
@@ -90,4 +92,9 @@ button:hover {
 /* adds padding between flexbox items */
 .padding-inside {
   gap: 16px;
+}
+
+/* inputs and interactions */
+button.large {
+  font-size: 24px;
 }

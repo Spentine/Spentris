@@ -1,22 +1,25 @@
+// This file is deprecated (on 16 Jan 2025). It is replaced by the new main.js file.
+// This file is kept as a reference and may be removed once redundant.
+
 // render
 // import { renderState, createDemoState } from "./ui/debug/debugRenderField.js";
-import { RenderGameState } from "./ui/gameRenderV1/converter.js";
-import { GameRenderer } from "./ui/gameRenderV1/renderer.js";
-import { tetrioSkin } from './ui/gameRenderV1/skin.js';
+import { RenderGameState } from "../ui/gameRenderV1/converter.js";
+import { GameRenderer } from "../ui/gameRenderV1/renderer.js";
+import { tetrioSkin } from '../ui/gameRenderV1/skin.js';
 
 // handle inputs
-import { KeyboardInput, keybinds } from "./interaction/keyboard.js";
+import { KeyboardInput, keybinds } from "../interaction/keyboard.js";
 
 // game engine
-import { Stacker } from "./engine/stacker.js";
+import { Stacker } from "../engine/stacker.js";
 
 // utilities
-import { files } from "./engine/functionLibrary.js";
-import { functionLocationAccessor } from "./engine/util.js";
-import { SRSPlusData } from "./engine/rsData.js";
+import { files } from "../engine/functionLibrary.js";
+import { functionLocationAccessor } from "../engine/util.js";
+import { SRSPlusData } from "../engine/rsData.js";
 
 // menus
-import { menus, MenuHandler } from "./ui/menu/menu.js";
+import { menus, MenuHandler } from "../ui/menu/menu.js";
 
 function main() {
   const renderCanvas = document.getElementById("renderCanvas");

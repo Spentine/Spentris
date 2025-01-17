@@ -6,13 +6,16 @@ This document will contain all the documentation for Spentris. It is intended as
 
 - `addons` (empty)
   - *currently does not contain anything*
-- `deprecatedDocs` (deprecated)
+- `deprecated` (deprecated)
   - `docs.md`
     - *contains a markdown-converted document that was used to plan the game for the first two or three months*
   - `events.md`
     - *planning out the types of events that would exist*
   - `standardRulesPlan.md`
     - *a plan about the hierarchy of functions to be implemented into `standardRules.js` while it was in development*
+  - `main.js`
+    - *an old version of main.js that would contain all the values and run everything necessary for the game engine to function*
+    - *replaced in lieu of a new version with menu features and better code overall*
 - `engine`
   - `allSpin.js`
     - *contains functions important for All-Spin mechanics*
@@ -44,6 +47,9 @@ This document will contain all the documentation for Spentris. It is intended as
     - *is a .js file because there are functions within the language object*
     - *JP language was just an example to test it with multiple languages but it was primarily translated by GitHub Copilot's autocomplete because I was too lazy to look up the actual terms myself*
     - *please help contribute <3*
+- `localStorage` (empty)
+  - *will contain scripts to manage reading and writing with the `localStorage` property*
+  - *must be backwards compatible so that local settings aren't reset on a refactor*
 - `mmOutput`
   - *multimedia output*
   - `audio` (empty)
@@ -74,6 +80,8 @@ This document will contain all the documentation for Spentris. It is intended as
       - *will also render other stuff besides minos but not now*
   - `menu` (in development)
     - *contains scripts to process the menu UIs*
+    - `defaultValues.js`
+      - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
     - `menu.js`
       - *will handle the menus and integrate closely with the HTML and CSS*
   - `skins`
