@@ -5,10 +5,26 @@
     <script src="main.js" type="module"> </script>
   </head>
   <body>
+    <!-- main menu / home menu -->
     <div class="menu" id="menuHome">
-      <button id="menuHomeButtonStart">Start</button>
+      <!-- for debugging, we'll just have a start button here -->
+      <div class="center-inside window-fill padding-inside">
+        <button id="menuHomeButtonStart">Start</button>
+        <button id="menuHomeButtonStart">Settings</button>
+      </div>
     </div>
     
-    <canvas id="renderCanvas"> </canvas>
+    <!-- settings menu -->
+    <div class="menu" id="menuSettings">
+      <div class="center-inside window-fill padding-inside">
+        <button id="menuSettingsButtonBack">Back</button>
+      </div>
+    </div>
+    
+    <!-- ingame -->
+    <div class="menu" id="menuIngame">
+      <!-- rely on canvas to render -->
+      <canvas id="renderCanvas"> </canvas>
+    </div>
   </body>
 </html>

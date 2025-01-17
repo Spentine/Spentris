@@ -1,4 +1,4 @@
-const menus = {
+const spentrisMenus = {
   home: {
     container: document.getElementById("menuHome"),
     buttonStart: document.getElementById("menuHomeButtonStart"),
@@ -9,21 +9,39 @@ class MenuHandler {
   constructor(data) {
     data = data ?? {};
     
-    this.menus = data.menus ?? menus;
+    this.menus = data.menus ?? spentrisMenus;
     this.currentMenu = data.currentMenu ?? "home";
     
-    this.menus[this.currentMenu].container.style.display = "block";
+    this.showMenu(this.currentMenu);
   }
   
-  changeMenu(menu) {
-    // hide previous menu
-    this.menus[this.currentMenu].container.style.display = "none";
-    
-    this.menus = menu;
-    
-    // show new menu
+  /**
+   * @param {string} menu
+   * @returns {void}
+   */
+  showMenu(menu) {
     this.menus[menu].container.style.display = "block";
+  }
+  
+  /**
+   * @param {string} menu
+   * @returns {void}
+   */
+  hideMenu(menu) {
+    this.menus[menu].container.style.display = "none";
+  }
+  
+  /**
+   * @param {string} menu
+   * @returns {void}
+   */
+  changeMenu(menu) {
+    // this.currentMenu is technically the previous menu
+    this.hideMenu(this.currentMenu);
+    
+    this.currentMenu = menu;
+    this.showMenu(this.currentMenu);
   }
 }
 
-export { menus, MenuHandler };
+export { MenuHandler, spentrisMenus };

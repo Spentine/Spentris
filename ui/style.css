@@ -1,10 +1,15 @@
-/* import font */
+/* fonts */
+
 @font-face {
   font-family: "Bloxyl";
   font-style: normal;
   font-weight: 400;
   src: local("Bloxyl"), url("fonts/Bloxyl.otf")
 }
+
+/* ==== tag name styles ==== */
+
+/* body */
 
 body {
   background-color: #222222;
@@ -13,6 +18,76 @@ body {
   overflow: hidden;
 }
 
+/* text */
+
+h1 {
+  font-family: inherit;
+  font-size: 48px;
+  margin: 0px;
+}
+
+h2 {
+  font-family: inherit;
+  font-size: 36px;
+  margin: 0px;
+}
+
+h3 {
+  font-family: inherit;
+  font-size: 24px;
+  margin: 0px;
+}
+
+p {
+  font-family: inherit;
+  font-size: 18px;
+  margin: 0px;
+}
+
+/* inputs and interactions */
+
+button { 
+  font-family: inherit;
+  font-size: 18px;
+  color: #ffffff;
+  
+  padding: 8px 16px;
+  
+  background-color: #333333;
+  border: solid 2px #444444;
+  border-radius: 4px;
+  
+  box-shadow: 0px 0px 8px #ffffff44;
+}
+
+button:hover {
+  background-color: #444444;
+  border: solid 2px #555555;
+}
+
+/* ==== class styles ==== */
+
+/* containers */
+
+/* by default hide everything */
 .menu {
   display: none;
+}
+
+/* centers everything inside */
+.center-inside {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* width and height are same as window */
+.window-fill {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* adds padding between flexbox items */
+.padding-inside {
+  gap: 16px;
 }
