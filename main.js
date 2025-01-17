@@ -69,6 +69,7 @@ function main() {
       game.event.on("reset", (e) => {
         gamePlaying = true;
         addListeners();
+        rState.addListeners();
         if (playKeyboardListener.listenersAttached === false) {
           playKeyboardListener.addListeners();
         }
