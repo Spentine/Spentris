@@ -110,8 +110,22 @@ This document will contain all the documentation for Spentris. It is intended as
 ## To-do
 
 - [ ] UI
-  - [ ] Create `MenuHandler` Class
-  - [ ] Create menu interface that allows for users to play
+  - [x] Create `MenuHandler` Class
+  - [x] Create menu interface that allows for users to play
   - [ ] Create settings interface that allows for users to change handling and keybinds
-    - [ ] Handling
+    - [x] Handling
     - [ ] Keybinds
+  - [ ] Update localization support for the UI
+  - [ ] Ability to create a custom mode
+  - [ ] Create ending screen for games 
+- [ ] Game
+  - [ ] Create more modes
+    - [ ] 40L
+    - [ ] 1000L
+    - [ ] Blitz / Ultra
+- [ ] Puzzles
+  - [ ] Create puzzle selection interface
+  - [ ] Create designated puzzle creator
+  - [ ] Automatically generate puzzles
+- [ ] Lessons
+  - *too far ahead, give it a month or two*

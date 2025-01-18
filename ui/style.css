@@ -46,6 +46,13 @@ p {
   margin: 0px;
 }
 
+label {
+  font-family: inherit;
+  font-size: 18px;
+  margin: 0px;
+  padding-top: 8px;
+}
+
 /* inputs and interactions */
 
 button { 
@@ -53,7 +60,7 @@ button {
   font-size: 18px;
   color: #ffffff;
   
-  padding: 8px 16px;
+  padding: 16px 16px 8px 16px;
   
   background-color: #333333;
   border: solid 2px #444444;
@@ -67,6 +74,20 @@ button:hover {
   border: solid 2px #555555;
 }
 
+input {
+  font-family: inherit;
+  font-size: 18px;
+  color: #dddddd;
+  
+  padding: 16px 16px 8px 16px;
+  
+  background-color: #333333;
+  border: solid 2px #444444;
+  border-radius: 8px;
+  
+  box-shadow: 0px 0px 8px #ffffff44;
+}
+
 /* ==== class styles ==== */
 
 /* containers */
@@ -74,6 +95,9 @@ button:hover {
 /* by default hide everything */
 .menu {
   display: none;
+  position: absolute;
+  left: 0px;
+  top: 0px;
 }
 
 /* centers everything inside */
@@ -85,16 +109,65 @@ button:hover {
 
 /* width and height are same as window */
 .window-fill {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   width: 100vw;
   height: 100vh;
+  
+  z-index: -1;
 }
 
 /* adds padding between flexbox items */
 .padding-inside {
   gap: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* label to element */
+.two-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+.two-grid label {
+  text-align: right;
+}
+.two-grid input {
+  width: 100%;
+}
+.two-grid div {
+  width: 100%;
 }
 
 /* inputs and interactions */
+
 button.large {
-  font-size: 24px;
+  font-size: 36px;
+}
+
+input.large {
+  font-size: 36px;
+}
+
+/* text */
+
+label.large {
+  font-size: 36px;
+}
+
+/* ==== id styles ==== */
+
+/* ==== other styles ==== */
+
+/* disabled */
+
+input:disabled {
+  color: #ffffff66;
+  
+  background-color: #222222;
+  border: solid 2px #333333;
+  
+  box-shadow: 0px 0px 8px #ffffff22;
 }

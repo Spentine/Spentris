@@ -6,7 +6,7 @@
   </head>
   <body>
     <!-- main menu / home menu -->
-    <div class="menu" id="menuHome">
+    <div class="menu padding-inside" id="menuHome">
       <!-- for debugging, we'll just have a start button here -->
       <div class="center-inside window-fill padding-inside">
         <button class="large" id="menuHomeButtonStart">Start</button>
@@ -15,11 +15,60 @@
     </div>
     
     <!-- settings menu -->
-    <div class="menu" id="menuSettings">
+    <div class="menu padding-inside" id="menuSettings">
+      <button class="large" id="menuSettingsButtonBack">Back</button>
       <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuSettingsButtonBack">Back</button>
         <button class="large" id="menuSettingsButtonHandling">Handling</button>
-        <button class="large" id="menuSettingsButtonKeybind">Keybinds</button>
+        <button class="large" id="menuSettingsButtonKeybinds">Keybinds</button>
+      </div>
+    </div>
+    
+    <!-- handling menu -->
+    <div class="menu padding-inside" id="menuHandling">
+      <button class="large" id="menuHandlingButtonBack">Back</button>
+      <div class="center-inside window-fill padding-inside">
+        <div class="two-grid padding-inside">
+          <!-- allow text inputs for numbers because of Infinity -->
+          <label class="large" for="menuHandlingARR"> ARR </label>
+          <input class="large" type="text" id="menuHandlingARR" value="0">
+          <label class="large" for="menuHandlingDAS"> DAS </label>
+          <input class="large" type="text" id="menuHandlingDAS" value="86.66">
+          <label class="large" for="menuHandlingSDF"> SDF </label>
+          <input class="large" type="text" id="menuHandlingSDF" value="Infinity">
+          <label class="large" for="menuHandlingDCD"> DCD </label>
+          <input class="large" type="text" id="menuHandlingDCD" value="0" disabled>
+          <label class="large" for="menuHandlingMSG"> MSG </label>
+          <input class="large" type="text" id="menuHandlingMSG" value="1000">
+          <label class="large" for="menuHandlingARE"> ARE </label>
+          <input class="large" type="text" id="menuHandlingARE" value="0" disabled>
+          <label class="large" for="menuHandlingLCA"> LCA </label>
+          <input class="large" type="text" id="menuHandlingLCA" value="0" disabled>
+        </div>
+      </div>
+    </div>
+    
+    <!-- keybinds menu -->
+    <div class="menu padding-inside" id="menuKeybinds">
+      <button class="large" id="menuKeybindsButtonBack">Back</button>
+      <div class="padding-inside">
+        <div class="two-grid padding-inside">
+          <label class="large" for="menuKeybindsLeftContainer"> Left </label>
+          <div class="large" id="menuKeybindsLeftContainer"> </div>
+          <label class="large" for="menuKeybindsRightContainer"> Right </label>
+          <div class="large" id="menuKeybindsRightContainer"> </div>
+          <label class="large" for="menuKeybindsSoftDropContainer"> Soft Drop </label>
+          <div class="large" id="menuKeybindsSoftDropContainer"> </div>
+          <label class="large" for="menuKeybindsHardDropContainer"> Hard Drop </label>
+          <div class="large" id="menuKeybindsHardDropContainer"> </div>
+          <label class="large" for="menuKeybindsRotateCCWContainer"> Rotate CCW </label>
+          <div class="large" id="menuKeybindsRotateCCWContainer"> </div>
+          <label class="large" for="menuKeybindsRotateCWContainer"> Rotate CW </label>
+          <div class="large" id="menuKeybindsRotateCWContainer"> </div>
+          <label class="large" for="menuKeybindsRotate180Container"> Rotate 180 </label>
+          <div class="large" id="menuKeybindsRotate180Container"> </div>
+          <label class="large" for="menuKeybindsHoldPieceContainer"> Hold Piece </label>
+          <div class="large" id="menuKeybindsHoldPieceContainer"> </div>
+        </div>
       </div>
     </div>
     

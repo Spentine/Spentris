@@ -1,5 +1,5 @@
-// default values
-import { values } from "./defaultValues.js";
+// values
+import { values, defaultValues } from "./defaultValues.js";
 
 // event emitter
 import { EventEmitter } from "../../eventEmitter.js";
@@ -20,7 +20,19 @@ const spentrisMenus = {
     container: document.getElementById("menuSettings"),
     buttonBack: document.getElementById("menuSettingsButtonBack"),
     buttonHandling: document.getElementById("menuSettingsButtonHandling"),
-    buttonKeybind: document.getElementById("menuSettingsButtonKeybind"),
+    buttonKeybinds: document.getElementById("menuSettingsButtonKeybinds"),
+  },
+  handling: {
+    container: document.getElementById("menuHandling"),
+    buttonBack: document.getElementById("menuHandlingButtonBack"),
+    arr: document.getElementById("menuHandlingARR"),
+    das: document.getElementById("menuHandlingDAS"),
+    sdf: document.getElementById("menuHandlingSDF"),
+    msg: document.getElementById("menuHandlingMSG"),
+  },
+  keybinds: {
+    container: document.getElementById("menuKeybinds"),
+    buttonBack: document.getElementById("menuKeybindsButtonBack"),
   },
   ingame: {
     container: document.getElementById("menuIngame"),
@@ -44,6 +56,8 @@ const redirectionIds = {
     redirect: "game",
   },
   */
+  
+  // settings
   menuHomeButtonSettings: {
     origin: ["home", "buttonSettings"],
     redirect: "settings",
@@ -52,12 +66,33 @@ const redirectionIds = {
     origin: ["settings", "buttonBack"],
     redirect: "home",
   },
+  menuSettingsButtonHandling: {
+    origin: ["settings", "buttonSettings"],
+    redirect: "handling",
+  },
+  menuSettingsButtonKeybinds: {
+    origin: ["settings", "buttonSettings"],
+    redirect: "keybinds",
+  },
+  
+  // handling
+  menuHandlingButtonBack: {
+    origin: ["handling", "buttonBack"],
+    redirect: "settings",
+  },
+  
+  // keybinds
+  menuKeybindsButtonBack: {
+    origin: ["keybinds", "buttonBack"],
+    redirect: "settings",
+  },
 };
 
 // all functions binded to the MenuHandler
 const functionIds = {
   menuHomeButtonStart: {
     origin: ["home", "buttonStart"],
+    type: "click",
     function: function () {
       this.changeMenu("ingame");
       this.event.emit("gameStart", {
@@ -65,6 +100,52 @@ const functionIds = {
         mode: "marathon",
         settings: this.generateSettings(),
       });
+    }
+  },
+  
+  // todo: apply DRY principle
+  menuHandlingARR: {
+    origin: ["handling", "arr"],
+    type: "change",
+    function : function () {
+      if (!isNaN(this.menus.handling.arr.value)) {
+        this.values.handling.arr = parseFloat(this.menus.handling.arr.value);
+      }
+      
+      this.menus.handling.arr.value = this.values.handling.arr;
+    }
+  },
+  menuHandlingDAS: {
+    origin: ["handling", "das"],
+    type: "change",
+    function : function () {
+      if (!isNaN(this.menus.handling.das.value)) {
+        this.values.handling.das = parseFloat(this.menus.handling.das.value);
+      }
+      
+      this.menus.handling.das.value = this.values.handling.das;
+    }
+  },
+  menuHandlingSDF: {
+    origin: ["handling", "sdf"],
+    type: "change",
+    function : function () {
+      if (!isNaN(this.menus.handling.sdf.value)) {
+        this.values.handling.sdf = parseFloat(this.menus.handling.sdf.value);
+      }
+      
+      this.menus.handling.sdf.value = this.values.handling.sdf;
+    }
+  },
+  menuHandlingMSG: {
+    origin: ["handling", "msg"],
+    type: "change",
+    function : function () {
+      if (!isNaN(this.menus.handling.msg.value)) {
+        this.values.handling.msg = parseFloat(this.menus.handling.msg.value);
+      }
+      
+      this.menus.handling.msg.value = this.values.handling.msg;
     }
   },
 };
@@ -137,10 +218,11 @@ class MenuHandler {
     
     for (const id of ids) {
       const func = this.functions[id];
+      console.log(func);
       
       const origin = document.getElementById(id);
       origin.addEventListener(
-        "click", func.function.bind(this)
+        func.type, func.function.bind(this)
       );
     }
   }

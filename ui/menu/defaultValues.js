@@ -2,6 +2,17 @@ import { files } from "../../engine/functionLibrary.js";
 import { playKeybinds, metaKeybinds } from "../../interaction/keyboard.js";
 import { SRSPlusData } from "../../engine/rsData.js";
 
+const defaultValues = {
+  state: {
+    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
+    gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+    startingLevel: 1, levelling: true, masterLevels: true,
+  },
+  handling: {
+    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
+  },
+};
+
 const values = {
   functionLocations: {
     update: {file: "standardRules.js", name: "update"},
@@ -67,14 +78,8 @@ const values = {
     // supplementary functions
     calculateGhostPiece: {file: "standardRules.js", name: "calculateGhostPiece"},
   },
-  state: {
-    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
-    gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-    startingLevel: 1, levelling: true, masterLevels: true,
-  },
-  handling: {
-    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
-  },
+  state: structuredClone(defaultValues.state),
+  handling: structuredClone(defaultValues.handling),
   keybinds: {
     play: playKeybinds,
     meta: metaKeybinds,
@@ -83,4 +88,4 @@ const values = {
   rotationSystem: SRSPlusData,
 };
 
-export { values };
+export { values, defaultValues };
