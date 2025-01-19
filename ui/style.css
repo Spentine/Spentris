@@ -4,7 +4,21 @@
   font-family: "Bloxyl";
   font-style: normal;
   font-weight: 400;
-  src: local("Bloxyl"), url("fonts/Bloxyl.otf")
+  src: local("Bloxyl"), url("fonts/Bloxyl.otf");
+}
+
+@font-face {
+  font-family: "Kaisotai";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Kaisotai"), url("fonts/Kaisotai-Next-UP-B.otf");
+}
+
+@font-face {
+  font-family: "Kiniro";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Kiniro"), url("fonts/GN-Kin-iro_SansSerif.ttf");
 }
 
 /* ==== tag name styles ==== */
@@ -146,7 +160,8 @@ input {
 button.large {
   font-size: 36px;
   
-  padding: 16px 16px 8px 16px;
+  /* padding: 16px 16px 8px 16px; */
+  padding: 16px;
 }
 
 button.keybind {
@@ -180,7 +195,8 @@ button.add-keybind:hover {
 input.large {
   font-size: 36px;
   
-  padding: 16px 16px 8px 16px;
+  /* padding: 16px 16px 8px 16px; */
+  padding: 16px;
 }
 
 /* text */
@@ -190,6 +206,14 @@ label.large {
 }
 
 /* ==== id styles ==== */
+
+#menuLanguageButtonEnglish {
+  font-family: "Bloxyl", sans-serif;
+}
+
+#menuLanguageButtonJapanese {
+  font-family: "Kaisotai", sans-serif;
+}
 
 /* ==== other styles ==== */
 

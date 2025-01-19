@@ -359,7 +359,7 @@ class GameRenderer {
       
       const title = valuePair.title;
       
-      this.ctx.font = `${state.textTitleSize}px Bloxyl`;
+      this.ctx.font = `${state.textTitleSize}px ${state.textFont}`;
       
       // should sit right on top of y
       const titleMeasure = this.ctx.measureText(title);
@@ -379,7 +379,7 @@ class GameRenderer {
           break;
       }
       
-      this.ctx.font = `${state.textValueSize}px Bloxyl`;
+      this.ctx.font = `${state.textValueSize}px ${state.textFont}`;
       
       // should sit right below y
       const valueMeasure = this.ctx.measureText(value);
@@ -403,7 +403,7 @@ class GameRenderer {
       // set opacity
       this.ctx.globalAlpha = 1 - (state.time - clear.time) / state.clearRemovalTime;
       
-      this.ctx.font = `${state.textClearPrimarySize}px Bloxyl`;
+      this.ctx.font = `${state.textClearPrimarySize}px ${state.textFont}`;
       
       // should sit right on top of y
       const primaryMeasure = this.ctx.measureText(text.primary);
@@ -415,7 +415,7 @@ class GameRenderer {
       );
       
       if (text.secondary !== "") {
-        this.ctx.font = `${state.textClearSecondarySize}px Bloxyl`;
+        this.ctx.font = `${state.textClearSecondarySize}px ${state.textFont}`;
         
         // should sit right below y
         const secondaryMeasure = this.ctx.measureText(text.secondary);

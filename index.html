@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="ui/style.css">
     <script src="main.js" type="module"> </script>
+    <title> Spentris </title>
   </head>
   <body>
     <!-- main menu / home menu -->
     <div class="menu padding-inside" id="menuHome">
       <!-- for debugging, we'll just have a start button here -->
       <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuHomeButtonStart">Start</button>
+        <button class="large" id="menuHomeButtonPlay">Play</button>
         <button class="large" id="menuHomeButtonSettings">Settings</button>
+        <button class="large" id="menuHomeButtonLanguage">Language</button>
+      </div>
+    </div>
+    
+    <!-- play menu -->
+    <div class="menu padding-inside" id="menuPlay">
+      <button class="large" id="menuPlayButtonBack">Back</button>
+      <div class="center-inside window-fill padding-inside">
+        <button class="large" id="menuPlayButtonMarathon"> Marathon </button>
+        <!-- aka 40 lines -->
+        <button class="large" id="menuPlayButtonSprint"> Sprint </button>
+        <!-- aka blitz -->
+        <button class="large" id="menuPlayButtonUltra"> Ultra </button>
       </div>
     </div>
     
@@ -29,19 +44,25 @@
       <div class="center-inside window-fill padding-inside">
         <div class="two-grid padding-inside">
           <!-- allow text inputs for numbers because of Infinity -->
-          <label class="large" for="menuHandlingARR"> ARR </label>
+          <label class="large" for="menuHandlingARR" id="menuHandlingARRLabel">ARR</label>
           <input class="large" type="text" id="menuHandlingARR" value="0">
-          <label class="large" for="menuHandlingDAS"> DAS </label>
+
+          <label class="large" for="menuHandlingDAS" id="menuHandlingDASLabel">DAS</label>
           <input class="large" type="text" id="menuHandlingDAS" value="86.66">
-          <label class="large" for="menuHandlingSDF"> SDF </label>
+
+          <label class="large" for="menuHandlingSDF" id="menuHandlingSDFLabel">SDF</label>
           <input class="large" type="text" id="menuHandlingSDF" value="Infinity">
-          <label class="large" for="menuHandlingDCD"> DCD </label>
+
+          <label class="large" for="menuHandlingDCD" id="menuHandlingDCDLabel">DCD</label>
           <input class="large" type="text" id="menuHandlingDCD" value="0" disabled>
-          <label class="large" for="menuHandlingMSG"> MSG </label>
+
+          <label class="large" for="menuHandlingMSG" id="menuHandlingMSGLabel">MSG</label>
           <input class="large" type="text" id="menuHandlingMSG" value="1000">
-          <label class="large" for="menuHandlingARE"> ARE </label>
+
+          <label class="large" for="menuHandlingARE" id="menuHandlingARELabel">ARE</label>
           <input class="large" type="text" id="menuHandlingARE" value="0" disabled>
-          <label class="large" for="menuHandlingLCA"> LCA </label>
+
+          <label class="large" for="menuHandlingLCA" id="menuHandlingLCALabel">LCA</label>
           <input class="large" type="text" id="menuHandlingLCA" value="0" disabled>
         </div>
       </div>
@@ -52,25 +73,42 @@
       <button class="large" id="menuKeybindsButtonBack">Back</button>
       <div class="padding-inside">
         <div class="two-grid padding-inside">
-          <label class="large" for="menuKeybindsLeftContainer"> Left </label>
-          <div class="large" id="menuKeybindsLeftContainer"> </div>
-          <label class="large" for="menuKeybindsRightContainer"> Right </label>
-          <div class="large" id="menuKeybindsRightContainer"> </div>
-          <label class="large" for="menuKeybindsSoftDropContainer"> Soft Drop </label>
-          <div class="large" id="menuKeybindsSoftDropContainer"> </div>
-          <label class="large" for="menuKeybindsHardDropContainer"> Hard Drop </label>
-          <div class="large" id="menuKeybindsHardDropContainer"> </div>
-          <label class="large" for="menuKeybindsRotateCCWContainer"> Rotate CCW </label>
-          <div class="large" id="menuKeybindsRotateCCWContainer"> </div>
-          <label class="large" for="menuKeybindsRotateCWContainer"> Rotate CW </label>
-          <div class="large" id="menuKeybindsRotateCWContainer"> </div>
-          <label class="large" for="menuKeybindsRotate180Container"> Rotate 180 </label>
-          <div class="large" id="menuKeybindsRotate180Container"> </div>
-          <label class="large" for="menuKeybindsHoldPieceContainer"> Hold Piece </label>
-          <div class="large" id="menuKeybindsHoldPieceContainer"> </div>
-          <label class="large" for="menuKeybindsResetGameContainer"> Reset Game </label>
-          <div class="large" id="menuKeybindsResetGameContainer"> </div>
+          <label class="large" for="menuKeybindsLeftContainer" id="menuKeybindsLeftLabel">Left</label>
+          <div class="large" id="menuKeybindsLeftContainer"></div>
+
+          <label class="large" for="menuKeybindsRightContainer" id="menuKeybindsRightLabel">Right</label>
+          <div class="large" id="menuKeybindsRightContainer"></div>
+
+          <label class="large" for="menuKeybindsSoftDropContainer" id="menuKeybindsSoftDropLabel">Soft Drop</label>
+          <div class="large" id="menuKeybindsSoftDropContainer"></div>
+
+          <label class="large" for="menuKeybindsHardDropContainer" id="menuKeybindsHardDropLabel">Hard Drop</label>
+          <div class="large" id="menuKeybindsHardDropContainer"></div>
+
+          <label class="large" for="menuKeybindsRotateCCWContainer" id="menuKeybindsRotateCCWLabel">Rotate CCW</label>
+          <div class="large" id="menuKeybindsRotateCCWContainer"></div>
+
+          <label class="large" for="menuKeybindsRotateCWContainer" id="menuKeybindsRotateCWLabel">Rotate CW</label>
+          <div class="large" id="menuKeybindsRotateCWContainer"></div>
+
+          <label class="large" for="menuKeybindsRotate180Container" id="menuKeybindsRotate180Label">Rotate 180</label>
+          <div class="large" id="menuKeybindsRotate180Container"></div>
+
+          <label class="large" for="menuKeybindsHoldPieceContainer" id="menuKeybindsHoldPieceLabel">Hold Piece</label>
+          <div class="large" id="menuKeybindsHoldPieceContainer"></div>
+
+          <label class="large" for="menuKeybindsResetGameContainer" id="menuKeybindsResetGameLabel">Reset Game</label>
+          <div class="large" id="menuKeybindsResetGameContainer"></div>
         </div>
+      </div>
+    </div>
+    
+    <!-- language -->
+    <div class="menu padding-inside" id="menuLanguage">
+      <button class="large" id="menuLanguageButtonBack">Back</button>
+      <div class="center-inside window-fill padding-inside">
+        <button class="large" id="menuLanguageButtonEnglish"> English </button>
+        <button class="large" id="menuLanguageButtonJapanese"> 日本語 </button>
       </div>
     </div>
     

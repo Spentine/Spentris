@@ -1,7 +1,7 @@
 // converts Stacker object to renderGameState object
 
 import { SRSData } from "./rsData.js";
-import { languages, currentLanguage } from "../../localization/language.js";
+import { translations, currentLanguage } from "../../localization/language.js";
 
 // texture type map
 const ttMap = {
@@ -63,7 +63,7 @@ class RenderGameState {
     return {
       time: clear.time, // for expiry
       original: clear, // for debugging
-      text: languages[currentLanguage].translations.clearConvert(clear),
+      text: translations[currentLanguage].translations.game.clearConvert(clear),
     }
   }
   
@@ -131,28 +131,28 @@ class RenderGameState {
     );
     this.values = {
       score: {
-        title: languages[currentLanguage].translations.gameScoreTitle,
+        title: translations[currentLanguage].translations.game.scoreTitle,
         value: this.game.score,
         
         side: "left",
         height: 0,
       },
       lines: {
-        title: languages[currentLanguage].translations.gameLinesTitle,
+        title: translations[currentLanguage].translations.game.linesTitle,
         value: this.game.lines,
         
         side: "left",
         height: 1,
       },
       level: {
-        title: languages[currentLanguage].translations.gameLevelTitle,
+        title: translations[currentLanguage].translations.game.levelTitle,
         value: this.game.level,
         
         side: "left",
         height: 2,
       },
       time: {
-        title: languages[currentLanguage].translations.gameTimeTitle,
+        title: translations[currentLanguage].translations.game.timeTitle,
         value: this.game.time,
         
         side: "left",
@@ -163,7 +163,7 @@ class RenderGameState {
       // i will keep these ones for future debugging
       /*
       spin: {
-        title: languages[currentLanguage].translations.gameSpinTitle,
+        title: translations[currentLanguage].translations.gameSpinTitle,
         value: this.game.spin,
         
         side: "right",
@@ -211,7 +211,7 @@ class RenderGameState {
         height: 0,
       },
       piecesPlaced: {
-        title: "pps",
+        title: translations[currentLanguage].translations.game.ppsTitle,
         value: Math.round(1000000 * this.game.piecesPlaced / this.game.time) / 1000,
         
         side: "right",
@@ -226,6 +226,8 @@ class RenderGameState {
     this.textClearPrimarySize = 20 / 24;
     this.textClearSecondarySize = 16 / 24;
     this.textClearMargin = 10 / 24;
+    
+    this.textFont = translations[currentLanguage].font.gameStats;
     
     this.rs = SRSData; // rs = rotation system
     

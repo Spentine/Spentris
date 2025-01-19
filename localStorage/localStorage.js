@@ -50,6 +50,7 @@ const defaultStorage = {
       }],
     },
   },
+  language: "en",
 };
 
 // another stupid singleton (there is no point)

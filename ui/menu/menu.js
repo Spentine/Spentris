@@ -10,14 +10,25 @@ import { ls } from "../../localStorage/localStorage.js";
 // function location accessor
 import { functionLocationAccessor } from "../../engine/util.js";
 
+// languages
+import { translations, currentLanguage, setLanguage } from "../../localization/language.js";
+
 // keybinds and keyboard input
 // import { bindInputFunctions } from "../../interaction/keyboard.js";
 
 const spentrisMenus = {
   home: {
     container: document.getElementById("menuHome"),
-    buttonStart: document.getElementById("menuHomeButtonStart"),
+    buttonPlay: document.getElementById("menuHomeButtonPlay"),
     buttonSettings: document.getElementById("menuHomeButtonSettings"),
+    buttonLanguage: document.getElementById("menuHomeButtonLanguage"),
+  },
+  play: {
+    container: document.getElementById("menuPlay"),
+    buttonBack: document.getElementById("menuPlayButtonBack"),
+    buttonMarathon: document.getElementById("menuPlayButtonMarathon"),
+    buttonSprint: document.getElementById("menuPlayButtonSprint"),
+    buttonUltra: document.getElementById("menuPlayButtonUltra"),
   },
   settings: {
     container: document.getElementById("menuSettings"),
@@ -64,6 +75,12 @@ const spentrisMenus = {
       resetInput: "meta",
     },
   },
+  language: {
+    container: document.getElementById("menuLanguage"),
+    buttonBack: document.getElementById("menuLanguageButtonBack"),
+    buttonEnglish: document.getElementById("menuLanguageButtonEnglish"),
+    buttonJapanese: document.getElementById("menuLanguageButtonJapanese"),
+  },
   ingame: {
     container: document.getElementById("menuIngame"),
     renderCanvas: document.getElementById("renderCanvas"),
@@ -78,20 +95,27 @@ const spentrisMenus = {
  * @property {string} redirect
  */
 const redirectionIds = {
-  // this button does some special things, not just starting the game but also setting up the game
-  // it's not just a simple redirect
-  /*
-  menuHomeButtonStart: {
-    origin: ["home", "buttonStart"],
-    redirect: "game",
+  // home
+  menuHomeButtonPlay: {
+    origin: ["home", "buttonPlay"],
+    redirect: "play",
   },
-  */
-  
-  // settings
   menuHomeButtonSettings: {
     origin: ["home", "buttonSettings"],
     redirect: "settings",
   },
+  menuHomeButtonLanguage: {
+    origin: ["home", "buttonLanguage"],
+    redirect: "language",
+  },
+  
+  // play
+  menuPlayButtonBack: {
+    origin: ["play", "buttonBack"],
+    redirect: "home",
+  },
+  
+  // settings
   menuSettingsButtonBack: {
     origin: ["settings", "buttonBack"],
     redirect: "home",
@@ -104,11 +128,31 @@ const redirectionIds = {
   },
   
   // keybinds
+  
+  // language
+  menuLanguageButtonBack: {
+    origin: ["language", "buttonBack"],
+    redirect: "home",
+  },
 };
+
+function menuHandlingFunctionGenerator(handlingValue) {
+  const func = function () {
+    if (!isNaN(this.menus.handling.values[handlingValue].value)) {
+      this.values.handling[handlingValue] = parseFloat(this.menus.handling.values[handlingValue].value);
+    }
+    
+    this.menus.handling.values[handlingValue].value = this.values.handling[handlingValue];
+    
+    ls.values.handling[handlingValue] = this.values.handling[handlingValue];
+    ls.save();
+  };
+  return func;
+}
 
 // all functions binded to the MenuHandler
 const functionIds = {
-  menuHomeButtonStart: {
+  menuPlayButtonMarathon: {
     origin: ["home", "buttonStart"],
     type: "click",
     function: function () {
@@ -143,59 +187,22 @@ const functionIds = {
   menuHandlingARR: {
     origin: ["handling", "values", "arr"],
     type: "change",
-    function : function () {
-      if (!isNaN(this.menus.handling.values.arr.value)) {
-        this.values.handling.arr = parseFloat(this.menus.handling.values.arr.value);
-      }
-      
-      this.menus.handling.values.arr.value = this.values.handling.arr;
-      
-      // it may be redundant but i'm going to put this here anyway
-      ls.values.handling.arr = this.values.handling.arr;
-      ls.save();
-    }
+    function : menuHandlingFunctionGenerator("arr"),
   },
   menuHandlingDAS: {
     origin: ["handling", "values", "das"],
     type: "change",
-    function : function () {
-      if (!isNaN(this.menus.handling.values.das.value)) {
-        this.values.handling.das = parseFloat(this.menus.handling.values.das.value);
-      }
-      
-      this.menus.handling.values.das.value = this.values.handling.das;
-      
-      ls.values.handling.das = this.values.handling.das;
-      ls.save();
-    }
+    function : menuHandlingFunctionGenerator("das"),
   },
   menuHandlingSDF: {
     origin: ["handling", "values", "sdf"],
     type: "change",
-    function : function () {
-      if (!isNaN(this.menus.handling.values.sdf.value)) {
-        this.values.handling.sdf = parseFloat(this.menus.handling.values.sdf.value);
-      }
-      
-      this.menus.handling.values.sdf.value = this.values.handling.sdf;
-      
-      ls.values.handling.sdf = this.values.handling.sdf;
-      ls.save();
-    }
+    function : menuHandlingFunctionGenerator("sdf"),
   },
   menuHandlingMSG: {
     origin: ["handling", "values", "msg"],
     type: "change",
-    function : function () {
-      if (!isNaN(this.menus.handling.values.msg.value)) {
-        this.values.handling.msg = parseFloat(this.menus.handling.values.msg.value);
-      }
-      
-      this.menus.handling.values.msg.value = this.values.handling.msg;
-      
-      ls.values.handling.msg = this.values.handling.msg;
-      ls.save();
-    }
+    function : menuHandlingFunctionGenerator("msg"),
   },
   
   menuKeybindsButtonBack: {
@@ -204,6 +211,28 @@ const functionIds = {
     function: function () {
       this.removeKeybindMenu();
       this.changeMenu("settings");
+    }
+  },
+  
+  menuLanguageButtonEnglish: {
+    origin: ["language", "buttonEnglish"],
+    type: "click",
+    function: function () {
+      setLanguage("en");
+      ls.values.language = "en";
+      ls.save();
+      this.translateMenu("en");
+    }
+  },
+  
+  menuLanguageButtonJapanese: {
+    origin: ["language", "buttonJapanese"],
+    type: "click",
+    function: function () {
+      setLanguage("jp");
+      ls.values.language = "jp";
+      ls.save();
+      this.translateMenu("jp");
     }
   },
 };
@@ -222,6 +251,9 @@ class MenuHandler {
     this.event = new EventEmitter();
     this.values = data.values ?? {};
     
+    setLanguage(ls.values.language);
+    
+    this.translateMenu(currentLanguage);
     this.showMenu(this.currentMenu);
     
     console.log("MenuHandler initialized", this);
@@ -261,6 +293,24 @@ class MenuHandler {
       previousMenu: previousMenu,
       currentMenu: this.currentMenu,
     });
+  }
+  
+  /**
+   * translates the menu to the specified language
+   * @param {string} language
+   * @returns {void}
+   */
+  translateMenu(language) {
+    // translate the ui elements
+    const uiTranslations = translations[language].translations.ui;
+    
+    for (let id in uiTranslations) {
+      const element = document.getElementById(id);
+      element.textContent = uiTranslations[id];
+    }
+    
+    // use correct font
+    document.body.style.fontFamily = translations[language].font.ui;
   }
   
   /**

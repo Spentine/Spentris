@@ -64,6 +64,11 @@ This document will contain all the documentation for Spentris. It is intended as
     - `Bloxyl.otf`
       - *a font I made a while ago that fits the style of this game*
       - *doesn't really adhere to font standards so beware*
+    - `GN-Kin-iro_SansSerif.ttf`
+      - *a Japanese font*
+    - `Kaisotai-Next-UP-B.otf`
+      - *a Japanese font*
+      - *the font used in-game*
   - `gameRenderV1`
     - *the first iteration of the rendering engine*
     - *uses `CanvasRenderingContext2D` to render, which may not be very performant*
@@ -117,7 +122,7 @@ This document will contain all the documentation for Spentris. It is intended as
   - [x] Create settings interface that allows for users to change handling and keybinds
     - [x] Handling
     - [x] Keybinds
-  - [ ] Update localization support for the UI
+  - [x] Update localization support for the UI
   - [ ] Ability to create a custom mode
   - [ ] Create ending screen for games 
 - [ ] Persistent Data
@@ -138,4 +143,6 @@ This document will contain all the documentation for Spentris. It is intended as
   - *too far ahead, give it a month or two*
 - [ ] Code
   - [ ] Centralize all values
-  - [ ] Enforce D.R.Y. principle
+  - [x] Enforce D.R.Y. principle
+- [ ] URL
+  - [ ] Redirect users with URL-specified parameters
