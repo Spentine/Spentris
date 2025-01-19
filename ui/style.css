@@ -60,7 +60,7 @@ button {
   font-size: 18px;
   color: #ffffff;
   
-  padding: 16px 16px 8px 16px;
+  padding: 8px;
   
   background-color: #333333;
   border: solid 2px #444444;
@@ -79,7 +79,7 @@ input {
   font-size: 18px;
   color: #dddddd;
   
-  padding: 16px 16px 8px 16px;
+  padding: 8px;
   
   background-color: #333333;
   border: solid 2px #444444;
@@ -145,10 +145,42 @@ input {
 
 button.large {
   font-size: 36px;
+  
+  padding: 16px 16px 8px 16px;
+}
+
+button.keybind {
+  font-size: 24px;
+  
+  margin: 4px;
+  
+  background-color: #444444;
+  border: outset 4px #666666;
+}
+
+button.keybind:hover {
+  background-color: #664444;
+  border: outset 4px #886666;
+}
+
+button.add-keybind {
+  color: #aaccaa;
+  font-size: 18px;
+  
+  margin-left: 16px;
+  
+  background-color: #444444;
+  box-shadow: 0px 0px 8px #ffffff33;
+}
+
+button.add-keybind:hover {
+  background-color: #445544;
 }
 
 input.large {
   font-size: 36px;
+  
+  padding: 16px 16px 8px 16px;
 }
 
 /* text */

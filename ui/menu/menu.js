@@ -25,14 +25,41 @@ const spentrisMenus = {
   handling: {
     container: document.getElementById("menuHandling"),
     buttonBack: document.getElementById("menuHandlingButtonBack"),
-    arr: document.getElementById("menuHandlingARR"),
-    das: document.getElementById("menuHandlingDAS"),
-    sdf: document.getElementById("menuHandlingSDF"),
-    msg: document.getElementById("menuHandlingMSG"),
+    values: {
+      arr: document.getElementById("menuHandlingARR"),
+      das: document.getElementById("menuHandlingDAS"),
+      sdf: document.getElementById("menuHandlingSDF"),
+      dcd: document.getElementById("menuHandlingDCD"),
+      msg: document.getElementById("menuHandlingMSG"),
+      are: document.getElementById("menuHandlingARE"),
+      lca: document.getElementById("menuHandlingLCA"),
+    },
   },
   keybinds: {
     container: document.getElementById("menuKeybinds"),
     buttonBack: document.getElementById("menuKeybindsButtonBack"),
+    actions: {
+      moveLeftInput: document.getElementById("menuKeybindsLeftContainer"),
+      moveRightInput: document.getElementById("menuKeybindsRightContainer"),
+      softDropInput: document.getElementById("menuKeybindsSoftDropContainer"),
+      hardDropInput: document.getElementById("menuKeybindsHardDropContainer"),
+      rotateCCWInput: document.getElementById("menuKeybindsRotateCCWContainer"),
+      rotateCWInput: document.getElementById("menuKeybindsRotateCWContainer"),
+      rotate180Input: document.getElementById("menuKeybindsRotate180Container"),
+      holdPieceInput: document.getElementById("menuKeybindsHoldPieceContainer"),
+      resetInput: document.getElementById("menuKeybindsResetGameContainer"),
+    },
+    inputTypeMap: {
+      moveLeftInput: "play",
+      moveRightInput: "play",
+      softDropInput: "play",
+      hardDropInput: "play",
+      rotateCCWInput: "play",
+      rotateCWInput: "play",
+      rotate180Input: "play",
+      holdPieceInput: "play",
+      resetInput: "meta",
+    },
   },
   ingame: {
     container: document.getElementById("menuIngame"),
@@ -70,10 +97,6 @@ const redirectionIds = {
     origin: ["settings", "buttonSettings"],
     redirect: "handling",
   },
-  menuSettingsButtonKeybinds: {
-    origin: ["settings", "buttonSettings"],
-    redirect: "keybinds",
-  },
   
   // handling
   menuHandlingButtonBack: {
@@ -82,10 +105,6 @@ const redirectionIds = {
   },
   
   // keybinds
-  menuKeybindsButtonBack: {
-    origin: ["keybinds", "buttonBack"],
-    redirect: "settings",
-  },
 };
 
 // all functions binded to the MenuHandler
@@ -103,49 +122,67 @@ const functionIds = {
     }
   },
   
+  menuSettingsButtonKeybinds: {
+    origin: ["settings", "buttonKeybinds"],
+    type: "click",
+    function: function () {
+      this.updateKeybindMenu();
+      this.changeMenu("keybinds");
+    }
+  },
+  
   // todo: apply DRY principle
   menuHandlingARR: {
-    origin: ["handling", "arr"],
+    origin: ["handling", "values", "arr"],
     type: "change",
     function : function () {
-      if (!isNaN(this.menus.handling.arr.value)) {
-        this.values.handling.arr = parseFloat(this.menus.handling.arr.value);
+      if (!isNaN(this.menus.handling.values.arr.value)) {
+        this.values.handling.arr = parseFloat(this.menus.handling.values.arr.value);
       }
       
-      this.menus.handling.arr.value = this.values.handling.arr;
+      this.menus.handling.values.arr.value = this.values.handling.arr;
     }
   },
   menuHandlingDAS: {
-    origin: ["handling", "das"],
+    origin: ["handling", "values", "das"],
     type: "change",
     function : function () {
-      if (!isNaN(this.menus.handling.das.value)) {
-        this.values.handling.das = parseFloat(this.menus.handling.das.value);
+      if (!isNaN(this.menus.handling.values.das.value)) {
+        this.values.handling.das = parseFloat(this.menus.handling.values.das.value);
       }
       
-      this.menus.handling.das.value = this.values.handling.das;
+      this.menus.handling.values.das.value = this.values.handling.das;
     }
   },
   menuHandlingSDF: {
-    origin: ["handling", "sdf"],
+    origin: ["handling", "values", "sdf"],
     type: "change",
     function : function () {
-      if (!isNaN(this.menus.handling.sdf.value)) {
-        this.values.handling.sdf = parseFloat(this.menus.handling.sdf.value);
+      if (!isNaN(this.menus.handling.values.sdf.value)) {
+        this.values.handling.sdf = parseFloat(this.menus.handling.values.sdf.value);
       }
       
-      this.menus.handling.sdf.value = this.values.handling.sdf;
+      this.menus.handling.values.sdf.value = this.values.handling.sdf;
     }
   },
   menuHandlingMSG: {
-    origin: ["handling", "msg"],
+    origin: ["handling", "values", "msg"],
     type: "change",
     function : function () {
-      if (!isNaN(this.menus.handling.msg.value)) {
-        this.values.handling.msg = parseFloat(this.menus.handling.msg.value);
+      if (!isNaN(this.menus.handling.values.msg.value)) {
+        this.values.handling.msg = parseFloat(this.menus.handling.values.msg.value);
       }
       
-      this.menus.handling.msg.value = this.values.handling.msg;
+      this.menus.handling.values.msg.value = this.values.handling.msg;
+    }
+  },
+  
+  menuKeybindsButtonBack: {
+    origin: ["keybinds", "buttonBack"],
+    type: "click",
+    function: function () {
+      this.removeKeybindMenu();
+      this.changeMenu("settings");
     }
   },
 };
@@ -153,6 +190,7 @@ const functionIds = {
 // there really isn't much of a reason to make this a class because it's going to be a singleton
 class MenuHandler {
   constructor(data) {
+    // setting values
     data = data ?? {};
     
     this.currentMenu = data.currentMenu ?? "home";
@@ -183,18 +221,27 @@ class MenuHandler {
   }
   
   /**
+   * changes the menu to the specified menu (and hiding the previous menu in the process)
    * @param {string} menu
    * @returns {void}
    */
   changeMenu(menu) {
     // this.currentMenu is technically the previous menu
-    this.hideMenu(this.currentMenu);
-    
+    const previousMenu = this.currentMenu;
     this.currentMenu = menu;
+    
+    this.hideMenu(previousMenu);
     this.showMenu(this.currentMenu);
+    
+    this.event.emit("menuChange", {
+      time: Date.now(),
+      previousMenu: previousMenu,
+      currentMenu: this.currentMenu,
+    });
   }
   
   /**
+   * adds the redirects (predefined functions) to each element as provided by the redirects json
    * @returns {void}
    */
   addRedirects() {
@@ -211,6 +258,7 @@ class MenuHandler {
   }
   
   /**
+   * adds the functions associated to each element as provided by the functions json
    * @returns {void}
    */
   addFunctions() {
@@ -218,7 +266,6 @@ class MenuHandler {
     
     for (const id of ids) {
       const func = this.functions[id];
-      console.log(func);
       
       const origin = document.getElementById(id);
       origin.addEventListener(
@@ -264,6 +311,126 @@ class MenuHandler {
       gameValues: gameValues,
       keybinds: this.values.keybinds,
     }
+  }
+  
+  /**
+   * deletes everything from the keybind menu
+   * @returns {void}
+   */
+  removeKeybindMenu() {
+    const actions = this.menus.keybinds.actions;
+    
+    for (let input in actions) {
+      const container = actions[input];
+      
+      // remove all items from container
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+    }
+  }
+  
+  /**
+   * updates the keybind menu with new elements and event listeners
+   * @returns {void}
+   */
+  updateKeybindMenu() {
+    const actions = this.menus.keybinds.actions;
+    const inputTypeMap = this.menus.keybinds.inputTypeMap;
+    
+    let awaitingInput = false;
+    
+    for (let input in actions) {
+      const container = actions[input];
+      const type = inputTypeMap[input];
+      
+      // remove all items from container
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      
+      // get keybinds stored in settings
+      const keybinds = this.values.keybinds[type][input];
+      
+      // add keybind buttons to container
+      for (let keybind of keybinds) {
+        const keybindElement = document.createElement("button");
+        keybindElement.classList.add("keybind");
+        
+        // add click event listener that deletes the keybind
+        // inadvertently closes all "add keybind" awaiting inputs
+        keybindElement.addEventListener("click", () => {
+          keybinds.splice(keybinds.indexOf(keybind), 1);
+          this.updateKeybindMenu();
+        });
+        
+        keybindElement.textContent = keybind.code;
+        container.appendChild(keybindElement);
+      };
+      
+      // add "addKeybind" button to container
+      const addKeybind = document.createElement("button");
+      addKeybind.classList.add("add-keybind");
+      addKeybind.textContent = "Add Keybind";
+      
+      let currentAwaitingInput = false;
+      
+      // todo: clean up code and beware of memory leaks
+      
+      // event listeners
+      const removeListeners = () => {
+        document.removeEventListener("keydown", keyDown);
+        this.event.off("menuChange", removeListeners);
+        this.event.off("keybindMenuUpdated", removeListeners);
+      };
+      
+      const keyDown = (e) => {
+        
+        keybinds.push({
+          code: e.code,
+          keyCode: e.keyCode,
+        });
+        
+        this.updateKeybindMenu();
+        
+        awaitingInput = false;
+        removeListeners();
+      };
+      
+      // add click event listener that adds a new keybind
+      addKeybind.addEventListener("click", () => {
+        // this button is already waiting for input
+        if (currentAwaitingInput) {
+          // cancel the input
+          awaitingInput = false;
+          currentAwaitingInput = false;
+          addKeybind.textContent = "Add Keybind";
+          removeListeners();
+          return;
+        };
+        
+        // another button is waiting for input
+        if (awaitingInput) return;
+        
+        // nothing is waiting for input
+        awaitingInput = true;
+        currentAwaitingInput = true;
+        addKeybind.textContent = "Awaiting Input";
+        
+        // wait for input
+        document.addEventListener("keydown", keyDown);
+        
+        // if the user leaves or something is updated then cancel the listeners (because the parent is removed)
+        this.event.on("menuChange", removeListeners);
+        this.event.on("keybindMenuUpdated", removeListeners);
+      });
+      
+      container.appendChild(addKeybind);
+    }
+    
+    this.event.emit("keybindMenuUpdated", {
+      time: Date.now(),
+    });
   }
 }
 

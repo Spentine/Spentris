@@ -47,9 +47,11 @@ This document will contain all the documentation for Spentris. It is intended as
     - *is a .js file because there are functions within the language object*
     - *JP language was just an example to test it with multiple languages but it was primarily translated by GitHub Copilot's autocomplete because I was too lazy to look up the actual terms myself*
     - *please help contribute <3*
-- `localStorage` (empty)
+- `localStorage`
   - *will contain scripts to manage reading and writing with the `localStorage` property*
   - *must be backwards compatible so that local settings aren't reset on a refactor*
+  - localStorage.js
+    - *contains a singleton class to manage `localStorage`*
 - `mmOutput`
   - *multimedia output*
   - `audio` (empty)
@@ -112,12 +114,17 @@ This document will contain all the documentation for Spentris. It is intended as
 - [ ] UI
   - [x] Create `MenuHandler` Class
   - [x] Create menu interface that allows for users to play
-  - [ ] Create settings interface that allows for users to change handling and keybinds
+  - [x] Create settings interface that allows for users to change handling and keybinds
     - [x] Handling
-    - [ ] Keybinds
+    - [x] Keybinds
   - [ ] Update localization support for the UI
   - [ ] Ability to create a custom mode
   - [ ] Create ending screen for games 
+- [ ] Persistent Data
+  - [ ] Save data with `localStorage`
+  - [ ] Save data to a file
+    - [ ] Export data
+    - [ ] Import data
 - [ ] Game
   - [ ] Create more modes
     - [ ] 40L
