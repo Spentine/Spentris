@@ -4,6 +4,9 @@ import { values, defaultValues } from "./defaultValues.js";
 // event emitter
 import { EventEmitter } from "../../eventEmitter.js";
 
+// local storage
+import { ls } from "../../localStorage/localStorage.js";
+
 // function location accessor
 import { functionLocationAccessor } from "../../engine/util.js";
 
@@ -93,10 +96,6 @@ const redirectionIds = {
     origin: ["settings", "buttonBack"],
     redirect: "home",
   },
-  menuSettingsButtonHandling: {
-    origin: ["settings", "buttonSettings"],
-    redirect: "handling",
-  },
   
   // handling
   menuHandlingButtonBack: {
@@ -122,6 +121,15 @@ const functionIds = {
     }
   },
   
+  menuSettingsButtonHandling: {
+    origin: ["settings", "buttonHandling"],
+    type: "click",
+    function: function () {
+      this.updateHandlingMenu();
+      this.changeMenu("handling");
+    }
+  },
+  
   menuSettingsButtonKeybinds: {
     origin: ["settings", "buttonKeybinds"],
     type: "click",
@@ -141,6 +149,10 @@ const functionIds = {
       }
       
       this.menus.handling.values.arr.value = this.values.handling.arr;
+      
+      // it may be redundant but i'm going to put this here anyway
+      ls.values.handling.arr = this.values.handling.arr;
+      ls.save();
     }
   },
   menuHandlingDAS: {
@@ -152,6 +164,9 @@ const functionIds = {
       }
       
       this.menus.handling.values.das.value = this.values.handling.das;
+      
+      ls.values.handling.das = this.values.handling.das;
+      ls.save();
     }
   },
   menuHandlingSDF: {
@@ -163,6 +178,9 @@ const functionIds = {
       }
       
       this.menus.handling.values.sdf.value = this.values.handling.sdf;
+      
+      ls.values.handling.sdf = this.values.handling.sdf;
+      ls.save();
     }
   },
   menuHandlingMSG: {
@@ -174,6 +192,9 @@ const functionIds = {
       }
       
       this.menus.handling.values.msg.value = this.values.handling.msg;
+      
+      ls.values.handling.msg = this.values.handling.msg;
+      ls.save();
     }
   },
   
@@ -202,6 +223,8 @@ class MenuHandler {
     this.values = data.values ?? {};
     
     this.showMenu(this.currentMenu);
+    
+    console.log("MenuHandler initialized", this);
   }
   
   /**
@@ -313,6 +336,18 @@ class MenuHandler {
     }
   }
   
+  updateHandlingMenu() {
+    // update everything to the correct values
+    const handlingElements = this.menus.handling.values;
+    const handlingValues = this.values.handling;
+    
+    for (let handlingValue in handlingValues) {
+      const element = handlingElements[handlingValue];
+      const value = handlingValues[handlingValue];
+      element.value = String(value);
+    }
+  }
+  
   /**
    * deletes everything from the keybind menu
    * @returns {void}
@@ -361,6 +396,12 @@ class MenuHandler {
         // inadvertently closes all "add keybind" awaiting inputs
         keybindElement.addEventListener("click", () => {
           keybinds.splice(keybinds.indexOf(keybind), 1);
+          
+          // update localStorage
+          ls.values.keybinds[type][input] = keybinds;
+          ls.save();
+          
+          // refresh menu
           this.updateKeybindMenu();
         });
         
@@ -385,11 +426,14 @@ class MenuHandler {
       };
       
       const keyDown = (e) => {
-        
         keybinds.push({
           code: e.code,
           keyCode: e.keyCode,
         });
+          
+        // update localStorage
+        ls.values.keybinds[type][input] = keybinds;
+        ls.save();
         
         this.updateKeybindMenu();
         

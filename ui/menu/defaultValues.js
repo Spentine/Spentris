@@ -1,6 +1,14 @@
+// access files for game initialization
 import { files } from "../../engine/functionLibrary.js";
+
+// default keybinds
 import { playKeybinds, metaKeybinds } from "../../interaction/keyboard.js";
+
+// rotation system data
 import { SRSPlusData } from "../../engine/rsData.js";
+
+// local storage
+import { ls } from "../../localStorage/localStorage.js";
 
 const defaultValues = {
   state: {
@@ -79,10 +87,10 @@ const values = {
     calculateGhostPiece: {file: "standardRules.js", name: "calculateGhostPiece"},
   },
   state: structuredClone(defaultValues.state),
-  handling: structuredClone(defaultValues.handling),
+  handling: ls.values.handling ?? structuredClone(defaultValues.handling),
   keybinds: {
-    play: playKeybinds,
-    meta: metaKeybinds,
+    play: ls.values.keybinds.play ?? structuredClone(playKeybinds),
+    meta: ls.values.keybinds.meta ?? structuredClone(metaKeybinds),
   },
   files: files,
   rotationSystem: SRSPlusData,

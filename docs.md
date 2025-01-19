@@ -121,7 +121,7 @@ This document will contain all the documentation for Spentris. It is intended as
   - [ ] Ability to create a custom mode
   - [ ] Create ending screen for games 
 - [ ] Persistent Data
-  - [ ] Save data with `localStorage`
+  - [x] Save data with `localStorage`
   - [ ] Save data to a file
     - [ ] Export data
     - [ ] Import data
@@ -136,3 +136,6 @@ This document will contain all the documentation for Spentris. It is intended as
   - [ ] Automatically generate puzzles
 - [ ] Lessons
   - *too far ahead, give it a month or two*
+- [ ] Code
+  - [ ] Centralize all values
+  - [ ] Enforce D.R.Y. principle

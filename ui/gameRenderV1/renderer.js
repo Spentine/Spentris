@@ -255,7 +255,7 @@ class GameRenderer {
       state[i] = Math.floor(state[i] * tileSize);
     }
     
-    this.ctx.fillStyle = "#000000";
+    this.ctx.fillStyle = "#00000022";
     this.ctx.fillRect(
       metrics.canvasMetrics.x,
       metrics.canvasMetrics.y,
@@ -263,7 +263,7 @@ class GameRenderer {
       metrics.canvasMetrics.height,
     );
     
-    this.ctx.fillStyle = "#222222";
+    this.ctx.fillStyle = "#333333";
     this.ctx.fillRect(
       metrics.boardMetrics.x,
       metrics.boardMetrics.y,
