@@ -81,6 +81,8 @@ button {
   border-radius: 4px;
   
   box-shadow: 0px 0px 8px #ffffff44;
+  
+  transition: 0.1s;
 }
 
 button:hover {
@@ -100,6 +102,13 @@ input {
   border-radius: 8px;
   
   box-shadow: 0px 0px 8px #ffffff44;
+  
+  transition: 0.1s;
+}
+
+input:hover {
+  background-color: #3a3a3a;
+  border: solid 2px #4a4a4a;
 }
 
 /* ==== class styles ==== */

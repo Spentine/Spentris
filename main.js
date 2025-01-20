@@ -25,12 +25,12 @@ function main() {
   menus.addFunctions();
   
   // start game
-  menus.event.on("gameStart", (e) => {
-    console.log(e);
+  menus.event.on("gameStart", (startEvent) => {
+    console.log(startEvent);
     
     // create game
-    const game = new Stacker(e.settings.gameValues);
-    e.initFunction(game);
+    const game = new Stacker(startEvent.settings.gameValues);
+    startEvent.initFunction(game);
     let gamePlaying = true;
     
     // create rendering engine
@@ -57,21 +57,22 @@ function main() {
     // create keyboard input system
     const inputForward = bindInputFunctions(game);
     const playKeyboardListener = new KeyboardInput(
-      inputForward, e.settings.keybinds.play
+      inputForward, startEvent.settings.keybinds.play
     );
     const metaKeyboardListener = new KeyboardInput(
-      inputForward, e.settings.keybinds.meta
+      inputForward, startEvent.settings.keybinds.meta
     );
     playKeyboardListener.addListeners();
     metaKeyboardListener.addListeners();
     
     // add basic listeners
-    const addListeners = () => {
+    const addListeners = function () {
       game.event.on("reset", (e) => {
         gamePlaying = true;
         addListeners();
+        startEvent.initFunction(game);
         rState.addListeners();
-        if (playKeyboardListener.listenersAttached === false) {
+        if (!playKeyboardListener.listenersAttached) {
           playKeyboardListener.addListeners();
         }
       });

@@ -183,7 +183,7 @@ const translations = {
       ui: `"Kaisotai", "Bloxyl", sans-serif`,
       gameStats: "Kaisotai",
     },
-  }
+  },
 }
 
 var currentLanguage = null;

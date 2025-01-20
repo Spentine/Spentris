@@ -4,6 +4,10 @@ This document will contain all the documentation for Spentris. It is intended as
 
 ## Current File Structure
 
+- `.github`
+  - `workflows`
+    - `static.yml`
+      - *deploys Spentris to GitHub Pages*
 - `addons` (empty)
   - *currently does not contain anything*
 - `deprecated` (deprecated)
@@ -57,7 +61,7 @@ This document will contain all the documentation for Spentris. It is intended as
   - *must be backwards compatible so that local settings aren't reset on a refactor*
   - localStorage.js
     - *contains a singleton class to manage `localStorage`*
-- `mmOutput`
+- `mmOutput` (unused)
   - *multimedia output*
   - `audio` (empty)
     - *will contain files that will handle audio*
@@ -69,11 +73,10 @@ This document will contain all the documentation for Spentris. It is intended as
     - `Bloxyl.otf`
       - *a font I made a while ago that fits the style of this game*
       - *doesn't really adhere to font standards so beware*
-    - `GN-Kin-iro_SansSerif.ttf`
+    - `GN-Kin-iro_SansSerif.ttf` (unused)
       - *a Japanese font*
     - `Kaisotai-Next-UP-B.otf`
       - *a Japanese font*
-      - *the font used ingame*
   - `gameRenderV1`
     - *the first iteration of the rendering engine*
     - *uses `CanvasRenderingContext2D` to render, which may not be very performant*
@@ -128,7 +131,6 @@ This document will contain all the documentation for Spentris. It is intended as
     - [x] Handling
     - [x] Keybinds
   - [x] Update localization support for the UI
-  - [ ] Ability to create a custom mode
   - [ ] Create ending screen for games 
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
@@ -138,7 +140,9 @@ This document will contain all the documentation for Spentris. It is intended as
 - [ ] Game
   - [x] Create more modes
     - [x] 40L
+      - [ ] make time start when you move first piece
     - [x] Blitz / Ultra
+  - [ ] Ability to create a custom mode
   - [ ] Add all-spin+ with T-piece immobility
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
