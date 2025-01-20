@@ -1,8 +1,8 @@
-import { gaEventHandler } from "./nextEvent.js";
-import { Board, Piece, BoardMino, PieceMino } from "./stackerObjects.js";
-import { SRSData } from "./rsData.js";
-import { EventEmitter } from "../eventEmitter.js";
-import { functionMap } from "./util.js";
+import { gaEventHandler } from "../nextEvent.js";
+import { Board, Piece, BoardMino, PieceMino } from "../stackerObjects.js";
+import { SRSData } from "../rsData.js";
+import { EventEmitter } from "../../eventEmitter.js";
+import { functionMap } from "../util.js";
 
 /**
  * updates the game state from (a, b] where a is the previous time and b is the current time
@@ -263,6 +263,13 @@ const update = function(tDelta, iter=0) {
   }
   
   this.time = endTime;
+  
+  // important note:
+  // try not to use this for events because it's update-dependent and not time-dependent
+  this.event.emit("update", {
+    time: this.time,
+    success: true,
+  });
 };
 
 /**

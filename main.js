@@ -30,6 +30,7 @@ function main() {
     
     // create game
     const game = new Stacker(e.settings.gameValues);
+    e.initFunction(game);
     let gamePlaying = true;
     
     // create rendering engine

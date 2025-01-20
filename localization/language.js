@@ -127,7 +127,7 @@ const translations = {
           }
           
           if (clear.perfectClear) {
-            text.primary += " パーフェクトクリア";
+            text.primary += " パフェ";
           }
           
           text.secondary = [];
@@ -137,7 +137,7 @@ const translations = {
           }
           
           if (clear.combo >= 2) {
-            text.secondary.push(`コンボ x${clear.combo - 1}`);
+            text.secondary.push(`${clear.combo - 1} REN`);
           }
           
           text.secondary = text.secondary.join(" ");

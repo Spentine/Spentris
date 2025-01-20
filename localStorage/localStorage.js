@@ -76,7 +76,7 @@ class LocalStorageHandler {
   save() {
     this.jsonCompatible(this.values);
     
-    localStorage.setItem("Spentris2", JSON.stringify(ls.values));
+    localStorage.setItem("Spentris2", JSON.stringify(this.values));
     
     this.gameCompatible(this.values);
   }

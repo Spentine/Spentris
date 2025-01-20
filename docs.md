@@ -17,9 +17,17 @@ This document will contain all the documentation for Spentris. It is intended as
     - *an old version of main.js that would contain all the values and run everything necessary for the game engine to function*
     - *replaced in lieu of a new version with menu features and better code overall*
 - `engine`
-  - `allSpin.js`
-    - *contains functions important for All-Spin mechanics*
-    - ***deprecated***
+  - `modes`
+    - *contains scripts that contain data to run different game modes*
+    - `standardModes.js`
+      - *contains three simple guideline modes*
+  - `stackerFunctions`
+    - *contains scripts with functions that modify the stacker*
+    - `standardRules.js`
+      - *contains all the functions to power a standard block stacker game*
+      - *basically the heart of everything*
+    - `allSpin.js`
+      - *contains functions important for All-Spin mechanics*
   - `functionLibrary.js`
     - *combines all the `Stacker` functions into one object that can be readily accessed*
   - `nextEvent.js`
@@ -31,9 +39,6 @@ This document will contain all the documentation for Spentris. It is intended as
     - *contains the base `Stacker` class*
   - `stackerObjects.js`
     - *contains important `Stacker` objects like `BoardMino`s and `PieceMino`s
-  - `standardRules.js`
-    - *contains all the functions to power a standard block stacker game*
-    - *basically the heart of everything*
   - `util.js`
     - *contains utilities (like functions or constants) that are not dependent on any other file*
 - `interaction`
@@ -68,7 +73,7 @@ This document will contain all the documentation for Spentris. It is intended as
       - *a Japanese font*
     - `Kaisotai-Next-UP-B.otf`
       - *a Japanese font*
-      - *the font used in-game*
+      - *the font used ingame*
   - `gameRenderV1`
     - *the first iteration of the rendering engine*
     - *uses `CanvasRenderingContext2D` to render, which may not be very performant*
@@ -131,10 +136,10 @@ This document will contain all the documentation for Spentris. It is intended as
     - [ ] Export data
     - [ ] Import data
 - [ ] Game
-  - [ ] Create more modes
-    - [ ] 40L
-    - [ ] 1000L
-    - [ ] Blitz / Ultra
+  - [x] Create more modes
+    - [x] 40L
+    - [x] Blitz / Ultra
+  - [ ] Add all-spin+ with T-piece immobility
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator
@@ -144,5 +149,6 @@ This document will contain all the documentation for Spentris. It is intended as
 - [ ] Code
   - [ ] Centralize all values
   - [x] Enforce D.R.Y. principle
+  - [ ] Remove logic from input handler functions in engine
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters

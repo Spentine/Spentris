@@ -1,6 +1,9 @@
 // values
 import { values, defaultValues } from "./defaultValues.js";
 
+// standard modes
+import { standardModes } from "../../engine/modes/standardModes.js";
+
 // event emitter
 import { EventEmitter } from "../../eventEmitter.js";
 
@@ -160,7 +163,43 @@ const functionIds = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "marathon",
-        settings: this.generateSettings(),
+        settings: this.generateSettings({
+          state: standardModes.marathon.state, 
+        }),
+        initFunction: standardModes.marathon.initFunction,
+      });
+    }
+  },
+  
+  // 40l
+  menuPlayButtonSprint: {
+    origin: ["home", "buttonStart"],
+    type: "click",
+    function: function () {
+      this.changeMenu("ingame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "sprint",
+        settings: this.generateSettings({
+          state: standardModes.sprint.state, 
+        }),
+        initFunction: standardModes.sprint.initFunction,
+      });
+    }
+  },
+  
+  menuPlayButtonUltra: {
+    origin: ["home", "buttonStart"],
+    type: "click",
+    function: function () {
+      this.changeMenu("ingame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "ultra",
+        settings: this.generateSettings({
+          state: standardModes.ultra.state, 
+        }),
+        initFunction: standardModes.ultra.initFunction,
       });
     }
   },
@@ -183,7 +222,6 @@ const functionIds = {
     }
   },
   
-  // todo: apply DRY principle
   menuHandlingARR: {
     origin: ["handling", "values", "arr"],
     type: "change",
@@ -351,12 +389,14 @@ class MenuHandler {
    * generates an object with the settings for the game
    * @returns {object}
    */
-  generateSettings() {
+  generateSettings(data) {
+    data = data ?? {};
+    
     const functionLocations = this.values.functionLocations;
     const gameFunctions = functionLocationAccessor(functionLocations, this.values.files);
     
-    const state = this.values.state;
-    const handling = this.values.handling;
+    const state = data.state ?? this.values.state;
+    const handling = data.handling ?? this.values.handling;
     state.das = handling.das;
     state.arr = handling.arr;
     state.sdf = handling.sdf;

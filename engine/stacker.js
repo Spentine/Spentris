@@ -1,4 +1,4 @@
-import { standardFunctions } from "./standardRules.js";
+import { standardFunctions } from "./stackerFunctions/standardRules.js";
 
 class Stacker {
   

@@ -1,4 +1,4 @@
-import { functionMap } from "./util.js";
+import { functionMap } from "../util.js";
 
 /**
  * immobility rule for all spin
