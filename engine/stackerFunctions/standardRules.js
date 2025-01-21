@@ -337,13 +337,13 @@ const initialize = function(params) {
   );
   
   // create the board
-  this.board = new Board(
+  this.board = params.board ?? new Board(
     params.width ?? 10,
     params.height ?? 40
   );
   
   // create the next queue
-  this.nextQueue = [];
+  this.nextQueue = params.nextQueue ?? [];
   
   // the minimum number of pieces in the queue at once
   this.refillQueue = params.refillQueue ?? 5;
@@ -586,9 +586,12 @@ const lehmerRNG = function(seed) {
 };
 
 /**
+ * 7-bag randomizer
  * @param {string} mode
  */
 const generateNext = function(mode) {
+  // consider removing the mode parameter outright
+  // if you want to use a different randomzation then swap out the function
   if (mode === "7-bag") {
     this.nextQueue.push(...this.rng.shuffleArray(["Z", "L", "O", "S", "I", "J", "T"]));
   }

@@ -9,38 +9,62 @@
   <body>
     <!-- main menu / home menu -->
     <div class="menu padding-inside" id="menuHome">
-      <!-- for debugging, we'll just have a start button here -->
-      <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuHomeButtonPlay">Play</button>
-        <button class="large" id="menuHomeButtonSettings">Settings</button>
-        <button class="large" id="menuHomeButtonLanguage">Language</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuHomeButtonPlay">Play</button>
+          <button class="menuButton" id="menuHomeButtonSettings">Settings</button>
+          <button class="menuButton" id="menuHomeButtonLanguage">Language</button>
+        </div>
       </div>
     </div>
     
     <!-- play menu -->
     <div class="menu padding-inside" id="menuPlay">
-      <button class="large" id="menuPlayButtonBack">Back</button>
-      <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuPlayButtonMarathon"> Marathon </button>
-        <!-- aka 40 lines -->
-        <button class="large" id="menuPlayButtonSprint"> Sprint </button>
-        <!-- aka blitz -->
-        <button class="large" id="menuPlayButtonUltra"> Ultra </button>
+      <button class="menuButton" id="menuPlayButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuPlayButtonStandardGamemodes"> Standard Gamemodes </button>
+          <button class="menuButton" id="menuPlayButtonPuzzles"> Puzzles </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- standard gamemodes menu -->
+    <div class="menu padding-inside" id="menuStandardGamemodes">
+      <button class="menuButton" id="menuStandardGamemodesButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuStandardGamemodesButtonMarathon"> Marathon </button>
+          <button class="menuButton" id="menuStandardGamemodesButtonSprint"> Sprint </button>
+          <button class="menuButton" id="menuStandardGamemodesButtonUltra"> Ultra </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- puzzles menu -->
+    <div class="menu padding-inside" id="menuPuzzles">
+      <button class="menuButton" id="menuPuzzlesButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          
+        </div>
       </div>
     </div>
     
     <!-- settings menu -->
     <div class="menu padding-inside" id="menuSettings">
-      <button class="large" id="menuSettingsButtonBack">Back</button>
-      <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuSettingsButtonHandling">Handling</button>
-        <button class="large" id="menuSettingsButtonKeybinds">Keybinds</button>
+      <button class="menuButton" id="menuSettingsButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuSettingsButtonHandling">Handling</button>
+          <button class="menuButton" id="menuSettingsButtonKeybinds">Keybinds</button>
+        </div>
       </div>
     </div>
     
     <!-- handling menu -->
     <div class="menu padding-inside" id="menuHandling">
-      <button class="large" id="menuHandlingButtonBack">Back</button>
+      <button class="menuButton" id="menuHandlingButtonBack">Back</button>
       <div class="center-inside window-fill padding-inside">
         <div class="two-grid padding-inside">
           <!-- allow text inputs for numbers because of Infinity -->
@@ -70,7 +94,7 @@
     
     <!-- keybinds menu -->
     <div class="menu padding-inside" id="menuKeybinds">
-      <button class="large" id="menuKeybindsButtonBack">Back</button>
+      <button class="menuButton" id="menuKeybindsButtonBack">Back</button>
       <div class="padding-inside">
         <div class="two-grid padding-inside">
           <label class="large" for="menuKeybindsLeftContainer" id="menuKeybindsLeftLabel">Left</label>
@@ -105,10 +129,12 @@
     
     <!-- language -->
     <div class="menu padding-inside" id="menuLanguage">
-      <button class="large" id="menuLanguageButtonBack">Back</button>
-      <div class="center-inside window-fill padding-inside">
-        <button class="large" id="menuLanguageButtonEnglish"> English </button>
-        <button class="large" id="menuLanguageButtonJapanese"> 日本語 </button>
+      <button class="menuButton" id="menuLanguageButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuLanguageButtonEnglish"> English </button>
+          <button class="menuButton" id="menuLanguageButtonJapanese"> 日本語 </button>
+        </div>
       </div>
     </div>
     

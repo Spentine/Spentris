@@ -37,7 +37,7 @@ const immobilityRule = function(piece, board) {
  * all-mini ruleset
  * @param {Piece} piece
  * @param {Board} board
- * @returns {string | null} the type of t-spin or null if it isn't a t-spin
+ * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isMiniSpin = function(piece, board) {
   if (piece.type === "T") {
@@ -49,10 +49,27 @@ const isMiniSpin = function(piece, board) {
 };
 
 /**
+ * all-mini+ ruleset
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {string | null} the type of spin or null if it isn't a spin
+ */
+const isMiniSpinPlus = function(piece, board) {
+  if (piece.type === "T") {
+    const tSpin = this.isTspin(piece, board);
+    if (tSpin !== null) {
+      return tSpin;
+    }
+  }
+  const immobile = this.immobilityRule(piece, board);
+  return immobile ? "mini" : null;
+};
+
+/**
  * all-spin ruleset
  * @param {Piece} piece
  * @param {Board} board
- * @returns {string | null} the type of t-spin or null if it isn't a t-spin
+ * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isAllSpin = function(piece, board) {
   if (piece.type === "T") {
@@ -62,11 +79,29 @@ const isAllSpin = function(piece, board) {
   }
 };
 
+/**
+ * all-spin+ ruleset
+ * @param {Piece} piece
+ * @param {Board} board
+ * @returns {string | null} the type of spin or null if it isn't a spin
+ */
+const isAllSpinPlus = function(piece, board) {
+  if (piece.type === "T") {
+    const tSpin = this.isTspin(piece, board);
+    if (tSpin !== null) {
+      return tSpin;
+    }
+  }
+  return this.immobilityRule(piece, board) ? "full" : null;
+}
+
 const functions = [
   immobilityRule,
   
   isMiniSpin,
+  isMiniSpinPlus,
   isAllSpin,
+  isAllSpinPlus,
 ];
 
 const allSpinFunctions = functionMap(functions);

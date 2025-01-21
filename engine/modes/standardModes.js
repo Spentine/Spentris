@@ -35,7 +35,8 @@ const standardFunctionLocations = {
   immobilityRule: {file: "allSpin.js", name: "immobilityRule"},
   // isSpin: {file: "standardRules.js", name: "isSpin"},
   // isSpin: {file: "allSpin.js", name: "isAllSpin"},
-  isSpin: {file: "allSpin.js", name: "isMiniSpin"},
+  // isSpin: {file: "allSpin.js", name: "isMiniSpin"},
+  isSpin: {file: "allSpin.js", name: "isMiniSpinPlus"},
   rotate: {file: "standardRules.js", name: "rotate"},
   holdPiece: {file: "standardRules.js", name: "holdPiece"},
   

@@ -25,19 +25,36 @@ const spentrisMenus = {
     buttonPlay: document.getElementById("menuHomeButtonPlay"),
     buttonSettings: document.getElementById("menuHomeButtonSettings"),
     buttonLanguage: document.getElementById("menuHomeButtonLanguage"),
+    
+    scrollable: false,
   },
   play: {
     container: document.getElementById("menuPlay"),
-    buttonBack: document.getElementById("menuPlayButtonBack"),
-    buttonMarathon: document.getElementById("menuPlayButtonMarathon"),
-    buttonSprint: document.getElementById("menuPlayButtonSprint"),
-    buttonUltra: document.getElementById("menuPlayButtonUltra"),
+    buttonStandardGamemodes: document.getElementById("menuPlayButtonStdGamemodes"),
+    buttonPuzzles: document.getElementById("menuPlayButtonPuzzles"),
+    
+    scrollable: false,
+  },
+  standardGamemodes: {
+    container: document.getElementById("menuStandardGamemodes"),
+    buttonBack: document.getElementById("menuStandardGamemodesButtonBack"),
+    buttonMarathon: document.getElementById("menuStandardGamemodesButtonMarathon"),
+    buttonSprint: document.getElementById("menuStandardGamemodesButtonSprint"),
+    buttonUltra: document.getElementById("menuStandardGamemodesButtonUltra"),
+    
+    scrollable: false,
+  },
+  puzzles: {
+    container: document.getElementById("menuPuzzles"),
+    buttonBack: document.getElementById("menuPuzzlesButtonBack"),
   },
   settings: {
     container: document.getElementById("menuSettings"),
     buttonBack: document.getElementById("menuSettingsButtonBack"),
     buttonHandling: document.getElementById("menuSettingsButtonHandling"),
     buttonKeybinds: document.getElementById("menuSettingsButtonKeybinds"),
+    
+    scrollable: false,
   },
   handling: {
     container: document.getElementById("menuHandling"),
@@ -51,6 +68,8 @@ const spentrisMenus = {
       are: document.getElementById("menuHandlingARE"),
       lca: document.getElementById("menuHandlingLCA"),
     },
+    
+    scrollable: true,
   },
   keybinds: {
     container: document.getElementById("menuKeybinds"),
@@ -77,16 +96,22 @@ const spentrisMenus = {
       holdPieceInput: "play",
       resetInput: "meta",
     },
+    
+    scrollable: true,
   },
   language: {
     container: document.getElementById("menuLanguage"),
     buttonBack: document.getElementById("menuLanguageButtonBack"),
     buttonEnglish: document.getElementById("menuLanguageButtonEnglish"),
     buttonJapanese: document.getElementById("menuLanguageButtonJapanese"),
+    
+    scrollable: false,
   },
   ingame: {
     container: document.getElementById("menuIngame"),
     renderCanvas: document.getElementById("renderCanvas"),
+    
+    scrollable: false,
   },
 };
 
@@ -116,6 +141,26 @@ const redirectionIds = {
   menuPlayButtonBack: {
     origin: ["play", "buttonBack"],
     redirect: "home",
+  },
+  menuPlayButtonStandardGamemodes: {
+    origin: ["play", "buttonStandardGamemodes"],
+    redirect: "standardGamemodes",
+  },
+  menuPlayButtonPuzzles: {
+    origin: ["play", "buttonPuzzles"],
+    redirect: "puzzles",
+  },
+  
+  // standard gamemodes
+  menuStandardGamemodesButtonBack: {
+    origin: ["standardGamemodes", "buttonBack"],
+    redirect: "play",
+  },
+  
+  // puzzles
+  menuPuzzlesButtonBack: {
+    origin: ["puzzles", "buttonBack"],
+    redirect: "play",
   },
   
   // settings
@@ -155,7 +200,7 @@ function menuHandlingFunctionGenerator(handlingValue) {
 
 // all functions binded to the MenuHandler
 const functionIds = {
-  menuPlayButtonMarathon: {
+  menuStandardGamemodesButtonMarathon: {
     origin: ["home", "buttonStart"],
     type: "click",
     function: function () {
@@ -164,7 +209,8 @@ const functionIds = {
         time: Date.now(),
         mode: "marathon",
         settings: this.generateSettings({
-          state: standardModes.marathon.state, 
+          functionLocations: standardModes.marathon.functionLocations,
+          state: standardModes.marathon.state,
         }),
         initFunction: standardModes.marathon.initFunction,
       });
@@ -172,7 +218,7 @@ const functionIds = {
   },
   
   // 40l
-  menuPlayButtonSprint: {
+  menuStandardGamemodesButtonSprint: {
     origin: ["home", "buttonStart"],
     type: "click",
     function: function () {
@@ -181,14 +227,15 @@ const functionIds = {
         time: Date.now(),
         mode: "sprint",
         settings: this.generateSettings({
-          state: standardModes.sprint.state, 
+          functionLocations: standardModes.sprint.functionLocations,
+          state: standardModes.sprint.state,
         }),
         initFunction: standardModes.sprint.initFunction,
       });
     }
   },
   
-  menuPlayButtonUltra: {
+  menuStandardGamemodesButtonUltra: {
     origin: ["home", "buttonStart"],
     type: "click",
     function: function () {
@@ -197,7 +244,8 @@ const functionIds = {
         time: Date.now(),
         mode: "ultra",
         settings: this.generateSettings({
-          state: standardModes.ultra.state, 
+          functionLocations: standardModes.ultra.functionLocations,
+          state: standardModes.ultra.state,
         }),
         initFunction: standardModes.ultra.initFunction,
       });
@@ -326,6 +374,14 @@ class MenuHandler {
     this.hideMenu(previousMenu);
     this.showMenu(this.currentMenu);
     
+    // set the body scrollability
+    // use the .scrollable class
+    if (this.menus[menu].scrollable) {
+      document.body.classList.add("scrollable");
+    } else {
+      document.body.classList.remove("scrollable");
+    }
+    
     this.event.emit("menuChange", {
       time: Date.now(),
       previousMenu: previousMenu,
@@ -359,12 +415,16 @@ class MenuHandler {
     const ids = Object.keys(this.redirects);
     
     for (const id of ids) {
-      const redirect = this.redirects[id];
-      
-      const origin = document.getElementById(id);
-      origin.addEventListener(
-        "click", () => this.changeMenu(redirect.redirect)
-      );
+      try {
+        const redirect = this.redirects[id];
+        
+        const origin = document.getElementById(id);
+        origin.addEventListener(
+          "click", () => this.changeMenu(redirect.redirect)
+        );
+      } catch (e) {
+        console.error("Error adding redirect", id);
+      }
     }
   }
   
@@ -376,12 +436,16 @@ class MenuHandler {
     const ids = Object.keys(this.functions);
     
     for (const id of ids) {
-      const func = this.functions[id];
-      
-      const origin = document.getElementById(id);
-      origin.addEventListener(
-        func.type, func.function.bind(this)
-      );
+      try {
+        const func = this.functions[id];
+        
+        const origin = document.getElementById(id);
+        origin.addEventListener(
+          func.type, func.function.bind(this)
+        );
+      } catch (e) {
+        console.error("Error adding function", id);
+      }
     }
   }
   
@@ -392,7 +456,7 @@ class MenuHandler {
   generateSettings(data) {
     data = data ?? {};
     
-    const functionLocations = this.values.functionLocations;
+    const functionLocations = data.functionLocations ?? this.values.functionLocations;
     const gameFunctions = functionLocationAccessor(functionLocations, this.values.files);
     
     const state = data.state ?? this.values.state;
@@ -408,9 +472,6 @@ class MenuHandler {
       settings: {
         functionLocations: functionLocations,
         initialization: {
-          variableOverrides: {
-            
-          },
           parameters: {
             seed: "random",
             rotationSystem: this.values.rotationSystem,

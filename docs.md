@@ -122,6 +122,40 @@ This document will contain all the documentation for Spentris. It is intended as
 - `README.md`
   - *GitHub readme*
 
+## Menu
+
+Main Menu
+- Play
+  - Standard Gamemodes
+    - Marathon
+    - Sprint
+    - Ultra
+  - Puzzles
+- Settings
+  - Back
+  - Handling
+    - ARR
+    - DAS
+    - SDF
+    - DCD
+    - MSG
+    - ARE
+    - LCA
+  - Keybinds
+    - Left
+    - Right
+    - Soft Drop
+    - Hard Drop
+    - Rotate CCW
+    - Rotate CW
+    - Rotate 180
+    - Hold Piece
+    - Reset Game
+- Language
+  - Back
+  - English
+  - 日本語 (Japanese)
+
 ## To-do
 
 - [ ] UI
@@ -130,6 +164,7 @@ This document will contain all the documentation for Spentris. It is intended as
   - [x] Create settings interface that allows for users to change handling and keybinds
     - [x] Handling
     - [x] Keybinds
+      - [ ] Fix keybinds for different keyboard layouts
   - [x] Update localization support for the UI
   - [ ] Create ending screen for games 
 - [ ] Persistent Data
@@ -143,7 +178,8 @@ This document will contain all the documentation for Spentris. It is intended as
       - [ ] make time start when you move first piece
     - [x] Blitz / Ultra
   - [ ] Ability to create a custom mode
-  - [ ] Add all-spin+ with T-piece immobility
+  - [x] Add all-spin+ with T-piece immobility
+  - [ ] Remove `mode` parameter from `generateNext`
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator

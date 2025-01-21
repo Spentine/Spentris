@@ -128,6 +128,7 @@ input:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 /* width and height are same as window */
@@ -144,6 +145,7 @@ input:hover {
 /* adds padding between flexbox items */
 .padding-inside {
   gap: 16px;
+  row-gap: 16px;
   padding: 16px;
   box-sizing: border-box;
 }
@@ -164,6 +166,11 @@ input:hover {
   width: 100%;
 }
 
+/* scrollable menu */
+.scrollable {
+  overflow-y: auto;
+}
+
 /* inputs and interactions */
 
 button.large {
@@ -171,6 +178,14 @@ button.large {
   
   /* padding: 16px 16px 8px 16px; */
   padding: 16px;
+}
+
+button.menuButton {
+  font-size: 36px;
+  
+  /* padding: 16px 16px 8px 16px; */
+  padding: 16px;
+  /* margin: 4px; */
 }
 
 button.keybind {

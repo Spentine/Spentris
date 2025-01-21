@@ -66,6 +66,7 @@ function main() {
     metaKeyboardListener.addListeners();
     
     // add basic listeners
+    // probably should be moved to a function
     const addListeners = function () {
       game.event.on("reset", (e) => {
         gamePlaying = true;
