@@ -50,18 +50,44 @@ const translations = {
         },
       },
       ui: {
-        menuHomeButtonPlay: "Play",
+        // home
+        menuHomeButtonGame: "Game",
         menuHomeButtonSettings: "Settings",
         menuHomeButtonLanguage: "Language",
-        menuPlayButtonBack: "Back",
-        menuPlayButtonStandardGamemodes: "Standard Gamemodes",
+        
+        // game
+        menuGameButtonBack: "Back",
+        menuGameButtonStandardGamemodes: "Standard Gamemodes",
+        menuGameButtonPuzzles: "Puzzles",
+        
+        // puzzles
+        menuPuzzlesButtonBack: "Back",
+        menuPuzzlesButtonPlay: "Play",
+        menuPuzzlesButtonCreate: "Create",
+        
+        // play puzzles
+        menuPlayPuzzlesButtonBack: "Back",
+        menuPlayPuzzlesButtonListing: "Listing",
+        menuPlayPuzzlesButtonImport: "Import",
+        
+        // create puzzles
+        menuCreatePuzzlesButtonBack: "Back",
+        menuCreatePuzzlesButtonNew: "New",
+        menuCreatePuzzlesButtonTemplate: "Template",
+        menuCreatePuzzlesButtonImport: "Import",
+        
+        // standard gamemodes
         menuStandardGamemodesButtonBack: "Back",
         menuStandardGamemodesButtonMarathon: "Marathon",
         menuStandardGamemodesButtonSprint: "Sprint",
         menuStandardGamemodesButtonUltra: "Ultra",
+        
+        // settings
         menuSettingsButtonBack: "Back",
         menuSettingsButtonHandling: "Handling",
         menuSettingsButtonKeybinds: "Keybinds",
+        
+        // handling
         menuHandlingButtonBack: "Back",
         menuHandlingARRLabel: "ARR",
         menuHandlingDASLabel: "DAS",
@@ -70,6 +96,8 @@ const translations = {
         menuHandlingMSGLabel: "MSG",
         menuHandlingARELabel: "ARE",
         menuHandlingLCALabel: "LCA",
+        
+        // keybinds
         menuKeybindsButtonBack: "Back",
         menuKeybindsLeftLabel: "Left",
         menuKeybindsRightLabel: "Right",
@@ -80,6 +108,8 @@ const translations = {
         menuKeybindsRotate180Label: "Rotate 180",
         menuKeybindsHoldPieceLabel: "Hold Piece",
         menuKeybindsResetGameLabel: "Reset Game",
+        
+        // language
         menuLanguageButtonBack: "Back",
         menuLanguageButtonEnglish: "English",
         menuLanguageButtonJapanese: "日本語",
@@ -148,18 +178,44 @@ const translations = {
         },
       },
       ui: {
-        menuHomeButtonPlay: "プレイ",
+        // home
+        menuHomeButtonGame: "ゲーム",
         menuHomeButtonSettings: "設定",
         menuHomeButtonLanguage: "言語",
-        menuPlayButtonBack: "戻る",
-        menuPlayButtonStandardGamemodes: "標準ゲームモード",
+        
+        // game
+        menuGameButtonBack: "戻る",
+        menuGameButtonStandardGamemodes: "標準ゲームモード",
+        menuGameButtonPuzzles: "パズル",
+        
+        // puzzles
+        menuPuzzlesButtonBack: "戻る",
+        menuPuzzlesButtonPlay: "プレイ",
+        menuPuzzlesButtonCreate: "作成",
+        
+        // play puzzles
+        menuPlayPuzzlesButtonBack: "戻る",
+        menuPlayPuzzlesButtonListing: "リスト",
+        menuPlayPuzzlesButtonImport: "インポート",
+        
+        // create puzzles
+        menuCreatePuzzlesButtonBack: "戻る",
+        menuCreatePuzzlesButtonNew: "新規",
+        menuCreatePuzzlesButtonTemplate: "テンプレート",
+        menuCreatePuzzlesButtonImport: "インポート",
+        
+        // standard gamemodes
         menuStandardGamemodesButtonBack: "戻る",
         menuStandardGamemodesButtonMarathon: "マラソン",
         menuStandardGamemodesButtonSprint: "スプリント",
         menuStandardGamemodesButtonUltra: "ウルトラ",
+        
+        // settings
         menuSettingsButtonBack: "戻る",
         menuSettingsButtonHandling: "操作",
         menuSettingsButtonKeybinds: "キーバインド",
+        
+        // handling
         menuHandlingButtonBack: "戻る",
         menuHandlingARRLabel: "ARR",
         menuHandlingDASLabel: "DAS",
@@ -168,16 +224,20 @@ const translations = {
         menuHandlingMSGLabel: "MSG",
         menuHandlingARELabel: "ARE",
         menuHandlingLCALabel: "LCA",
+        
+        // keybinds
         menuKeybindsButtonBack: "戻る",
         menuKeybindsLeftLabel: "左",
         menuKeybindsRightLabel: "右",
         menuKeybindsSoftDropLabel: "ソフトドロップ",
         menuKeybindsHardDropLabel: "ハードドロップ",
-        menuKeybindsRotateCCWLabel: "反時計回りに回転",
-        menuKeybindsRotateCWLabel: "時計回りに回転",
+        menuKeybindsRotateCCWLabel: "反時計回り",
+        menuKeybindsRotateCWLabel: "時計回り",
         menuKeybindsRotate180Label: "180度回転",
         menuKeybindsHoldPieceLabel: "ホールド",
         menuKeybindsResetGameLabel: "リセット",
+        
+        // language
         menuLanguageButtonBack: "戻る",
         menuLanguageButtonEnglish: "English",
         menuLanguageButtonJapanese: "日本語",

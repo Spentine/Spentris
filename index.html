@@ -11,20 +11,20 @@
     <div class="menu padding-inside" id="menuHome">
       <div class="center-inside window-fill">
         <div class="center-inside padding-inside">
-          <button class="menuButton" id="menuHomeButtonPlay">Play</button>
+          <button class="menuButton" id="menuHomeButtonGame">Game</button>
           <button class="menuButton" id="menuHomeButtonSettings">Settings</button>
           <button class="menuButton" id="menuHomeButtonLanguage">Language</button>
         </div>
       </div>
     </div>
     
-    <!-- play menu -->
-    <div class="menu padding-inside" id="menuPlay">
-      <button class="menuButton" id="menuPlayButtonBack">Back</button>
+    <!-- game menu -->
+    <div class="menu padding-inside" id="menuGame">
+      <button class="menuButton" id="menuGameButtonBack">Back</button>
       <div class="center-inside window-fill">
         <div class="center-inside padding-inside">
-          <button class="menuButton" id="menuPlayButtonStandardGamemodes"> Standard Gamemodes </button>
-          <button class="menuButton" id="menuPlayButtonPuzzles"> Puzzles </button>
+          <button class="menuButton" id="menuGameButtonStandardGamemodes"> Standard Gamemodes </button>
+          <button class="menuButton" id="menuGameButtonPuzzles"> Puzzles </button>
         </div>
       </div>
     </div>
@@ -46,7 +46,31 @@
       <button class="menuButton" id="menuPuzzlesButtonBack">Back</button>
       <div class="center-inside window-fill">
         <div class="center-inside padding-inside">
-          
+          <button class="menuButton" id="menuPuzzlesButtonPlay"> Play </button>
+          <button class="menuButton" id="menuPuzzlesButtonCreate"> Create </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- play puzzles menu -->
+    <div class="menu padding-inside" id="menuPlayPuzzles">
+      <button class="menuButton" id="menuPlayPuzzlesButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuPlayPuzzlesButtonListing"> Listing </button>
+          <button class="menuButton" id="menuPlayPuzzlesButtonImport"> Import </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- create puzzles menu -->
+    <div class="menu padding-inside" id="menuCreatePuzzles">
+      <button class="menuButton" id="menuCreatePuzzlesButtonBack">Back</button>
+      <div class="center-inside window-fill">
+        <div class="center-inside padding-inside">
+          <button class="menuButton" id="menuCreatePuzzlesButtonNew"> New </button>
+          <button class="menuButton" id="menuCreatePuzzlesButtonTemplate"> Template </button>
+          <button class="menuButton" id="menuCreatePuzzlesButtonImport"> Import </button>
         </div>
       </div>
     </div>
@@ -141,7 +165,8 @@
     <!-- ingame -->
     <div class="menu" id="menuIngame">
       <!-- rely on canvas to render -->
-      <canvas id="renderCanvas"> </canvas>
     </div>
+    
+    <canvas id="renderCanvas"> </canvas>
   </body>
 </html>

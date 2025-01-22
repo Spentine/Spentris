@@ -22,18 +22,20 @@ import { translations, currentLanguage, setLanguage } from "../../localization/l
 const spentrisMenus = {
   home: {
     container: document.getElementById("menuHome"),
-    buttonPlay: document.getElementById("menuHomeButtonPlay"),
+    buttonGame: document.getElementById("menuHomeButtonGame"),
     buttonSettings: document.getElementById("menuHomeButtonSettings"),
     buttonLanguage: document.getElementById("menuHomeButtonLanguage"),
     
     scrollable: false,
+    canvas: false,
   },
-  play: {
-    container: document.getElementById("menuPlay"),
-    buttonStandardGamemodes: document.getElementById("menuPlayButtonStdGamemodes"),
-    buttonPuzzles: document.getElementById("menuPlayButtonPuzzles"),
+  game: {
+    container: document.getElementById("menuGame"),
+    buttonStandardGamemodes: document.getElementById("menuGameButtonStandardGamemodes"),
+    buttonPuzzles: document.getElementById("menuGameButtonPuzzles"),
     
     scrollable: false,
+    canvas: false,
   },
   standardGamemodes: {
     container: document.getElementById("menuStandardGamemodes"),
@@ -43,10 +45,33 @@ const spentrisMenus = {
     buttonUltra: document.getElementById("menuStandardGamemodesButtonUltra"),
     
     scrollable: false,
+    canvas: false,
   },
   puzzles: {
     container: document.getElementById("menuPuzzles"),
     buttonBack: document.getElementById("menuPuzzlesButtonBack"),
+    
+    scrollable: false,
+    canvas: false,
+  },
+  playPuzzles: {
+    container: document.getElementById("menuPlayPuzzles"),
+    buttonBack: document.getElementById("menuPlayPuzzlesButtonBack"),
+    listing: document.getElementById("menuPlayPuzzlesButtonListing"),
+    import: document.getElementById("menuPlayPuzzlesButtonImport"),
+    
+    scrollable: false,
+    canvas: false,
+  },
+  createPuzzles: {
+    container: document.getElementById("menuCreatePuzzles"),
+    buttonBack: document.getElementById("menuCreatePuzzlesButtonBack"),
+    new: document.getElementById("menuCreatePuzzlesButtonNew"),
+    template: document.getElementById("menuCreatePuzzlesButtonTemplate"),
+    import: document.getElementById("menuCreatePuzzlesButtonImport"),
+    
+    scrollable: false,
+    canvas: false,
   },
   settings: {
     container: document.getElementById("menuSettings"),
@@ -55,6 +80,7 @@ const spentrisMenus = {
     buttonKeybinds: document.getElementById("menuSettingsButtonKeybinds"),
     
     scrollable: false,
+    canvas: false,
   },
   handling: {
     container: document.getElementById("menuHandling"),
@@ -70,6 +96,7 @@ const spentrisMenus = {
     },
     
     scrollable: true,
+    canvas: false,
   },
   keybinds: {
     container: document.getElementById("menuKeybinds"),
@@ -98,6 +125,7 @@ const spentrisMenus = {
     },
     
     scrollable: true,
+    canvas: false,
   },
   language: {
     container: document.getElementById("menuLanguage"),
@@ -106,12 +134,17 @@ const spentrisMenus = {
     buttonJapanese: document.getElementById("menuLanguageButtonJapanese"),
     
     scrollable: false,
+    canvas: false,
   },
   ingame: {
     container: document.getElementById("menuIngame"),
-    renderCanvas: document.getElementById("renderCanvas"),
     
     scrollable: false,
+    canvas: true,
+  },
+  
+  global: {
+    renderCanvas: document.getElementById("renderCanvas"),
   },
 };
 
@@ -124,9 +157,9 @@ const spentrisMenus = {
  */
 const redirectionIds = {
   // home
-  menuHomeButtonPlay: {
-    origin: ["home", "buttonPlay"],
-    redirect: "play",
+  menuHomeButtonGame: {
+    origin: ["home", "buttonGame"],
+    redirect: "game",
   },
   menuHomeButtonSettings: {
     origin: ["home", "buttonSettings"],
@@ -137,30 +170,50 @@ const redirectionIds = {
     redirect: "language",
   },
   
-  // play
-  menuPlayButtonBack: {
-    origin: ["play", "buttonBack"],
+  // game
+  menuGameButtonBack: {
+    origin: ["game", "buttonBack"],
     redirect: "home",
   },
-  menuPlayButtonStandardGamemodes: {
-    origin: ["play", "buttonStandardGamemodes"],
+  menuGameButtonStandardGamemodes: {
+    origin: ["game", "buttonStandardGamemodes"],
     redirect: "standardGamemodes",
   },
-  menuPlayButtonPuzzles: {
-    origin: ["play", "buttonPuzzles"],
+  menuGameButtonPuzzles: {
+    origin: ["game", "buttonPuzzles"],
     redirect: "puzzles",
   },
   
   // standard gamemodes
   menuStandardGamemodesButtonBack: {
     origin: ["standardGamemodes", "buttonBack"],
-    redirect: "play",
+    redirect: "game",
   },
   
   // puzzles
   menuPuzzlesButtonBack: {
     origin: ["puzzles", "buttonBack"],
-    redirect: "play",
+    redirect: "game",
+  },
+  menuPuzzlesButtonPlay: {
+    origin: ["puzzles", "buttonPlay"],
+    redirect: "playPuzzles",
+  },
+  menuPuzzlesButtonCreate: {
+    origin: ["puzzles", "buttonCreate"],
+    redirect: "createPuzzles",
+  },
+  
+  // play puzzles
+  menuPlayPuzzlesButtonBack: {
+    origin: ["playPuzzles", "buttonBack"],
+    redirect: "puzzles",
+  },
+  
+  // create puzzles
+  menuCreatePuzzlesButtonBack: {
+    origin: ["createPuzzles", "buttonBack"],
+    redirect: "puzzles",
   },
   
   // settings
@@ -351,6 +404,21 @@ class MenuHandler {
    */
   showMenu(menu) {
     this.menus[menu].container.style.display = "block";
+    
+    // set the body scrollability
+    // use the .scrollable class
+    if (this.menus[menu].scrollable) {
+      document.body.classList.add("scrollable");
+    } else {
+      document.body.classList.remove("scrollable");
+    }
+    
+    // set the canvas visibility
+    if (this.menus[menu].canvas) {
+      this.menus.global.renderCanvas.style.display = "block";
+    } else {
+      this.menus.global.renderCanvas.style.display = "none";
+    }
   }
   
   /**
@@ -373,14 +441,6 @@ class MenuHandler {
     
     this.hideMenu(previousMenu);
     this.showMenu(this.currentMenu);
-    
-    // set the body scrollability
-    // use the .scrollable class
-    if (this.menus[menu].scrollable) {
-      document.body.classList.add("scrollable");
-    } else {
-      document.body.classList.remove("scrollable");
-    }
     
     this.event.emit("menuChange", {
       time: Date.now(),

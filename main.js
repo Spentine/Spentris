@@ -34,7 +34,7 @@ function main() {
     let gamePlaying = true;
     
     // create rendering engine
-    const renderCanvas = menus.menus.ingame.renderCanvas;
+    const renderCanvas = menus.menus.global.renderCanvas;
     const ctx = renderCanvas.getContext("2d");
     const rState = new RenderGameState({ // converter
       game: game,

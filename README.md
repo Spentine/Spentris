@@ -1,6 +1,20 @@
 # Spentris
 
-This repository houses the *second version* of Spentris. The motivation for creating a brand new version was because of the rashness, hastiness, and spaghettification of the old code. I was unable to continue working on the previous version, so I planned and created a new version over many months. This time, I was attentive to ensure that there was sufficient planning and lookahead involved with the project. Modularity within the project is heavily utilized to make swapping parts easier. Comments must be somewhat frequent but not redundant.
+Spentris is a game of the Block Stacker genre. It will contain a variety of features ranging from learning material to gameplay. The program is intended for use by beginners to learn new strategies and for professionals to refresh and review their skills. All intended use purposes will be listed below:
+
+-	Puzzles to practice new strategies
+-	Lessons to teach new strategies
+-	Ability to play generic game modes
+-	Multiplayer over WebSocket
+  If not, create 1v1 vs bots
+-	Separability of UI and Game Engine
+  - Allows for separate refactoring
+  - More expandability
+- As a passive finesse trainer
+
+Of all the features, the most important is to allow for expandability. This will allow for the program to continually be improved without refactoring.
+
+*(taken from deprecated docs.md)*
 
 ## Documentation
 

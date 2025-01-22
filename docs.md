@@ -2,6 +2,115 @@
 
 This document will contain all the documentation for Spentris. It is intended as a reference while developing.
 
+## Object Formats
+
+Default values will automatically be filled in and marked as defaults. Keys may be optional.
+
+### Stacker Parameters
+
+```js
+new Stacker(initializationData);
+```
+
+```js
+initializationData = {
+  version: 1, // {number | string} the version number (current is 1)
+  functions: { // contains maps from keys to functions
+    update: // {function}
+    tick: // {function}
+    
+    // each function used within the program (as accessed by `this.[...]`)
+    
+    foo: // {function},
+    // this.foo could be called by the other functions
+  },
+  settings: {
+    functionLocations: // use the format specified by *Standard Function Locations*
+    initialization: {
+      /*
+       * variableOverrides: {
+       *   foo: bar
+       *   // after initialization replace
+       * }
+       */
+      // was previously intended to override variables
+      // but was made obsolete by initialization parametsrs
+      
+      parameters: {
+        // each key is optional and may be omitted
+        // if a key is omitted the game will use predefined default values
+        
+        seed: 0 // {"random" | number}
+        rotationSystem: // use the format specified by *Rotation System Data*
+        state: {
+          // keys are optional
+          
+          das: 83.33 // {number} ms/delay
+          arr: 0 // {number} ms/repeat
+          sdf: Infinity // {number} factor (multiplies with gravity, higher number is faster)
+          msg: 1000 // {number} ms/drop (minimum sdf gravity)
+          
+          gravity: Infinity // {number} ms/drop
+          lockDelay: 500 // {number} ms/lock
+          maxLockDelay: 5000 // {number} ms/lock
+          
+          startingLevel: 1 // {number} starting level for the game
+          levelling: false // {boolean} whether levelling would influence the game
+          masterLevels: false // {boolean} decides whether levels above 20 are master levels
+        }
+        
+        // only takes action if params.board is undefined
+        width: 10 // {number} width of the board
+        height: 40 // {number} height of the board
+        
+        board: new Board(
+          params.width, // default 10
+          params.height, // default 40
+        ) // Board type defined by *Object `Board`*
+        
+        nextQueue: [] // {string[]} where each string represents a piece
+        refillQueue: 5 // {number} mininum number of pieces in the queue at any given time
+      }
+    }
+  }
+}
+```
+
+> **Reference Directory**
+> - [Standard Function Locations](#standard-function-locations)
+> - [Rotation System Data](#rotation-system-data)
+> - [Object `Board`](#object-board)
+
+### Standard Function Locations
+Only used to make defining the functions in `initializationData.functions` easier than creating a bunch of functions. It also has a greater possibility of modularity and exporting because it uses all regular JSON objects. In `engine/util.js`, `function functionLocationAccessor();` could be used to convert `standardFunctionLocations` into a `initializationData.functions` format.
+
+```js
+standardFunctionLocations = {
+  update: {file: "standardRules.js", name: "update"},
+  tick: {file: "standardRules.js", name: "tick"},
+  
+  // each key will be converted to a function
+  
+  foo: {
+    file: "bar.js" // {string} file to access from
+    name: "foo" // {string} function name
+  },
+  
+  // the file to name object is defined in `engine/functionLibrary.js`.
+  // the file name is chosen to make it easier to remember, but it's really arbitrary.
+}
+
+// how to convert to gameFunctions for use in initializationData.functions
+const gameFunctions = functionLocationAccessor(
+  standardFunctionLocations, // object of functions
+  files // file to object mapping
+);
+```
+
+### Rotation System Data
+
+### Object `Board`
+
 ## Current File Structure
 
 - `.github`
@@ -108,6 +217,11 @@ This document will contain all the documentation for Spentris. It is intended as
     - `TETRIOconnected` (unused)
       - `ghost.png`
       - `minos.png`
+- `puzzles`
+  - `engine` (empty)
+    - *contains scripts that handle running the puzzles using the engine*
+  - `ui` (empty)
+    - *contains scripts that present puzzles to the user*
 - `docs.md`
   - *documentation for the entire game*
   - *this file*
@@ -116,7 +230,7 @@ This document will contain all the documentation for Spentris. It is intended as
 - `index.html`
   - *the web page with the actual game on it*
 - `archivedMain.js`
-  - *an archived version of `main.js` that is used for future reference when trying to reoperate the main game engine`
+  - *an archived version of `main.js` that is used for future reference when trying to reoperate the main game engine*
 - `main.js`
   - *the only script `index.html` imports, should load everything else*
 - `README.md`
@@ -124,13 +238,22 @@ This document will contain all the documentation for Spentris. It is intended as
 
 ## Menu
 
+*Italic menu options are planned and not in the game.*
+
 Main Menu
-- Play
+- Game
   - Standard Gamemodes
     - Marathon
     - Sprint
     - Ultra
   - Puzzles
+    - Play
+      - Listing
+      - Import
+    - Create
+      - New
+      - Template
+      - Import
 - Settings
   - Back
   - Handling
