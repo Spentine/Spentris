@@ -40,36 +40,38 @@ initializationData = {
         // each key is optional and may be omitted
         // if a key is omitted the game will use predefined default values
         
-        seed: 0 // {"random" | number}
+        seed: 0, // {"random" | number}
         rotationSystem: // use the format specified by *Rotation System Data*
         state: {
           // keys are optional
           
-          das: 83.33 // {number} ms/delay
-          arr: 0 // {number} ms/repeat
-          sdf: Infinity // {number} factor (multiplies with gravity, higher number is faster)
-          msg: 1000 // {number} ms/drop (minimum sdf gravity)
+          das: 83.33, // {number} ms/delay
+          arr: 0, // {number} ms/repeat
+          sdf: Infinity, // {number} factor (× gravity, higher number is faster)
+          msg: 1000, // {number} ms/drop (minimum sdf gravity)
           
-          gravity: Infinity // {number} ms/drop
-          lockDelay: 500 // {number} ms/lock
-          maxLockDelay: 5000 // {number} ms/lock
+          gravity: Infinity, // {number} ms/drop
+          lockDelay: 500, // {number} ms/lock
+          maxLockDelay: 5000, // {number} ms/lock
           
-          startingLevel: 1 // {number} starting level for the game
-          levelling: false // {boolean} whether levelling would influence the game
-          masterLevels: false // {boolean} decides whether levels above 20 are master levels
-        }
+          startingLevel: 1, // {number} starting level for the game
+          levelling: false, // {boolean} whether levelling would influence the game
+          masterLevels: false, // {boolean} decides whether levels above 20 are master levels
+        },
         
         // only takes action if params.board is undefined
-        width: 10 // {number} width of the board
-        height: 40 // {number} height of the board
+        width: 10, // {number} width of the board
+        height: 40, // {number} height of the board
         
         board: new Board(
           params.width, // default 10
           params.height, // default 40
-        ) // Board type defined by *Object `Board`*
+        ), // Board type defined by *Object `Board`*
         
-        nextQueue: [] // {string[]} where each string represents a piece
-        refillQueue: 5 // {number} mininum number of pieces in the queue at any given time
+        nextQueue: [], // {string[]} where each string represents a piece
+        refillQueue: 5, // {number} mininum number of pieces in the queue at any given time
+        
+        eventEmitter: new EventEmitter(); // {EventEmitter}
       }
     }
   }
@@ -92,7 +94,7 @@ standardFunctionLocations = {
   // each key will be converted to a function
   
   foo: {
-    file: "bar.js" // {string} file to access from
+    file: "bar.js", // {string} file to access from
     name: "foo" // {string} function name
   },
   
@@ -109,7 +111,173 @@ const gameFunctions = functionLocationAccessor(
 
 ### Rotation System Data
 
+```js
+rotationSystemData = {
+  // contains an array of the piece names
+  pieces: [ // {string[]} where each string is a piece name
+    "Z", "L", "O", "S", "I", "J", "T" // standard tetromino pieces
+  ],
+  
+  // contains the data for the piece matrices (where the minos are)
+  matrices: {
+    // {key: matrix[]} where matrix is {(0 or 1)[][]}
+    
+    Z: [
+      // there will only be 4 matrices for the 4 possible rotations
+      // the first item is the spawn rotation
+      // each successive item is a rotation clockwise 90 degrees
+      [
+        [0, 0, 0],
+        [0, 1, 1],
+        [1, 1, 0]
+        
+        // note how it's flipped across the x-axis
+        // lower index is lower on the board
+        // it will actually display as:
+        
+        /*
+         * [][]__
+         * __[][]
+         * ______
+         */
+        
+        // where 1 is represented as [] and 0 as __
+      ],
+      [ /* ... */ ],
+      [ /* ... */ ],
+      [ /* ... */ ],
+    ],
+    L: /* ... */
+  },
+  
+  // contains piece kicks
+  kicks: {
+    // {key: kicks[][]} where kicks is {kick[]} and kick is {x:..., y:...}
+    
+    Z: [
+      // outer array contains 4 arrays for 4 starting rotations
+      // each array contains 4 more arrays for the 4 ending rotations
+      // the very inner `kicks` array contains a list of testing kicks
+      [
+        [{x: 0, y: 0}], // will only try moving to the same position
+        [{x: 0, y: 0}, {x: -1, y: 0}, {x: -1, y: 1}, {x: 0, y: -2}, {x: -1, y: -2}],
+        [ /* ... */ ],
+        [ /* ... */ ],
+      ],
+      [ /* ... */ ],
+      [ /* ... */ ],
+      [ /* ... */ ],
+    ],
+    L: /* ... */
+    
+    // to access a particular piece's kicks
+    // kicks = rotationSystem.kicks[pieceName][startingRotation][endingRotation]
+    // kicks[0] is the first position test
+    // kicks[1] is the second position test
+    // ... etc ...
+  },
+  
+  // contains the spawn positions for each piece
+  spawnPositions: {
+    // {key: {x:..., y:...}}
+    
+    Z: {x: 3, y: 20}, // spawn Z piece at (3, 20)
+    L: /* ... */
+  }
+}
+```
+
 ### Object `Board`
+
+
+```js
+// constructor
+// width: board width
+// height: board height
+board = new Board(width, height);
+```
+
+```js
+// board object keys
+board = {
+  width: // {number} width of board
+  height: // {number} height of board
+  matrix: // {BoardMino[][]} board matrix
+}
+```
+
+## Future Object Formats
+
+### Puzzle Set
+
+```js
+puzzleSet = {
+  // keys will map to puzzles
+  // it is not an array because it's easier to organize keys
+  puzzles: {
+    // {key: Puzzle}
+  },
+  
+  // randomization distribution
+  // the key refers to the puzzle and the default weighing is 1
+  // change to a higher number for a better chance at being chosen
+  distribution: // {key: Number}
+}
+```
+
+> **Reference Directory**
+> - [Object `Puzzle`](#object-puzzle)
+
+### Object `Puzzle`
+
+```js
+puzzle = new Puzzle({
+  parameters: // {object} becomes `this.parameters`
+  winConditions: // {puzzleFunction[]}
+  lossConditions: // {puzzleFunction[]}
+  prioritizeWinCondition: true, // {boolean}
+  initFunction: // {puzzleFunction}
+});
+```
+
+```js
+puzzle = {
+  version: 1, // {number | string} puzzle version
+  // not to be confused with parameter versions, those are separate
+  
+  parameters: {
+    // the parameters as specified by *Stacker Parameters*
+  },
+  
+  // if any of the conditions are true the game will end on a win
+  winConditions: // {puzzleFunction[]}
+  
+  // if any of the conditions are false the game will end on a loss
+  lossConditions: // {puzzleFunction[]}
+  
+  // if both end functions activate at the same time
+  // will the player win?
+  prioritizeWinCondition: true, // {boolean}
+  
+  // init function to run before the game starts
+  initFunction: // {puzzleFunction}
+}
+```
+
+```js
+puzzleFunction: {
+  version: 1, // version of puzzle function
+  type: // {string} the type of end condition or function
+  parameters: // {object} the data for end condition or function
+  func: // {function} function generated or provided
+}
+```
+When the puzzle is saved as a JSON file, the `func` functions cannot be represented. The `type` and `parameters` should hopefully be enough to reconstruct the `func` function.
+
+Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.  
+
+> **Reference Directory**
+> - [Stacker Parameters](#stacker-parameters)
 
 ## Current File Structure
 

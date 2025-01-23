@@ -391,7 +391,7 @@ const initialize = function(params) {
   this.b2b = 0;
   
   // event emitter
-  this.event = new EventEmitter();
+  this.event = params.eventEmitter ?? new EventEmitter();
   
   // debug
   // window.game = this;
