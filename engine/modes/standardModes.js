@@ -66,22 +66,39 @@ const standardFunctionLocations = {
 
 const standardModes = {
   marathon: {
-    functionLocations: standardFunctionLocations,
-    state: {
-      das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-      gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-      startingLevel: 1, levelling: true, masterLevels: true,
+    values: {
+      settings: {
+        functionLocations: standardFunctionLocations,
+        initialization: {
+          parameters: {
+            state: {
+              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+              startingLevel: 1, levelling: true, masterLevels: true,
+            },
+          },
+        },
+      },
     },
     initFunction: function (game) {
       // nothing because marathon is normal
     },
   },
   sprint: {
-    functionLocations: standardFunctionLocations,
-    state: {
-      das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-      gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-      startingLevel: 1, levelling: false, masterLevels: false,
+    values: {
+      version: 1,
+      settings: {
+        functionLocations: standardFunctionLocations,
+        initialization: {
+          parameters: {
+            state: {
+              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+              startingLevel: 1, levelling: false, masterLevels: false,
+            },
+          },
+        },
+      },
     },
     initFunction: function (game) {
       game.event.on("clear", (e) => {
@@ -96,11 +113,20 @@ const standardModes = {
     },
   },
   ultra: {
-    functionLocations: standardFunctionLocations,
-    state: {
-      das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-      gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-      startingLevel: 1, levelling: true, masterLevels: true,
+    values: {
+      version: 1,
+      settings: {
+        functionLocations: standardFunctionLocations,
+        initialization: {
+          parameters: {
+            state: {
+              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+              startingLevel: 1, levelling: true, masterLevels: true,
+            },
+          },
+        },
+      },
     },
     initFunction: function (game) {
       game.event.on("update", (e) => {
@@ -116,11 +142,20 @@ const standardModes = {
     },
   },
   zen: {
-    functionLocations: standardFunctionLocations,
-    state: {
-      das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-      gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-      startingLevel: 1, levelling: false, masterLevels: false,
+    values: {
+      version: 1,
+      settings: {
+        functionLocations: standardFunctionLocations,
+        initialization: {
+          parameters: {
+            state: {
+              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
+              startingLevel: 1, levelling: false, masterLevels: false,
+            },
+          },
+        },
+      },
     },
     initFunction: function (game) {
       

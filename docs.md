@@ -235,6 +235,8 @@ puzzleSet = {
 ```js
 puzzle = new Puzzle({
   parameters: // {object} becomes `this.parameters`
+  values: // {object} stacker initialization values
+  
   winConditions: // {puzzleFunction[]}
   lossConditions: // {puzzleFunction[]}
   prioritizeWinCondition: true, // {boolean}
@@ -276,7 +278,7 @@ puzzleFunction: {
 ```
 When the puzzle is saved as a JSON file, the `func` functions cannot be represented. The `type` and `parameters` should hopefully be enough to reconstruct the `func` function.
 
-Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.  
+Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.
 
 > **Reference Directory**
 > - [Stacker Parameters](#stacker-parameters)
@@ -483,5 +485,6 @@ Main Menu
   - [ ] Centralize all values
   - [x] Enforce D.R.Y. principle
   - [ ] Remove logic from input handler functions in engine
+  - [ ] Move value change conversion from menu scripts to engine
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters

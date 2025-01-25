@@ -264,8 +264,7 @@ const functionIds = {
         time: Date.now(),
         mode: "marathon",
         settings: this.generateSettings({
-          functionLocations: standardModes.marathon.functionLocations,
-          state: standardModes.marathon.state,
+          values: standardModes.marathon.values,
         }),
         initFunction: standardModes.marathon.initFunction,
       });
@@ -282,8 +281,7 @@ const functionIds = {
         time: Date.now(),
         mode: "sprint",
         settings: this.generateSettings({
-          functionLocations: standardModes.sprint.functionLocations,
-          state: standardModes.sprint.state,
+          values: standardModes.sprint.values,
         }),
         initFunction: standardModes.sprint.initFunction,
       });
@@ -299,8 +297,7 @@ const functionIds = {
         time: Date.now(),
         mode: "ultra",
         settings: this.generateSettings({
-          functionLocations: standardModes.ultra.functionLocations,
-          state: standardModes.ultra.state,
+          values: standardModes.ultra.values,
         }),
         initFunction: standardModes.ultra.initFunction,
       });
@@ -516,53 +513,88 @@ class MenuHandler {
    * @returns {object}
    */
   generateSettings(data) {
-    data = data ?? {};
+    data ??= {};
     
-    const functionLocations = data.functionLocations ?? this.values.functionLocations;
-    const gameFunctions = functionLocationAccessor(functionLocations, this.values.files);
+    // const functionLocations = data.functionLocations ?? this.values.functionLocations;
+    // const gameFunctions = functionLocationAccessor(functionLocations, this.values.files);
     
-    const state = data.state ?? this.values.state;
+    // const state = data.state ?? this.values.state;
+    // const handling = data.handling ?? this.values.handling;
+    // state.das = handling.das;
+    // state.arr = handling.arr;
+    // state.sdf = handling.sdf;
+    // state.msg = handling.msg;
+    
+    // const parameters = data.parameters ?? {
+    //   seed: "random",
+    //   rotationSystem: this.values.rotationSystem,
+    //   state: state
+    // }
+    
+    // const gameValues = {
+    //   version: 1,
+    //   functions: gameFunctions,
+    //   settings: {
+    //     functionLocations: functionLocations,
+    //     initialization: {
+    //       parameters: parameters,
+    //     }
+    //   }
+    // };
+    
+    data.values ??= {};
     const handling = data.handling ?? this.values.handling;
-    state.das = handling.das;
-    state.arr = handling.arr;
-    state.sdf = handling.sdf;
-    state.msg = handling.msg;
+    const handlingTraversal = {
+      settings: {
+        initialization: {
+          parameters: {
+            state: handling,
+          },
+        },
+      },
+    };
     
-    const parameters = data.parameters ?? {
-      seed: "random",
-      rotationSystem: this.values.rotationSystem,
-      state: state
-    }
+    // copy handling settings
+    copyObjByTraversal(data.values, handlingTraversal);
     
     const gameValues = {
       version: 1,
-      functions: gameFunctions,
+      functions: null, // computed afterwards
       settings: {
-        functionLocations: functionLocations,
+        functionLocations: this.values.functionLocations,
         initialization: {
-          parameters: parameters,
+          parameters: {
+            seed: "random",
+            rotationSystem: this.values.rotationSystem,
+            state: this.values.state,
+          },
+        },
+      },
+    };
+    
+    // which keys not to traverse
+    const disallowedKeys = {
+      version: true,
+      functions: true,
+      settings: {
+        functionLocations: true,
+        initialization: {
+          parameters: {
+            seed: true,
+            rotationSystem: true,
+            state: true,
+          }
         }
       }
+    }
+    
+    copyObjByTraversal(gameValues, data.values, disallowedKeys);
+    
+    const computedValues = {
+      functions: functionLocationAccessor(gameValues.settings.functionLocations, this.values.files),
     };
-   
-    // const gameValues = data.gameValues ?? {
-    //   version: 1,
-    //   functions: null,
-    //   settings: null,
-    // };
     
-    // gameValues.settings = data.settings ?? {
-    //   functionLocations: null,
-    //   initialization: null,
-    // };
-    
-    // gameValues.settings.functionLocations = data.functionLocations ?? this.values.functionLocations;
-    
-    // gameValues.functions = functionLocationAccessor(gameValues.settings.functionLocations, this.values.files);
-    
-    // gameValues.settings.initialization = data.initialization ?? {
-    //   parameters: null,
-    // };
+    copyObjByTraversal(gameValues, computedValues, disallowedKeys);
     
     return {
       gameValues: gameValues,

@@ -26,7 +26,7 @@ function main() {
   
   // start game
   menus.event.on("gameStart", (startEvent) => {
-    console.log(startEvent);
+    console.log("Game Start Event", startEvent);
     
     // create game
     const game = new Stacker(startEvent.settings.gameValues);

@@ -57,7 +57,6 @@ const defaultStorage = {
 class LocalStorageHandler {
   constructor() {
     const data = localStorage.getItem("Spentris2");
-    console.log(data);
     if (data === null) {
       this.values = {};
       this.save();
