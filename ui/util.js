@@ -26,6 +26,23 @@ function humanTime(time) {
   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
+/**
+ * copy object by traversal
+ */
+function copyObjByTraversal(head, copy) {
+  for (let key in copy) {
+    const value = copy[key];
+    
+    if (typeof value === "object" && !Array.isArray(value)) {
+      head[key] ??= {};
+      copyObjByTraversal(head[key], value);
+    } else {
+      head[key] = value;
+    }
+    
+  }
+  
+  return head;
+}
 
-
-export { humanTime };
+export { humanTime, copyObjByTraversal };

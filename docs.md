@@ -212,6 +212,8 @@ board = {
 
 ```js
 puzzleSet = {
+  name: // {string}
+  
   // keys will map to puzzles
   // it is not an array because it's easier to organize keys
   puzzles: {

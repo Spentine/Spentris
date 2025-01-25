@@ -128,4 +128,4 @@ const standardModes = {
   },
 };
 
-export { standardModes };
+export { standardModes, standardFunctionLocations };

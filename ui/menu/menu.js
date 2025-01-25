@@ -16,6 +16,8 @@ import { functionLocationAccessor } from "../../engine/util.js";
 // languages
 import { translations, currentLanguage, setLanguage } from "../../localization/language.js";
 
+import { copyObjByTraversal } from "../util.js";
+
 // keybinds and keyboard input
 // import { bindInputFunctions } from "../../interaction/keyboard.js";
 
@@ -526,20 +528,41 @@ class MenuHandler {
     state.sdf = handling.sdf;
     state.msg = handling.msg;
     
+    const parameters = data.parameters ?? {
+      seed: "random",
+      rotationSystem: this.values.rotationSystem,
+      state: state
+    }
+    
     const gameValues = {
       version: 1,
       functions: gameFunctions,
       settings: {
         functionLocations: functionLocations,
         initialization: {
-          parameters: {
-            seed: "random",
-            rotationSystem: this.values.rotationSystem,
-            state: state
-          }
+          parameters: parameters,
         }
       }
     };
+   
+    // const gameValues = data.gameValues ?? {
+    //   version: 1,
+    //   functions: null,
+    //   settings: null,
+    // };
+    
+    // gameValues.settings = data.settings ?? {
+    //   functionLocations: null,
+    //   initialization: null,
+    // };
+    
+    // gameValues.settings.functionLocations = data.functionLocations ?? this.values.functionLocations;
+    
+    // gameValues.functions = functionLocationAccessor(gameValues.settings.functionLocations, this.values.files);
+    
+    // gameValues.settings.initialization = data.initialization ?? {
+    //   parameters: null,
+    // };
     
     return {
       gameValues: gameValues,
