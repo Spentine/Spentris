@@ -66,6 +66,50 @@ class Board {
     this.width = width;
     this.height = height;
   }
+  
+  static fromArray(data) {
+    data ??= {};
+    
+    const arr = data.array;
+    const width = data.width;
+    const height = data.height;
+    
+    const board = new Board(width, height);
+    
+    for (let i=0; i<height; i++) {
+      if (!arr[i]) break;
+      for (let j=0; j<width; j++) {
+        board.matrix[i][j] = arr[i][j];
+      }
+    };
+    
+    return board;
+  }
+  
+  static fromSimpleArray(data) {
+    data ??= {};
+    
+    const arr = data.array;
+    const width = data.width;
+    const height = data.height;
+    
+    // modify array
+    for (let row of arr) {
+      for (let mino in row) {
+        const m = row[mino];
+        
+        if (m === null) {
+          // empty
+          row[mino] = new BoardMino(0, 0);
+        } else {
+          // mino
+          row[mino] = new BoardMino(1, row[mino]);
+        }
+      }
+    }
+    
+    return Board.fromArray({width, height, array: arr});
+  }
 }
 
 // The Block Stacker Piece

@@ -239,7 +239,7 @@ puzzle = new Puzzle({
   
   winConditions: // {puzzleFunction[]}
   lossConditions: // {puzzleFunction[]}
-  prioritizeWinCondition: true, // {boolean}
+  // prioritizeWinCondition: true, // {boolean}
   initFunction: // {puzzleFunction}
 });
 ```
@@ -261,7 +261,7 @@ puzzle = {
   
   // if both end functions activate at the same time
   // will the player win?
-  prioritizeWinCondition: true, // {boolean}
+  // prioritizeWinCondition: true, // {boolean}
   
   // init function to run before the game starts
   initFunction: // {puzzleFunction}
@@ -279,6 +279,8 @@ puzzleFunction: {
 When the puzzle is saved as a JSON file, the `func` functions cannot be represented. The `type` and `parameters` should hopefully be enough to reconstruct the `func` function.
 
 Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.
+
+`prioritizeWinCondition` is not really possible to enforce, so consider removing its existence from all the comments.
 
 > **Reference Directory**
 > - [Stacker Parameters](#stacker-parameters)
@@ -390,8 +392,12 @@ Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same form
       - `ghost.png`
       - `minos.png`
 - `puzzles`
-  - `engine` (empty)
+  - `engine`
     - *contains scripts that handle running the puzzles using the engine*
+    - `puzzle.js`
+      - *contains puzzle objects*
+    - `puzzleFunctions.js`
+      - *contains all the puzzle functions*
   - `ui` (empty)
     - *contains scripts that present puzzles to the user*
 - `docs.md`
@@ -479,6 +485,7 @@ Main Menu
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator
   - [ ] Automatically generate puzzles
+  - [ ] Make puzzle format JSON-compliant
 - [ ] Lessons
   - *too far ahead, give it a month or two*
 - [ ] Code

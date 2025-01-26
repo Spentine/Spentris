@@ -16,7 +16,12 @@ import { functionLocationAccessor } from "../../engine/util.js";
 // languages
 import { translations, currentLanguage, setLanguage } from "../../localization/language.js";
 
+// game engine
 import { Stacker } from "../../engine/stacker.js";
+
+// puzzles
+import { PuzzleFunction, Puzzle } from "../../puzzles/engine/puzzle.js";
+import { debugPuzzles } from "../../puzzles/packs/test.js";
 
 // keybinds and keyboard input
 // import { bindInputFunctions } from "../../interaction/keyboard.js";
@@ -303,6 +308,26 @@ const functionIds = {
           defaults: this.values,
         },
         initFunction: standardModes.ultra.initFunction,
+      });
+    }
+  },
+  
+  // debug functionality
+  menuPlayPuzzlesButtonListing: {
+    origin: ["playPuzzles", "buttonListing"],
+    type: "click",
+    function: function () {
+      this.changeMenu("ingame");
+      const puz = debugPuzzles[1];
+      console.log(puz);
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "puzzle",
+        settings: {
+          values: puz.parameters.values,
+          defaults: this.values,
+        },
+        initFunction: puz.allFunctions,
       });
     }
   },

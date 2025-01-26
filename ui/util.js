@@ -26,4 +26,4 @@ function humanTime(time) {
   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
-export { humanTime, copyObjByTraversal };
+export { humanTime };
