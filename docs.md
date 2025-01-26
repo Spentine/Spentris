@@ -485,6 +485,6 @@ Main Menu
   - [ ] Centralize all values
   - [x] Enforce D.R.Y. principle
   - [ ] Remove logic from input handler functions in engine
-  - [ ] Move value change conversion from menu scripts to engine
+  - [x] Move value change conversion from menu scripts to engine
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters

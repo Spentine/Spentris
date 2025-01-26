@@ -16,7 +16,7 @@ import { functionLocationAccessor } from "../../engine/util.js";
 // languages
 import { translations, currentLanguage, setLanguage } from "../../localization/language.js";
 
-import { copyObjByTraversal } from "../util.js";
+import { Stacker } from "../../engine/stacker.js";
 
 // keybinds and keyboard input
 // import { bindInputFunctions } from "../../interaction/keyboard.js";
@@ -263,9 +263,10 @@ const functionIds = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "marathon",
-        settings: this.generateSettings({
+        settings: {
           values: standardModes.marathon.values,
-        }),
+          defaults: this.values,
+        },
         initFunction: standardModes.marathon.initFunction,
       });
     }
@@ -280,9 +281,10 @@ const functionIds = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "sprint",
-        settings: this.generateSettings({
+        settings: {
           values: standardModes.sprint.values,
-        }),
+          defaults: this.values,
+        },
         initFunction: standardModes.sprint.initFunction,
       });
     }
@@ -296,9 +298,10 @@ const functionIds = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "ultra",
-        settings: this.generateSettings({
+        settings: {
           values: standardModes.ultra.values,
-        }),
+          defaults: this.values,
+        },
         initFunction: standardModes.ultra.initFunction,
       });
     }
@@ -505,100 +508,6 @@ class MenuHandler {
       } catch (e) {
         console.error("Error adding function", id);
       }
-    }
-  }
-  
-  /**
-   * generates an object with the settings for the game
-   * @returns {object}
-   */
-  generateSettings(data) {
-    data ??= {};
-    
-    // const functionLocations = data.functionLocations ?? this.values.functionLocations;
-    // const gameFunctions = functionLocationAccessor(functionLocations, this.values.files);
-    
-    // const state = data.state ?? this.values.state;
-    // const handling = data.handling ?? this.values.handling;
-    // state.das = handling.das;
-    // state.arr = handling.arr;
-    // state.sdf = handling.sdf;
-    // state.msg = handling.msg;
-    
-    // const parameters = data.parameters ?? {
-    //   seed: "random",
-    //   rotationSystem: this.values.rotationSystem,
-    //   state: state
-    // }
-    
-    // const gameValues = {
-    //   version: 1,
-    //   functions: gameFunctions,
-    //   settings: {
-    //     functionLocations: functionLocations,
-    //     initialization: {
-    //       parameters: parameters,
-    //     }
-    //   }
-    // };
-    
-    data.values ??= {};
-    const handling = data.handling ?? this.values.handling;
-    const handlingTraversal = {
-      settings: {
-        initialization: {
-          parameters: {
-            state: handling,
-          },
-        },
-      },
-    };
-    
-    // copy handling settings
-    copyObjByTraversal(data.values, handlingTraversal);
-    
-    const gameValues = {
-      version: 1,
-      functions: null, // computed afterwards
-      settings: {
-        functionLocations: this.values.functionLocations,
-        initialization: {
-          parameters: {
-            seed: "random",
-            rotationSystem: this.values.rotationSystem,
-            state: this.values.state,
-          },
-        },
-      },
-    };
-    
-    // which keys not to traverse
-    const disallowedKeys = {
-      version: true,
-      functions: true,
-      settings: {
-        functionLocations: true,
-        initialization: {
-          parameters: {
-            seed: true,
-            rotationSystem: true,
-            state: true,
-          }
-        }
-      }
-    }
-    
-    copyObjByTraversal(gameValues, data.values, disallowedKeys);
-    
-    const computedValues = {
-      functions: functionLocationAccessor(gameValues.settings.functionLocations, this.values.files),
-    };
-    
-    copyObjByTraversal(gameValues, computedValues, disallowedKeys);
-    
-    return {
-      gameValues: gameValues,
-      keybinds: this.values.keybinds,
     }
   }
   

@@ -28,8 +28,12 @@ function main() {
   menus.event.on("gameStart", (startEvent) => {
     console.log("Game Start Event", startEvent);
     
+    const values = Stacker.generateSettings(
+      startEvent.settings
+    );
+    
     // create game
-    const game = new Stacker(startEvent.settings.gameValues);
+    const game = new Stacker(values.gameValues);
     startEvent.initFunction(game);
     let gamePlaying = true;
     
@@ -57,10 +61,10 @@ function main() {
     // create keyboard input system
     const inputForward = bindInputFunctions(game);
     const playKeyboardListener = new KeyboardInput(
-      inputForward, startEvent.settings.keybinds.play
+      inputForward, values.keybinds.play
     );
     const metaKeyboardListener = new KeyboardInput(
-      inputForward, startEvent.settings.keybinds.meta
+      inputForward, values.keybinds.meta
     );
     playKeyboardListener.addListeners();
     metaKeyboardListener.addListeners();

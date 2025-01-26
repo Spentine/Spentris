@@ -1,7 +1,5 @@
 import { standardFunctionLocations } from "../../engine/modes/standardModes.js";
 
-import { copyObjByTraversal } from "util.js";
-
 class Puzzle {
   constructor(data) {
     data ??= {};
