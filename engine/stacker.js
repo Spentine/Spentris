@@ -21,6 +21,8 @@ class Stacker {
       
       this.initialize(this.settings.initialization.parameters);
     }
+    
+    console.log("Stacker Initialized", this);
   }
   
   /**

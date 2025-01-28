@@ -206,30 +206,6 @@ board = {
 }
 ```
 
-## Future Object Formats
-
-### Puzzle Set
-
-```js
-puzzleSet = {
-  name: // {string}
-  
-  // keys will map to puzzles
-  // it is not an array because it's easier to organize keys
-  puzzles: {
-    // {key: Puzzle}
-  },
-  
-  // randomization distribution
-  // the key refers to the puzzle and the default weighing is 1
-  // change to a higher number for a better chance at being chosen
-  distribution: // {key: Number}
-}
-```
-
-> **Reference Directory**
-> - [Object `Puzzle`](#object-puzzle)
-
 ### Object `Puzzle`
 
 ```js
@@ -281,6 +257,30 @@ When the puzzle is saved as a JSON file, the `func` functions cannot be represen
 Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.
 
 `prioritizeWinCondition` is not really possible to enforce, so consider removing its existence from all the comments.
+
+## Future Object Formats
+
+### Puzzle Set
+
+```js
+puzzleSet = {
+  name: // {string}
+  
+  // keys will map to puzzles
+  // it is not an array because it's easier to organize keys
+  puzzles: {
+    // {key: Puzzle}
+  },
+  
+  // randomization distribution
+  // the key refers to the puzzle and the default weighing is 1
+  // change to a higher number for a better chance at being chosen
+  distribution: // {key: Number}
+}
+```
+
+> **Reference Directory**
+> - [Object `Puzzle`](#object-puzzle)
 
 > **Reference Directory**
 > - [Stacker Parameters](#stacker-parameters)

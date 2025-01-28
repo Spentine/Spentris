@@ -337,13 +337,13 @@ const initialize = function(params) {
   );
   
   // create the board
-  this.board = params.board ?? new Board(
+  this.board = structuredClone(params.board) ?? new Board(
     params.width ?? 10,
     params.height ?? 40
   );
   
   // create the next queue
-  this.nextQueue = params.nextQueue ?? [];
+  this.nextQueue = structuredClone(params.nextQueue) ?? [];
   
   // the minimum number of pieces in the queue at once
   this.refillQueue = params.refillQueue ?? 5;
