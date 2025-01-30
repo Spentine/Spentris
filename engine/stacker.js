@@ -19,7 +19,21 @@ class Stacker {
         this[functionName] = data.functions[functionName];
       }
       
-      this.initialize(this.settings.initialization.parameters);
+      // check for the type of parameters
+      
+      const paramType = data.settings.initialization.paramType;
+      var parameters;
+      
+      if (paramType === "standardInitializeParams") {
+        parameters = this.settings.initialization.parameters;
+      } 
+      if (paramType === "standardJsonParams") {
+        parameters = this.jsonToInitialize(this.settings.initialization.parameters);
+      } else {
+        parameters = this.settings.initialization.parameters; // default
+      }
+      
+      this.initialize(parameters);
     }
     
     console.log("Stacker Initialized", this);

@@ -70,7 +70,7 @@ class Board {
   static fromArray(data) {
     data ??= {};
     
-    const arr = data.array;
+    const arr = data.matrix;
     const width = data.width;
     const height = data.height;
     
@@ -89,7 +89,7 @@ class Board {
   static fromSimpleArray(data) {
     data ??= {};
     
-    const arr = data.array;
+    const arr = data.matrix;
     const width = data.width;
     const height = data.height;
     
@@ -108,7 +108,7 @@ class Board {
       }
     }
     
-    return Board.fromArray({width, height, array: arr});
+    return Board.fromArray({width, height, matrix: arr});
   }
 }
 

@@ -397,6 +397,22 @@ const initialize = function(params) {
   // window.game = this;
 };
 
+/**
+ * converts json state to initialize parameters
+ * @param {object} json
+ * @returns {object}
+ */
+const jsonToInitialize = function(json) {
+  const params = structuredClone(json);
+  
+  // convert board
+  if (json.board.type === "simpleArray") {
+    params.board = Board.fromSimpleArray(json.board);
+  }
+  
+  return params;
+};
+
 const resetGame = function() {
   const prevEvent = this.event;
   
@@ -1317,6 +1333,7 @@ const functions = [
   update,
   tick,
   initialize,
+  jsonToInitialize,
   resetGame,
   
   lehmerRNG,

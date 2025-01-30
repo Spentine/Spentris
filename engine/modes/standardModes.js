@@ -2,6 +2,7 @@ const standardFunctionLocations = {
   update: {file: "standardRules.js", name: "update"},
   tick: {file: "standardRules.js", name: "tick"},
   initialize: {file: "standardRules.js", name: "initialize"},
+  jsonToInitialize: {file: "standardRules.js", name: "jsonToInitialize"},
   resetGame: {file: "standardRules.js", name: "resetGame"},
   
   lehmerRNG: {file: "standardRules.js", name: "lehmerRNG"},

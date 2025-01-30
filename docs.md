@@ -34,7 +34,14 @@ initializationData = {
        * }
        */
       // was previously intended to override variables
-      // but was made obsolete by initialization parametsrs
+      // but was made obsolete by initialization parameters
+      
+      paramType: "standardInitializeParams", // {string}
+      // the format of the parameters
+      /* 
+       * - standardInitializeParams (regular format)
+       * - standardJsonParams (JSON-friendly format)
+       */
       
       parameters: {
         // each key is optional and may be omitted
@@ -63,10 +70,21 @@ initializationData = {
         width: 10, // {number} width of the board
         height: 40, // {number} height of the board
         
+        // standardInitializeParams
         board: new Board(
           params.width, // default 10
           params.height, // default 40
         ), // Board type defined by *Object `Board`*
+        
+        // standardJsonParams
+        board: {
+          type: // {string} the type of board format
+          
+          // simpleArray
+          width: // {number}
+          height: // {number}
+          matrix: // {string[][]} where string is piece name or mino color
+        },
         
         nextQueue: [], // {string[]} where each string represents a piece
         refillQueue: 5, // {number} mininum number of pieces in the queue at any given time
@@ -456,6 +474,97 @@ Main Menu
   - Back
   - English
   - 日本語 (Japanese)
+
+## Mathematics
+
+### Current Level
+The current level, as determined from a function of the number of lines cleared, $l$, is equal to:
+
+$$\left\lfloor 10l \right\rfloor$$
+
+### Drop Speed
+The current drop speed in $\text{ms} \times \text{lines}^{-1}$ is equal to:
+
+$$\frac{1000 \text{ms}}{\text{lines}} \times \left(0.8 - 0.7\left(\text{level} - 1\right)\right)^{\text{level}-1}$$
+
+### Lock Delay
+The lock delay is a function of the form $\frac{1}{bx + c}$ where it is defined to intersect two points $\alpha$ and $\beta$. In the game, $\alpha$ is chosen to be at $(\text{level}\,20, 500\text{ms})$ and $\beta$ at $(\text{level}\,40, 150\text{ms})$. In terms of $x$, $x_l$ will denote the level and $x_d$ will denote the lock *d*elay.  To solve for $b$ and $c$ in terms of $\alpha$ and $\beta$, just isolate it.
+
+$$
+\begin{cases}
+  \frac{1}{\alpha_l b + c} = \alpha_d \\
+  \frac{1}{\beta_l b + c} = \beta_d \\
+\end{cases}
+$$
+
+$$
+\begin{cases}
+  1 = \alpha_d \left(\alpha_l b + c \right) \\
+  1 = \beta_d \left(\beta_l b + c \right) \\
+\end{cases}
+$$
+
+Isolate $b$ from the first equation.
+
+$$
+1 = \alpha_d \alpha_l b + \alpha_d c
+$$
+
+$$
+b = \frac{1 - \alpha_d c}{\alpha_d \alpha_l}
+$$
+
+Plug $b$ into the second equation.
+
+$$
+1 = \beta_d \left(\beta_l \frac{1 - \alpha_d c}{\alpha_d \alpha_l} + c \right)
+$$
+
+Isolate $c$.
+
+$$
+\frac{1}{\beta_d} = \beta_l \frac{1 - \alpha_d c}{\alpha_d \alpha_l} + c
+$$
+
+$$
+\frac{1}{\beta_d} = \frac{\beta_l}{\alpha_d \alpha_l} - \frac{\beta_l \alpha_d c}{\alpha_d \alpha_l} + c
+$$
+
+$$
+\frac{1}{\beta_d} = \frac{\beta_l}{\alpha_d \alpha_l} + c \left(1 - \frac{\beta_l \alpha_d}{\alpha_d \alpha_l} \right)
+$$
+
+$$
+\frac{\frac{1}{\beta_d} - \frac{\beta_l}{\alpha_d \alpha_l}}{1 - \frac{\beta_l \alpha_d}{\alpha_d \alpha_l}} = c
+$$
+
+Simplify.
+
+$$
+c
+
+= \frac{\frac{1}{\beta_d} - \frac{\beta_l}{\alpha_d \alpha_l}}{1 - \frac{\beta_l \alpha_c}{\alpha_d \alpha_l}}
+
+= \frac{\frac{\alpha_d \alpha_l - \beta_l \beta_d}{\alpha_d \alpha_l \beta_d}}{\frac{\alpha_d \alpha_l - \beta_l \alpha_d}{\alpha_d \alpha_l}}
+
+= \frac{\alpha_d \alpha_l \left(\alpha_d \alpha_l - \beta_l \beta_d \right)}{\alpha_d \alpha_l \beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
+
+= \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
+
+= \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \alpha_d \left(\alpha_l - \beta_l \right)}
+$$
+
+Answer:
+
+$$
+c = \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \alpha_d \left(\alpha_l - \beta_l \right)}
+$$
+
+$$
+b = \frac{1 - \alpha_d c}{\alpha_d \alpha_l}
+$$
+
+Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c = - \frac{1}{375}$, $b = \frac{7}{30000}$
 
 ## To-do
 

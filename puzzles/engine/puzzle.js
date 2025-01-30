@@ -66,7 +66,7 @@ class Puzzle {
     };
     
     return this;
-  };
+  }
   
   exportJSON() {
     const data = {
@@ -81,6 +81,17 @@ class Puzzle {
     };
     
     return data;
+  }
+  
+  static fromJSON(json) {
+    json = structuredClone(json);
+    
+    // replace functions with PuzzleFunction objects
+    json.winConditions = json.winConditions.map((e) => new PuzzleFunction(e));
+    json.lossConditions = json.lossConditions.map((e) => new PuzzleFunction(e));
+    json.initFunction = new PuzzleFunction(json.initFunction);
+    
+    return new Puzzle(json);
   }
 }
 
