@@ -2,6 +2,28 @@
 
 This document will contain all the documentation for Spentris. It is intended as a reference while developing.
 
+## About Spentris
+
+Spentris is a game of the Block Stacker genre. It will contain a variety of features primarily directed towards helping players improve their gameplay and learn new strategies.
+
+The code should be relatively modular with lots of documentation. It should be able to be expanded upon without much fuss or issues. There must be a lot of foresight before continual development.
+
+Performance and memory aren't things I am worrying about at the moment, but I may optimize later. Right now, I'm focusing on keeping the code readable.
+
+This document is the centralized documentation of the game. It will contain information about the various object formats, the processes of the game, structures of the files, and other useful information.
+
+Planning will be relegated to other documents that may be created spontaneously and moved to the deprecation list once the creation has been completed. The updated information about the script or part may be added to this document afterwards.
+
+## Documentation Standards
+
+I don't really have any standards at the moment, but I still want some level of consistency within the project. When documenting, follow these general rules:
+
+- Two-space indents
+- Use mathematics when necessary
+- Use a reasonable amount of headers to make navigation easier
+- Reference other relevant parts of the document such as dependencies
+- Keep everything up-to-date!
+
 ## Object Formats
 
 Default values will automatically be filled in and marked as defaults. Keys may be optional.
@@ -276,6 +298,9 @@ Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same form
 
 `prioritizeWinCondition` is not really possible to enforce, so consider removing its existence from all the comments.
 
+> **Reference Directory**
+> - [Stacker Parameters](#stacker-parameters)
+
 ## Future Object Formats
 
 ### Puzzle Set
@@ -299,9 +324,6 @@ puzzleSet = {
 
 > **Reference Directory**
 > - [Object `Puzzle`](#object-puzzle)
-
-> **Reference Directory**
-> - [Stacker Parameters](#stacker-parameters)
 
 ## Current File Structure
 
@@ -432,6 +454,126 @@ puzzleSet = {
 - `README.md`
   - *GitHub readme*
 
+## Events
+
+### Standard Stacker
+
+- `update`
+  - *emitted every time `update()` is called*
+  - ```js
+    this.event.emit("update", {
+      time: this.time, // {number} the time at which the event occurred
+      success: true, // {boolean} whether the placement succeeded (always true)
+    });
+- `move`
+  - *emitted whenever the piece is moved left or right*
+  - ```js
+    this.event.emit("move", {
+      time: this.time, // {number} the time at which the event occurred
+      direction: // {number} the amount of x movement (1 for right, -1 for left)
+      
+      origin: // {string} the origin of the movement
+      
+      // triggered by ARR
+      origin: "arr", // auto repeat rate
+      speed: this.state.arr, // {number} speed of arr
+      
+      // triggered by keypress
+      origin: "userInput", // initial keypress
+      
+      success: true, // {boolean} whether the movement succeeded
+    });
+    ```
+- `rotate`
+  - *emitted when the piece rotates*
+  - ```js
+    this.event.emit("rotate", {
+      time: this.time, // {number} the time at which the event occurred
+      
+      // 0: spawn rotation
+      // 1: 90° clockwise from spawn rotation
+      // 2: 180° clockwise from spawn rotation
+      // 3: 270° clockwise from spawn rotation
+      
+      oldRotation: oldRotation, // {number} the previous rotation value
+      newRotation: newRotation, // {number} the new current rotation value
+      
+      spin: this.spin, // {null | "full" | "mini"} whether the rotation resulted in a spin bonus
+      origin: "userInput", // {string} origin of rotation (only "userInput")
+      success: rotation.success, // {boolean} whether the rotation was successful
+    });
+    ```
+- `hold`
+  - *emitted when the piece is held*
+  - ```js
+    this.event.emit("hold", {
+      time: this.time, // {number} the time at which the event occurred
+      origin: "userInput", // the origin of the hold (only "userInput")
+      success: true, // {boolean} whether the hold was successful
+    });
+    ```
+- `drop`
+  - *emitted whenever the piece is moved down*
+  - ```js
+    this.event.emit("drop", {
+      time: this.time, // {number} the time at which the event occurred
+      type: "gravity", // {string} the type of drop
+      
+      // {string} the origin of the drop
+      origin: "gravity", // soft drop not active
+      origin: "userInput", // soft drop active
+      
+      speed: this.gravity, // {number} speed of the soft drop
+      
+      success: true, // {boolean} whether the drop succeded
+    });
+    ```
+- `place`
+  - *emitted whenever the piece is placed*
+  - ```js
+    this.event.emit("place", {
+      time: this.time, // {number} the time at which the event occurred
+      
+      type: // the reason for the placement
+      origin: // the origin of the placement
+      
+      // triggered by lock delay
+      type: "lockDelay", // placed by lock delay
+      origin: "lockDelay", // placed because of lock delay
+      
+      // triggered by hard drop
+      type: "hardDrop", // placed by hard drop
+      origin: "userInput", // placed because of user input
+      
+      success: true, // {boolean} whether the placement succeeded
+      // (whether it was successful in placement, doesn't factor in next piece spawn)
+    });
+- `clear`
+  - *emitted every piece placement with piece clear data*
+  - ```js
+    this.event.emit("clear", {
+      time: this.time, // {number} the time at which the event occurred
+      lines: linesCleared, // {number} number of lines cleared
+      spin: this.spin, // {null | "full" | "mini"} current spin
+      b2b: this.b2b, // {number} current b2b (+1)
+      combo: this.combo, // {number} current combo (+2)
+      piece: this.currentPiece.type, // {string} current piece type / name
+      perfectClear: perfectClear, // {boolean} whether the clear resulted in a perfect clear
+      success: linesCleared > 0, // {boolean} whether any lines were cleared
+    });
+    ```
+- `end`
+  - *emitted when the game ends*
+  - The game may also have custom ending types as specified by puzzles or modes upon completion or failure which do not fit into the typical definitions of when the game ends.
+  - ```js
+    this.event.emit("end", {
+      time: this.time, // {number} the time at which the event occurred
+      type: "blockOut", // {string} the type of ending
+      success: true, // {boolean} whether the game ended (always true)
+    });
+    ```
+
+
 ## Menu
 
 *Italic menu options are planned and not in the game.*
@@ -542,15 +684,15 @@ Simplify.
 
 $$
 c
-
 = \frac{\frac{1}{\beta_d} - \frac{\beta_l}{\alpha_d \alpha_l}}{1 - \frac{\beta_l \alpha_c}{\alpha_d \alpha_l}}
-
 = \frac{\frac{\alpha_d \alpha_l - \beta_l \beta_d}{\alpha_d \alpha_l \beta_d}}{\frac{\alpha_d \alpha_l - \beta_l \alpha_d}{\alpha_d \alpha_l}}
+$$
 
+Make it a single fraction.
+
+$$
 = \frac{\alpha_d \alpha_l \left(\alpha_d \alpha_l - \beta_l \beta_d \right)}{\alpha_d \alpha_l \beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
-
 = \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
-
 = \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \alpha_d \left(\alpha_l - \beta_l \right)}
 $$
 
@@ -589,12 +731,12 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [x] Blitz / Ultra
   - [ ] Ability to create a custom mode
   - [x] Add all-spin+ with T-piece immobility
-  - [ ] Remove `mode` parameter from `generateNext`
+  - [x] Remove `mode` parameter from `generateNext`
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator
   - [ ] Automatically generate puzzles
-  - [ ] Make puzzle format JSON-compliant
+  - [x] Make puzzle format JSON-compliant
 - [ ] Lessons
   - *too far ahead, give it a month or two*
 - [ ] Code

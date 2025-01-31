@@ -21,7 +21,7 @@ const update = function(tDelta, iter=0) {
   
   const overrides = {
     time: beginningTime,
-  }
+  };
   
   var arrDirection = null;
   if (!this.leftInput && !this.rightInput) {
@@ -352,7 +352,7 @@ const initialize = function(params) {
   this.rng = this.lehmerRNG(params.seed ?? 0);
   
   // generate the first 7 pieces
-  this.generateNext("7-bag");
+  this.generateNext();
   
   // spawn the first piece
   this.currentPiece = null;
@@ -605,12 +605,10 @@ const lehmerRNG = function(seed) {
  * 7-bag randomizer
  * @param {string} mode
  */
-const generateNext = function(mode) {
+const generateNext = function() {
   // consider removing the mode parameter outright
   // if you want to use a different randomzation then swap out the function
-  if (mode === "7-bag") {
-    this.nextQueue.push(...this.rng.shuffleArray(["Z", "L", "O", "S", "I", "J", "T"]));
-  }
+  this.nextQueue.push(...this.rng.shuffleArray(["Z", "L", "O", "S", "I", "J", "T"]));
 };
 
 /**
@@ -759,7 +757,7 @@ const spawnPiece = function(piece, data) {
  */
 const refillNextQueue = function() {
   if (this.nextQueue.length < this.refillQueue) {
-    this.generateNext("7-bag");
+    this.generateNext();
   }
 };
 

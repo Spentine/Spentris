@@ -93,7 +93,7 @@ class Stacker {
           }
         }
       }
-    }
+    };
     
     // overwrite gameValues with data.values
     copyObjByTraversal(gameValues, data.values, disallowedKeys);
@@ -108,7 +108,7 @@ class Stacker {
     return {
       gameValues: gameValues,
       keybinds: data.defaults.keybinds,
-    }
+    };
   }
 }
 
