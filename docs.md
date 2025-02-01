@@ -708,6 +708,46 @@ $$
 
 Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c = - \frac{1}{375}$, $b = \frac{7}{30000}$
 
+### Score
+
+- $1$ point for every line moved down by soft drop
+- $2$ points for every line moved down by hard drop
+
+#### Line Clears
+- *the number of line clears is equal to $l$*
+- *the number of combo is equal to $c$*
+- **0** lines cleared
+  - $+0 \text{ points}$ for no spin
+  - $+100 \text{ points}$ for mini spin
+  - $+400 \text{ points}$ for full spin
+- **≥1** line cleared
+  - *no spin*
+    - $
+      \begin{cases} 
+        100 \text{ points}, & \text{if } l = 1 \\
+        300 \text{ points}, & \text{if } l = 2 \\
+        500 \text{ points}, & \text{if } l = 3 \\
+        800 \text{ points}, & \text{if } l = 4
+      \end{cases}
+      $ 
+  - *mini spin*
+    - $+200l \text{ points}$
+  - *full spin*
+    - $+400(l+1) \text{ points}$
+- **afterwards**
+  1. multiply number of points gained by $1.5$ if there is b2b
+  2. add $50c$ if there is combo
+  3. check for perfect clear
+- **perfect clear**
+  - add $
+    \begin{cases} 
+      800 \text{ points}, & \text{if } l = 1 \\
+      1200 \text{ points}, & \text{if } l = 2 \\
+      2000 \text{ points}, & \text{if } l = 3 \\
+      3200 \text{ points}, & \text{if } l = 4
+    \end{cases}
+    $ 
+
 ## To-do
 
 - [ ] UI
@@ -719,6 +759,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
       - [ ] Fix keybinds for different keyboard layouts
   - [x] Update localization support for the UI
   - [ ] Create ending screen for games 
+  - [ ] Prevent SDF from going below 1
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file
