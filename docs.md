@@ -301,6 +301,38 @@ Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same form
 > **Reference Directory**
 > - [Stacker Parameters](#stacker-parameters)
 
+### `clearsFinish` Puzzle Function Format
+
+```js
+const puzzleFunction = {
+  clears: [
+    // clear objects with omitted keys
+    // if the keys are omitted, then it can be any value
+    
+    { // TSD
+      lines: 2,
+      piece: "T",
+      spin: "full"
+    },
+    
+    { // PC with I
+      piece: "I",
+      perfectClear: true
+    }
+  ],
+  
+  type: "all", // {string} how to handle the clears
+  
+  type: "all", // all clears must be cleared in any order
+  type: "sequential", // all clears must be cleared in order
+  
+  endType: "clearsFinish", // {string} type of end event to emit
+}
+```
+
+> **Reference Directory**
+> - [Event `clear`](#standard-stacker)
+
 ## Future Object Formats
 
 ### Puzzle Set
@@ -737,7 +769,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
 - **afterwards**
   1. multiply number of points gained by $1.5$ if there is b2b
   2. add $50c$ if there is combo
-  3. check for perfect clear
+  3. check for perfect clear and add the corresponding score if necessary
+  4. multiply number of points (after steps 1-3) by the level count
 - **perfect clear**
   - add $
     \begin{cases} 
@@ -785,5 +818,6 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [x] Enforce D.R.Y. principle
   - [ ] Remove logic from input handler functions in engine
   - [x] Move value change conversion from menu scripts to engine
+  - [ ] test `clearsFinish` puzzle function
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters

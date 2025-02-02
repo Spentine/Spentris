@@ -16,16 +16,16 @@ const jsonDebugPuzzles = {
               startingLevel: 1, levelling: false, masterLevels: false,
             },
             
-            nextQueue: ["O", "O", "O", "O", "O", "T", "O"],
+            nextQueue: ["I", "O", "O", "O", "T", "O"],
             board: {
               type: "simpleArray",
               width: 10,
               height: 40,
               matrix: [
-                ["L", "L", null, null, null, null, null, null, null, null],
-                ["L", "Z", null, null, null, null, null, null, null, null],
-                ["Z", "Z", "S", "S", null, null, null, null, null, null],
-                ["Z", "S", "S", null, null, null, null, null, null, null],
+                ["L", "L", "L", null, null, null, null, null, null, "I"],
+                ["L", "Z", null, null, null, null, null, null, null, "I"],
+                ["Z", "Z", "S", "S", null, null, null, null, null, "I"],
+                ["Z", "S", "S", null, null, null, null, null, null, "I"],
               ].reverse(),
             },
           },
