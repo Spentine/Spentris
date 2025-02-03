@@ -375,6 +375,10 @@ puzzleSet = {
   - `main.js`
     - *an old version of main.js that would contain all the values and run everything necessary for the game engine to function*
     - *replaced in lieu of a new version with menu features and better code overall*
+- `documentation`
+  - `docs.md`
+    - *documentation for the entire game*
+    - *this file*
 - `engine`
   - `modes`
     - *contains scripts that contain data to run different game modes*
@@ -420,6 +424,11 @@ puzzleSet = {
   - *multimedia output*
   - `audio` (empty)
     - *will contain files that will handle audio*
+- `planning`
+  - *will contain files that will plan the future of the game*
+  - `Spentris Puzzle Editor.penpot`
+    - *planning the UI of the puzzle editor*
+    - *has to be viewed with penpot, a design tool*
 - `ui`
   - `debug` (deprecated)
     - `debugRenderField.js` (deprecated)
@@ -472,9 +481,6 @@ puzzleSet = {
       - *contains all the puzzle functions*
   - `ui` (empty)
     - *contains scripts that present puzzles to the user*
-- `docs.md`
-  - *documentation for the entire game*
-  - *this file*
 - `eventEmitter.js`
   - *contains a class to emit events much like `addEventListener` but for objects*
 - `index.html`
