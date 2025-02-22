@@ -64,8 +64,8 @@ const spentrisMenus = {
   playPuzzles: {
     container: document.getElementById("menuPlayPuzzles"),
     buttonBack: document.getElementById("menuPlayPuzzlesButtonBack"),
-    listing: document.getElementById("menuPlayPuzzlesButtonListing"),
-    import: document.getElementById("menuPlayPuzzlesButtonImport"),
+    buttonListing: document.getElementById("menuPlayPuzzlesButtonListing"),
+    buttonImport: document.getElementById("menuPlayPuzzlesButtonImport"),
     
     scrollable: false,
     canvas: false,
@@ -73,12 +73,18 @@ const spentrisMenus = {
   createPuzzles: {
     container: document.getElementById("menuCreatePuzzles"),
     buttonBack: document.getElementById("menuCreatePuzzlesButtonBack"),
-    new: document.getElementById("menuCreatePuzzlesButtonNew"),
-    template: document.getElementById("menuCreatePuzzlesButtonTemplate"),
-    import: document.getElementById("menuCreatePuzzlesButtonImport"),
+    buttonNew: document.getElementById("menuCreatePuzzlesButtonNew"),
+    // template: document.getElementById("menuCreatePuzzlesButtonTemplate"),
+    buttonImport: document.getElementById("menuCreatePuzzlesButtonImport"),
     
     scrollable: false,
     canvas: false,
+  },
+  puzzleEditor: {
+    container: document.getElementById("menuPuzzleEditor"),
+    
+    scrollable: false,
+    canvas: true,
   },
   settings: {
     container: document.getElementById("menuSettings"),
@@ -221,6 +227,10 @@ const redirectionIds = {
   menuCreatePuzzlesButtonBack: {
     origin: ["createPuzzles", "buttonBack"],
     redirect: "puzzles",
+  },
+  menuCreatePuzzlesButtonNew: {
+    origin: ["createPuzzles", "buttonNew"],
+    redirect: "puzzleEditor",
   },
   
   // settings
@@ -387,7 +397,7 @@ const functionIds = {
       setLanguage("en");
       ls.values.language = "en";
       ls.save();
-      this.translateMenu("en");
+      // this.translateMenu("en");
     }
   },
   
@@ -398,7 +408,7 @@ const functionIds = {
       setLanguage("jp");
       ls.values.language = "jp";
       ls.save();
-      this.translateMenu("jp");
+      // this.translateMenu("jp");
     }
   },
 };
@@ -419,7 +429,7 @@ class MenuHandler {
     
     setLanguage(ls.values.language);
     
-    this.translateMenu(currentLanguage);
+    // this.translateMenu(currentLanguage);
     this.showMenu(this.currentMenu);
     
     console.log("MenuHandler initialized", this);
