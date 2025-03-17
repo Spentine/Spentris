@@ -1,3 +1,5 @@
+import { SRSPlusData } from "../rsData.js";
+
 const standardFunctionLocations = {
   update: {file: "standardRules.js", name: "update"},
   tick: {file: "standardRules.js", name: "tick"},
@@ -77,6 +79,7 @@ const standardModes = {
               gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
               startingLevel: 1, levelling: true, masterLevels: true,
             },
+            rotationSystem: SRSPlusData,
           },
         },
       },
@@ -97,6 +100,7 @@ const standardModes = {
               gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
               startingLevel: 1, levelling: false, masterLevels: false,
             },
+            rotationSystem: SRSPlusData,
           },
         },
       },
@@ -125,6 +129,7 @@ const standardModes = {
               gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
               startingLevel: 1, levelling: true, masterLevels: true,
             },
+            rotationSystem: SRSPlusData,
           },
         },
       },
@@ -154,6 +159,7 @@ const standardModes = {
               gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
               startingLevel: 1, levelling: false, masterLevels: false,
             },
+            rotationSystem: SRSPlusData,
           },
         },
       },

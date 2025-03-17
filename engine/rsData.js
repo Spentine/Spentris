@@ -348,6 +348,21 @@ const SRSPlusIPieceKicks = [
   ],
 ];
 
+// made out of curiosity
+/*
+  function reverseKickOrder(table) {
+    for (let rotations of table) {
+      for (let kicks of rotations) {
+        kicks.reverse();
+      }
+    }
+    return table;
+  }
+
+  reverseKickOrder(SRSPlusPieceKicks);
+  reverseKickOrder(SRSPlusIPieceKicks);
+*/
+
 const SRSPlusData = {
   pieces: ["Z", "L", "O", "S", "I", "J", "T"],
   matrices: tetrominoMatrices,
