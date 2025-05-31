@@ -10,19 +10,25 @@ import { KeyboardInput, bindInputFunctions } from "./interaction/keyboard.js";
 import { Stacker } from "./engine/stacker.js";
 
 // menus
-import { MenuHandler, spentrisMenus, redirectionIds, functionIds, values } from "./ui/menu/menu.js";
+import {
+  MenuHandlerV2,
+  uiFunctions,
+  spentrisMenus,
+  uiDisplay,
+  values,
+} from "./ui/menu/menuV2.js";
 
 function main() {
   // initialize menus
-  const menus = new MenuHandler({
-    menus: spentrisMenus,
-    redirects: redirectionIds,
-    functions: functionIds,
-    values: values,
+  const menus = new MenuHandlerV2({
     currentMenu: "home",
+    uiFunctions: uiFunctions,
+    menus: spentrisMenus,
+    uiDisplay: uiDisplay,
+    values: values,
   });
-  menus.addRedirects();
-  menus.addFunctions();
+  
+  menus.showMenu("home");
   
   // start game
   menus.event.on("gameStart", (startEvent) => {

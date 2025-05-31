@@ -463,6 +463,8 @@ puzzleSet = {
       - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
     - `menu.js`
       - *will handle the menus and integrate closely with the HTML and CSS*
+    - `menuV2.js`
+      - *new version of `menu.js` that has more centralized menus and a function-based approach*
   - `skins`
     - *contains images with texture data*
     - *ghost.png also contains images for the next piece spawn*
@@ -485,10 +487,12 @@ puzzleSet = {
   - *contains a class to emit events much like `addEventListener` but for objects*
 - `index.html`
   - *the web page with the actual game on it*
-- `archivedMain.js`
-  - *an archived version of `main.js` that is used for future reference when trying to reoperate the main game engine*
+- `mainV2.html`
+  - *second version of `index.html` but with v2 menus*
 - `main.js`
   - *the only script `index.html` imports, should load everything else*
+- `mainV2.js`
+  - *second version of `main.js` but with v2 menus*
 - `README.md`
   - *GitHub readme*
 
@@ -799,6 +803,10 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [x] Update localization support for the UI
   - [ ] Create ending screen for games 
   - [ ] Prevent SDF from going below 1
+  - V2
+    - [x] Create `MenuHandlerV2` Class
+    - [ ] Implement all current features of `MenuHandler` Class
+    - [ ] Deprecate V1 and try to remove traces of it
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file
