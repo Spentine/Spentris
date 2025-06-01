@@ -17,7 +17,13 @@ const defaultValues = {
     startingLevel: 1, levelling: true, masterLevels: true,
   },
   handling: {
-    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
+    arr: 0,
+    das: 86.66,
+    sdf: Infinity,
+    dcd: 0,
+    msg: 1000,
+    are: 0,
+    lca: 0,
   },
 };
 

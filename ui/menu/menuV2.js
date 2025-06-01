@@ -39,7 +39,7 @@ const uiFunctions = {
    * create button
    * @param {string} text - the text of the button
    * @param {(function|null)} callback - the function to call when the button is clicked
-   * @return {HTMLElement} - the created button element
+   * @returns {HTMLElement} - the created button element
    */
   createButton: function (text, callback) {
     const button = document.createElement("button");
@@ -55,7 +55,7 @@ const uiFunctions = {
    *   <div class="center-inside padding-inside">
    *   </div>
    * </div>
-   * @return {outer: HTMLElement, inner: HTMLElement}
+   * @returns {outer: HTMLElement, inner: HTMLElement}
    */
   createMenuSelection: function () {
     const outer = document.createElement("div");
@@ -262,7 +262,191 @@ const spentrisMenus = {
     this.uiDisplay.className = "padding-inside";
     const backButton = this.uiFunctions.createButton("Back");
     
-    // placeholder
+    // create display
+    const outer = document.createElement("div");
+    outer.className = "center-inside window-fill padding-inside";
+    
+    const inner = document.createElement("div");
+    inner.className = "two-grid padding-inside";
+    
+    outer.appendChild(inner);
+    
+    /**
+     * handling options
+     * - text: the text to display
+     * - valid: converts a value to a valid value
+     */
+    const handlingOptions = {
+      "arr": {
+        "text": "ARR",
+        "id": "menuHandlingARR",
+        "enabled": true,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.arr;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+      "das": {
+        "text": "DAS",
+        "id": "menuHandlingDAS",
+        "enabled": true,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.das;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+      "sdf": {
+        "text": "SDF",
+        "id": "menuHandlingSDF",
+        "enabled": true,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.sdf;
+          }
+          
+          if (value < 1) { // minimum value
+            return 1;
+          }
+          
+          return value;
+        },
+      },
+      "dcd": {
+        "text": "DCD",
+        "id": "menuHandlingDCD",
+        "enabled": false,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.dcd;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+      "msg": {
+        "text": "MSG",
+        "id": "menuHandlingMSG",
+        "enabled": true,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.msg;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+      "are": {
+        "text": "ARE",
+        "id": "menuHandlingARE",
+        "enabled": false,
+        "valid": function (value) {
+          value = parseFloat(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.are;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+      "lca": {
+        "text": "LCA",
+        "id": "menuHandlingLCA",
+        "enabled": false,
+        "valid": function (value) {
+          value = Number(value);
+          
+          if (isNaN(value)) { // default value
+            return defaultValues.handling.lca;
+          }
+          
+          if (value < 0) { // minimum value
+            return 0;
+          }
+          
+          return value;
+        },
+      },
+    };
+    
+    // add handling options to the display (inner)
+    const options = Object.keys(handlingOptions);
+    for (let option of options) {
+      const optionData = handlingOptions[option];
+      
+      // label and input
+      const label = document.createElement("label");
+      label.className = "large";
+      label.for = optionData.id;
+      label.textContent = optionData.text;
+      
+      const input = document.createElement("input");
+      input.className = "large";
+      input.type = "text";
+      input.id = optionData.id;
+      input.value = String(
+        this.values.handling[option]
+        ?? defaultValues.handling[option]
+      );
+      input.disabled = !optionData.enabled;
+      
+      // add event listener to input
+      input.addEventListener("change", () => {
+        const value = optionData.valid(input.value);
+        
+        // set the value in both localStorage and this.values
+        (
+          ls.values.handling[option]
+          = this.values.handling[option]
+          = value
+        );
+        
+        // update the input value
+        input.value = String(value);
+        
+        // save to localStorage
+        ls.save();
+      });
+      
+      inner.appendChild(label);
+      inner.appendChild(input);
+    }
     
     // functionality
     backButton.addEventListener("click", () => {
@@ -270,6 +454,7 @@ const spentrisMenus = {
     });
     
     this.uiDisplay.appendChild(backButton);
+    this.uiDisplay.appendChild(outer);
   },
   
   keybinds: function () {

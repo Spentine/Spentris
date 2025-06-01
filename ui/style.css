@@ -160,7 +160,7 @@ input:hover {
   text-align: right;
 }
 .two-grid input {
-  width: 100%;
+  width: calc(100% - 24px);
 }
 .two-grid div {
   width: 100%;
