@@ -24,7 +24,7 @@ I don't really have any standards at the moment, but I still want some level of 
 - Reference other relevant parts of the document such as dependencies
 - Keep everything up-to-date!
 
-## Object Formats
+## Object Formats (Stacker)
 
 Default values will automatically be filled in and marked as defaults. Keys may be optional.
 
@@ -354,8 +354,31 @@ puzzleSet = {
 }
 ```
 
+## Objecct Formats (UI)
+
+### Translations
+
+```js
+translations = {  // {Key: string} each string is 2-letter language code
+  en: { // {object} contains data for language
+    translations: { // {object} contains translation data
+      game: {
+        scoreTitle, linesTitle, levelTitle,
+        timeTitle, spinTitle, ppsTitle
+        
+        clearConvert: (clear) => {} // {function} converts clear to string
+      }
+      ui: { // {object} where each key is an id for a particular UI element
+        // {string} key: {string} translation
+        // may also contain functions in the future but they will be indicated
+      }
+    }
+  }
+}
+```
+
 > **Reference Directory**
-> - [Object `Puzzle`](#object-puzzle)
+> - [UI Menu](#menu)
 
 ## Current File Structure
 
@@ -616,6 +639,14 @@ puzzleSet = {
     ```
 
 ### Menu
+- `menuChange`
+  - *emitted on every menu change*
+  - ```js
+    this.event.emit("menuChange", {
+      time: Date.now(), // {number} the timestamp of occurrence
+      previousMenu: // {string} the previous menu name
+      currentMenu: // {string} the current menu name
+    });
 - `gameStart`
   - *emitted when the menu requests for a game to start*
   - ```js
@@ -629,57 +660,59 @@ puzzleSet = {
       initFunction: // {function} the function to run on game start
     });
     ```
-- `menuChange`
-  - *emitted on every menu change*
-  - ```js
-    this.event.emit("menuChange", {
-      time: Date.now(), // {number} the timestamp of occurrence
-      previousMenu: // {string} the previous menu name
-      currentMenu: // {string} the current menu name
-    }
 
 ## Menu
 
-*Italic menu options are planned and not in the game.*
+The string in the parathensized monospaced format is the corresponding translation key. *Italic menu options are planned and not in the game.*
 
 Main Menu
-- Game
-  - Standard Gamemodes
-    - Marathon
-    - Sprint
-    - Ultra
-  - Puzzles
-    - Play
-      - Listing
-      - Import
-    - Create
-      - New
-      - Template
-      - Import
-- Settings
-  - Back
-  - Handling
-    - ARR
-    - DAS
-    - SDF
-    - DCD
-    - MSG
-    - ARE
-    - LCA
-  - Keybinds
-    - Left
-    - Right
-    - Soft Drop
-    - Hard Drop
-    - Rotate CCW
-    - Rotate CW
-    - Rotate 180
-    - Hold Piece
-    - Reset Game
-- Language
-  - Back
-  - English
-  - 日本語 (Japanese)
+- Game (`menuHomeButtonGame`)
+  - Back (`menuGameButtonBack`)
+  - Standard Gamemodes (`menuGameButtonStandardGamemodes`)
+    - Back (`menuStandardGamemodesButtonBack`)
+    - Marathon (`menuStandardGamemodesButtonMarathon`)
+    - Sprint (`menuStandardGamemodesButtonSprint`)
+    - Ultra (`menuStandardGamemodesButtonUltra`)
+  - Puzzles (`menuGameButtonPuzzles`)
+    - Back (`menuPuzzlesButtonBack`)
+    - Play (`menuPuzzlesButtonPlay`)
+      - Back (`menuPlayPuzzlesButtonBack`)
+      - Listing (`menuPlayPuzzlesButtonListing`)
+      - Import (`menuPlayPuzzlesButtonImport`)
+    - Create (`menuPuzzlesButtonCreate`)
+      - Back (`menuCreatePuzzlesButtonBack`)
+      - New (`menuCreatePuzzlesButtonNew`)
+      - Template (`menuCreatePuzzlesButtonTemplate`)
+      - Import (`menuCreatePuzzlesButtonImport`)
+- Settings (`menuHomeButtonSettings`)
+  - Back (`menuSettingsButtonBack`)
+  - Handling (`menuSettingsButtonHandling`)
+    - Back (`menuHandlingButtonBack`)
+    - ARR (`menuHandlingARRLabel`)
+    - DAS (`menuHandlingDASLabel`)
+    - SDF (`menuHandlingSDFLabel`)
+    - DCD (`menuHandlingDCDLabel`)
+    - MSG (`menuHandlingMSGLabel`)
+    - ARE (`menuHandlingARELabel`)
+    - LCA (`menuHandlingLCALabel`)
+  - Keybinds (`menuSettingsButtonKeybinds`)
+    - Back (`menuKeybindsButtonBack`)
+    - Left (`menuKeybindsLeftLabel`)
+    - Right (`menuKeybindsRightLabel`)
+    - Soft Drop (`menuKeybindsSoftDropLabel`)
+    - Hard Drop (`menuKeybindsHardDropLabel`)
+    - Rotate CCW (`menuKeybindsRotateCCWLabel`)
+    - Rotate CW (`menuKeybindsRotateCWLabel`)
+    - Rotate 180 (`menuKeybindsRotate180Label`)
+    - Hold Piece (`menuKeybindsHoldPieceLabel`)
+    - Reset Game (`menuKeybindsResetGameLabel`)
+- Language (`menuHomeButtonLanguage`)
+  - Back (`menuLanguageButtonBack`)
+  - English (`menuLanguageButtonEnglish`)
+  - 日本語 (Japanese) (`menuLanguageButtonJapanese`)
+
+> **Reference Directory**
+> - [Object `translations`](#translations)
 
 ## Mathematics
 
@@ -710,57 +743,7 @@ $$
 \end{cases}
 $$
 
-Isolate $b$ from the first equation.
-
-$$
-1 = \alpha_d \alpha_l b + \alpha_d c
-$$
-
-$$
-b = \frac{1 - \alpha_d c}{\alpha_d \alpha_l}
-$$
-
-Plug $b$ into the second equation.
-
-$$
-1 = \beta_d \left(\beta_l \frac{1 - \alpha_d c}{\alpha_d \alpha_l} + c \right)
-$$
-
-Isolate $c$.
-
-$$
-\frac{1}{\beta_d} = \beta_l \frac{1 - \alpha_d c}{\alpha_d \alpha_l} + c
-$$
-
-$$
-\frac{1}{\beta_d} = \frac{\beta_l}{\alpha_d \alpha_l} - \frac{\beta_l \alpha_d c}{\alpha_d \alpha_l} + c
-$$
-
-$$
-\frac{1}{\beta_d} = \frac{\beta_l}{\alpha_d \alpha_l} + c \left(1 - \frac{\beta_l \alpha_d}{\alpha_d \alpha_l} \right)
-$$
-
-$$
-\frac{\frac{1}{\beta_d} - \frac{\beta_l}{\alpha_d \alpha_l}}{1 - \frac{\beta_l \alpha_d}{\alpha_d \alpha_l}} = c
-$$
-
-Simplify.
-
-$$
-c
-= \frac{\frac{1}{\beta_d} - \frac{\beta_l}{\alpha_d \alpha_l}}{1 - \frac{\beta_l \alpha_c}{\alpha_d \alpha_l}}
-= \frac{\frac{\alpha_d \alpha_l - \beta_l \beta_d}{\alpha_d \alpha_l \beta_d}}{\frac{\alpha_d \alpha_l - \beta_l \alpha_d}{\alpha_d \alpha_l}}
-$$
-
-Make it a single fraction.
-
-$$
-= \frac{\alpha_d \alpha_l \left(\alpha_d \alpha_l - \beta_l \beta_d \right)}{\alpha_d \alpha_l \beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
-= \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \left(\alpha_d \alpha_l - \beta_l \alpha_d \right)}
-= \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \alpha_d \left(\alpha_l - \beta_l \right)}
-$$
-
-Answer:
+I deleted all the solution steps because it was just unnecessary. Answer:
 
 $$
 c = \frac{\alpha_d \alpha_l - \beta_l \beta_d}{\beta_d \alpha_d \left(\alpha_l - \beta_l \right)}
@@ -824,7 +807,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
       - [ ] Fix keybinds for different keyboard layouts
   - [x] Update localization support for the UI
   - [ ] Create ending screen for games 
-  - [ ] Prevent SDF from going below 1
+  - [x] Prevent SDF from going below 1
   - V2
     - [x] Create `MenuHandlerV2` Class
     - [ ] Implement all current features of `MenuHandler` Class
@@ -848,12 +831,13 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Automatically generate puzzles
   - [x] Make puzzle format JSON-compliant
 - [ ] Lessons
-  - *too far ahead, give it a month or two*
+  - *too far ahead, give it a year at this pace*
 - [ ] Code
   - [ ] Centralize all values
   - [x] Enforce D.R.Y. principle
   - [ ] Remove logic from input handler functions in engine
   - [x] Move value change conversion from menu scripts to engine
-  - [ ] test `clearsFinish` puzzle function
+  - [ ] Test `clearsFinish` puzzle function
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters
+  - [ ] Dynamically update URL with current menu
