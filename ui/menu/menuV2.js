@@ -558,7 +558,6 @@ const spentrisMenus = {
        *   - removes the keybind from the keybindsData array
        *   - removes the keybind button from the container
        * - the relative indices are maintained
-       * - each button should have a unique identifier starting from 0
        * 
        * - to identify the keybind to delete:
        *   - use array.indexOf to find the index of the element
