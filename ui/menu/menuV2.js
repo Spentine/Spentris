@@ -448,7 +448,6 @@ const spentrisMenus = {
       inner.appendChild(input);
     }
     
-    // functionality
     backButton.addEventListener("click", () => {
       this.showMenu("settings");
     });
@@ -461,14 +460,251 @@ const spentrisMenus = {
     this.uiDisplay.className = "padding-inside";
     const backButton = this.uiFunctions.createButton("Back");
     
-    // placeholder
+    const outer = document.createElement("div");
+    outer.className = "padding-inside";
     
-    // functionality
+    const inner = document.createElement("div");
+    inner.className = "two-grid padding-inside";
+    
+    outer.appendChild(inner);
+    
+    /**
+     * action options
+     * - text: the text to display
+     * - id: the id of the 
+     */
+    const actionOptions = {
+      moveLeft: {
+        text: "Left",
+        id: "menuKeybindsLeftContainer",
+        input: ["play", "moveLeftInput"],
+      },
+      moveRight: {
+        text: "Right",
+        id: "menuKeybindsRightContainer",
+        input: ["play", "moveRightInput"],
+      },
+      softDrop: {
+        text: "Soft Drop",
+        id: "menuKeybindsSoftDropContainer",
+        input: ["play", "softDropInput"],
+      },
+      hardDrop: {
+        text: "Hard Drop",
+        id: "menuKeybindsHardDropContainer",
+        input: ["play", "hardDropInput"],
+      },
+      rotateLeft: {
+        text: "Rotate CCW",
+        id: "menuKeybindsRotateCCWContainer",
+        input: ["play", "rotateCCWInput"],
+      },
+      rotateRight: {
+        text: "Rotate CW",
+        id: "menuKeybindsRotateCWContainer",
+        input: ["play", "rotateCWInput"],
+      },
+      rotate180: {
+        text: "Rotate 180",
+        id: "menuKeybindsRotate180Container",
+        input: ["play", "rotate180Input"],
+      },
+      holdPiece: {
+        text: "Hold Piece",
+        id: "menuKeybindsHoldPieceContainer",
+        input: ["play", "holdPieceInput"],
+      },
+      resetGame: {
+        text: "Reset Game",
+        id: "menuKeybindsResetGameContainer",
+        input: ["meta", "resetInput"],
+      },
+    };
+    
+    // add action options to the display (inner)
+    const options = Object.keys(actionOptions);
+    const keybinds = this.values.keybinds;
+    for (let option of options) {
+      const optionData = actionOptions[option];
+      
+      const label = document.createElement("label");
+      label.className = "large";
+      label.for = optionData.id;
+      label.textContent = optionData.text;
+      
+      const container = document.createElement("div");
+      container.className = "large";
+      container.id = optionData.id;
+      
+      const type = optionData.input[0];
+      const action = optionData.input[1];
+      
+      /**
+       * this is used in various eventListener functions with a different context, making `this` refer to an element rather than the MenuHandlerV2 instance
+       * 
+       * this.event must be used so the element can stop awaiting an input when the menu changes because this.event emits a "menuChange" event
+       */
+      const menuEvent = this.event;
+      
+      /**
+       * contains all keybinds for the specified action
+       * {keyCode: integer, code: string}[]
+       */
+      const keybindsData = keybinds[type][action];
+      
+      /**
+       * deletion of keybinds (very confusing code)
+       * - when a keybind is deleted, it:
+       *   - removes the keybind from the keybindsData array
+       *   - removes the keybind button from the container
+       * - the relative indices are maintained
+       * - each button should have a unique identifier starting from 0
+       * 
+       * - to identify the keybind to delete:
+       *   - use array.indexOf to find the index of the element
+       *   - use that index to remove the element from the array
+       */
+      
+      // array with elements as a reference for deletion
+      const keyElements = [];
+      
+      /**
+       * creates a keybind button
+       * @param {Object} key - the keybind data object
+       */
+      const createKeybind = function (key) {
+        const keyElement = document.createElement("button");
+        keyElement.className = "keybind";
+        
+        keyElement.textContent = key.code;
+        container.appendChild(keyElement);
+        
+        // update with new keybind
+        keyElements.push(keyElement);
+        
+        /**
+         * when the keybind button is clicked, remove the keybind
+         */
+        const removeKey = function (e) {
+          // find index
+          const index = keyElements.indexOf(keyElement);
+          if (index === -1) return; // not found
+          
+          // remove from keybindsData (the actual target array)
+          keybindsData.splice(index, 1);
+          
+          // update the keyElements array to maintain relative indices
+          keyElements.splice(index, 1);
+          
+          // remove the keybind button from the container
+          container.removeChild(keyElement);
+          
+          // save to localStorage
+          ls.values.keybinds[type][action] = keybindsData;
+          ls.save();
+        }
+        
+        // click to remove feature
+        keyElement.addEventListener("click", removeKey);
+      }
+      
+      // add buttons to the container
+      for (let key of keybindsData) {
+        createKeybind(key);
+      }
+      
+      // add "add keybind" button
+      const addKeybind = document.createElement("button");
+      addKeybind.className = "add-keybind";
+      addKeybind.textContent = "Add Keybind";
+      container.appendChild(addKeybind);
+      
+      let awaitingInput = false;
+      
+      /**
+       * stops awaiting input
+       * @param {Event} e - the event that triggered this function
+       */
+      const stopAwaitingInput = function (e) {
+        // stop awaiting input
+        document.removeEventListener("keydown", keyDown);
+        
+        // remove stopAwaitingInput listeners
+        document.removeEventListener("click", stopAwaitingInput);
+        menuEvent.off("menuChange", stopAwaitingInput);
+        
+        // reset awaitingInput state
+        awaitingInput = false;
+        addKeybind.textContent = "Add Keybind";
+      };
+      
+      /**
+       * handles keydown events
+       * @param {KeyboardEvent} e - the keydown event
+       */
+      const keyDown = function (e) {
+        // if the esc key is pressed, stop awaiting input
+        if (e.key === "Escape") {
+          stopAwaitingInput(e);
+          return;
+        }
+        
+        // get key data
+        const key = {
+          code: e.code,
+          keyCode: e.keyCode,
+        };
+        
+        keybindsData.push(key);
+        
+        // update localStorage
+        ls.values.keybinds[type][action] = keybindsData;
+        ls.save();
+        
+        createKeybind(key);
+        
+        // move the addKeybind button to the end
+        container.appendChild(addKeybind);
+        
+        stopAwaitingInput();
+      };
+      
+      /**
+       * when addKeybind is clicked, it will change its text to "Awaiting Input"
+       *   - if a key is pressed, it will add the keybind
+       *   - if the button is clicked again, it will cancel the input
+       *   - if the esc key is pressed, it will cancel the input
+       *   - if the menu is closed, it will cancel the input
+       * @param {Event} e - the click event
+       */
+      const addKeybindFunction = function (e) {
+        // handle click cancellation
+        if (awaitingInput) {
+          stopAwaitingInput(e);
+          return;
+        }
+        
+        awaitingInput = true;
+        addKeybind.textContent = "Awaiting Input";
+        
+        // handles key input and esc cancellation
+        document.addEventListener("keydown", keyDown);
+        
+        // handles menu change cancellation
+        menuEvent.on("menuChange", stopAwaitingInput);
+      };
+      addKeybind.addEventListener("click", addKeybindFunction);
+      
+      inner.appendChild(label);
+      inner.appendChild(container);
+    }
+    
     backButton.addEventListener("click", () => {
       this.showMenu("settings");
     });
     
     this.uiDisplay.appendChild(backButton);
+    this.uiDisplay.appendChild(outer);
   },
   
   language: function () {
@@ -525,9 +761,16 @@ class MenuHandlerV2 {
   }
   
   showMenu(menu) {
+    const previousMenu = this.currentMenu;
     this.currentMenu = menu;
     this.uiFunctions.resetDisplay.call(this);
     this.menus[menu].call(this);
+    
+    this.event.emit("menuChange", {
+      time: Date.now(),
+      previousMenu: previousMenu,
+      currentMenu: this.currentMenu,
+    });
   }
 }
 

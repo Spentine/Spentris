@@ -615,6 +615,28 @@ puzzleSet = {
     });
     ```
 
+### Menu
+- `gameStart`
+  - *emitted when the menu requests for a game to start*
+  - ```js
+    this.event.emit("gameStart", {
+      time: Date.now(), // {number} the timestamp of occurrence
+      mode: // {string} the mode that is being played
+      settings: { // {object} the settings for the game
+        values: // the main settings
+        defaults: // the fallback settings
+      },
+      initFunction: // {function} the function to run on game start
+    });
+    ```
+- `menuChange`
+  - *emitted on every menu change*
+  - ```js
+    this.event.emit("menuChange", {
+      time: Date.now(), // {number} the timestamp of occurrence
+      previousMenu: // {string} the previous menu name
+      currentMenu: // {string} the current menu name
+    }
 
 ## Menu
 
