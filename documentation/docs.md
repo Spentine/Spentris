@@ -472,11 +472,11 @@ Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese 
     - *contains a markdown-converted document that was used to plan the game for the first two or three months*
   - `events.md`
     - *planning out the types of events that would exist*
+  - `menu.js`
+    - *was made deprecated on 20250603 due to the changes made from replacing the entire ui system*
+    - *kept as a reference*
   - `standardRulesPlan.md`
     - *a plan about the hierarchy of functions to be implemented into `standardRules.js` while it was in development*
-  - `main.js`
-    - *an old version of main.js that would contain all the values and run everything necessary for the game engine to function*
-    - *replaced in lieu of a new version with menu features and better code overall*
 - `documentation`
   - `docs.md`
     - *documentation for the entire game*
@@ -566,9 +566,9 @@ Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese 
     - `defaultValues.js`
       - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
     - `menu.js`
-      - *will handle the menus and integrate closely with the HTML and CSS*
-    - `menuV2.js`
-      - *new version of `menu.js` that has more centralized menus and a function-based approach*
+      - *current (and 2nd) version of `MenuHandler` more centralized menus and a function-based approach*
+      - *do not mention v2 any more when referencing it, it is a bit redundant to keep repeating it*
+      - *in the future, if this is replaced, use V3 at the end of class names (or not depending on how much i change)*
   - `skins`
     - *contains images with texture data*
     - *ghost.png also contains images for the next piece spawn*
@@ -599,8 +599,6 @@ Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese 
   - *second version of `index.html` but with v2 menus*
 - `main.js`
   - *the only script `index.html` imports, should load everything else*
-- `mainV2.js`
-  - *second version of `main.js` but with v2 menus*
 - `README.md`
   - *GitHub readme*
 
@@ -898,7 +896,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - V2
     - [x] Create `MenuHandlerV2` Class
     - [x] Implement all current features of `MenuHandler` Class
-    - [ ] Deprecate V1 and try to remove traces of it
+    - [x] Deprecate V1 and try to remove traces of it
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file
