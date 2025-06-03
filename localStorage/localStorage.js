@@ -1,6 +1,12 @@
 const defaultStorage = {
   handling: {
-    das: 86.66, arr: 0, sdf: Infinity, msg: 1000,
+    arr: 0,
+    das: 100,
+    sdf: Infinity,
+    dcd: 0,
+    msg: 1000,
+    are: 0,
+    lca: 0,
   },
   keybinds: {
     play: {
@@ -137,4 +143,4 @@ const ls = new LocalStorageHandler();
 
 // console.log(ls);
 
-export { ls, LocalStorageHandler };
+export { ls, defaultStorage, LocalStorageHandler };

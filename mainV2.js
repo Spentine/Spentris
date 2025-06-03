@@ -18,6 +18,9 @@ import {
   values,
 } from "./ui/menu/menuV2.js";
 
+// convert game start event
+import { convertGameStartEvent } from "./ui/menu/converter.js";
+
 function main() {
   // initialize menus
   const menus = new MenuHandlerV2({
@@ -34,17 +37,22 @@ function main() {
   menus.event.on("gameStart", (startEvent) => {
     console.log("Game Start Event", startEvent);
     
-    const values = Stacker.generateSettings(
-      startEvent.settings
-    );
+    const gameStart = convertGameStartEvent(startEvent);
+    const keybinds = startEvent.settings.keybinds;
+    
+    const values = Stacker.generateSettings(gameStart);
+    const initData = values.initData;
+    const initFunction = values.initFunction;
+    
+    console.log(initData);
     
     // create game
-    const game = new Stacker(values.gameValues);
-    startEvent.initFunction(game);
+    const game = new Stacker(initData);
+    initFunction(game);
     let gamePlaying = true;
     
     // create rendering engine
-    const renderCanvas = menus.menus.global.renderCanvas;
+    const renderCanvas = document.getElementById("renderCanvas");
     const ctx = renderCanvas.getContext("2d");
     const rState = new RenderGameState({ // converter
       game: game,
@@ -67,10 +75,10 @@ function main() {
     // create keyboard input system
     const inputForward = bindInputFunctions(game);
     const playKeyboardListener = new KeyboardInput(
-      inputForward, values.keybinds.play
+      inputForward, keybinds.play
     );
     const metaKeyboardListener = new KeyboardInput(
-      inputForward, values.keybinds.meta
+      inputForward, keybinds.meta
     );
     playKeyboardListener.addListeners();
     metaKeyboardListener.addListeners();
@@ -81,7 +89,7 @@ function main() {
       game.event.on("reset", (e) => {
         gamePlaying = true;
         addListeners();
-        startEvent.initFunction(game);
+        initFunction(game);
         rState.addListeners();
         if (!playKeyboardListener.listenersAttached) {
           playKeyboardListener.addListeners();

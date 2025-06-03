@@ -229,7 +229,6 @@ rotationSystemData = {
 
 ### Object `Board`
 
-
 ```js
 // constructor
 // width: board width
@@ -333,6 +332,34 @@ const puzzleFunction = {
 > **Reference Directory**
 > - [Event `clear`](#standard-stacker)
 
+### `Stacker.generateSettings` Data Format
+
+```js
+static generateSettings(data) {} ==> result
+```
+
+```js
+data = {
+  standard: // {initializationData} the base mode
+  initFunction: // {function} the initialization function (?)
+  settings: { // modifications to the standard rule
+    // nothing
+    // keybinds (?)
+    // the keybinds don't really have to be passed in it's useless to the Stacker class
+  }
+}
+```
+
+```js
+result = {
+  initData: // {initializationData} the ready initialization data
+  initFunction: // {function} the initialization function
+}
+```
+
+> **Reference Directory**
+> - [Object `initializationData`](#stacker parameters)
+
 ## Future Object Formats
 
 ### Puzzle Set
@@ -354,7 +381,7 @@ puzzleSet = {
 }
 ```
 
-## Objecct Formats (UI)
+## Object Formats (UI)
 
 ### Translations
 
@@ -379,6 +406,58 @@ translations = {  // {Key: string} each string is 2-letter language code
 
 > **Reference Directory**
 > - [UI Menu](#menu)
+
+### Menu Values
+A new approach should be taken when considering the interaction between the UI and game engine. To emphasize modularity, the UI and game engine data structures should be largely separate. The only data the UI should store are values only it has control over, whereas another function will help provide the bridge between the UI data type and game engine data type.
+
+The UI data type should be, in many ways, similar to the `LocalStorageHandler` data type.
+
+## Object Formats (Misc)
+
+### `LocalStorageHandler`
+
+```js
+this.values = {
+  handling: // {handling}
+  keybinds: {
+    /**
+     * {
+     *   type: {
+     *     action: {
+     *       keycode: integer, code: string}[]
+     *     }
+     *   }
+     */
+    play: {
+      moveLeftInput, moveRightInput, softDropInput, hardDropInput,
+      rotateCCWInput, rotateCWInput, rotate180Input, holdPieceInput
+    },
+    meta: {
+      resetInput
+    }
+  },
+  language: // {string} two letter code for language
+}
+```
+
+> **Reference Directory**
+> - [Handling](#handling)
+
+### Handling
+
+```js
+handling: { // {key: {number}}
+  arr: 0,         // Auto Repeat Rate
+  das: 100,     // Delayed Auto Shift
+  sdf: Infinity,  // Soft Drop Factor
+  dcd: 0,         // DAS Cut Delay
+  msg: 1000,      // Minimum SDF Gravity
+  are: 0,         // Entry Delay
+  lca: 0          // Line Clear ARE
+}
+```
+
+Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese word あれ used to refer to the entry delay.
 
 ## Current File Structure
 
@@ -482,6 +561,8 @@ translations = {  // {Key: string} each string is 2-letter language code
       - *will also render other stuff besides minos but not now*
   - `menu` (in development)
     - *contains scripts to process the menu UIs*
+    - `converter.js`
+      - *converts formats between the `MenuHandler` and the game engine, particularly `Stacker`.*
     - `defaultValues.js`
       - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
     - `menu.js`
@@ -506,6 +587,10 @@ translations = {  // {Key: string} each string is 2-letter language code
       - *contains all the puzzle functions*
   - `ui` (empty)
     - *contains scripts that present puzzles to the user*
+- `unitTests`
+  - *contains scripts to perform unit tests.*
+  - `copyObjByTraversal.js`
+    - *performs various unit tests on the function `copyObjByTraversal` in `engine/util.js`. it is a bit redundant now, but it is good to keep!
 - `eventEmitter.js`
   - *contains a class to emit events much like `addEventListener` but for objects*
 - `index.html`
@@ -654,12 +739,14 @@ translations = {  // {Key: string} each string is 2-letter language code
       time: Date.now(), // {number} the timestamp of occurrence
       mode: // {string} the mode that is being played
       settings: { // {object} the settings for the game
-        values: // the main settings
-        defaults: // the fallback settings
-      },
-      initFunction: // {function} the function to run on game start
+        handling: // {handling}
+        keybinds: // keybinds
+      }
     });
     ```
+
+> **Reference Directory**
+> - [Handling](#handling)
 
 ## Menu
 
@@ -810,7 +897,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [x] Prevent SDF from going below 1
   - V2
     - [x] Create `MenuHandlerV2` Class
-    - [ ] Implement all current features of `MenuHandler` Class
+    - [x] Implement all current features of `MenuHandler` Class
     - [ ] Deprecate V1 and try to remove traces of it
 - [ ] Persistent Data
   - [x] Save data with `localStorage`

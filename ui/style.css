@@ -117,7 +117,7 @@ input:hover {
 
 /* by default hide everything */
 .menu {
-  display: none;
+  display: block;
   position: absolute;
   left: 0px;
   top: 0px;
@@ -245,7 +245,6 @@ label.large {
   top: 0px;
   width: 100vw;
   height: 100vh;
-  display: none;
 }
 
 #uiDisplay {

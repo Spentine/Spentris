@@ -1,9 +1,6 @@
 // values
 import { values, defaultValues } from "./defaultValues.js";
 
-// standard modes
-import { standardModes } from "../../engine/modes/standardModes.js";
-
 // event emitter
 import { EventEmitter } from "../../eventEmitter.js";
 
@@ -155,6 +152,42 @@ const spentrisMenus = {
     // functionality
     backButton.addEventListener("click", () => {
       this.showMenu("game");
+    });
+    
+    // these buttons are using a new version of the game start event
+    // engine/modes/standardModes.js handles most of the mode specifications
+    buttons.marathon.addEventListener("click", () => {
+      this.showMenu("inGame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "marathon",
+        settings: {
+          handling: this.values.handling,
+          keybinds: this.values.keybinds,
+        },
+      });
+    });
+    buttons.sprint.addEventListener("click", () => {
+      this.showMenu("inGame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "sprint",
+        settings: {
+          handling: this.values.handling,
+          keybinds: this.values.keybinds,
+        },
+      });
+    });
+    buttons.ultra.addEventListener("click", () => {
+      this.showMenu("inGame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "ultra",
+        settings: {
+          handling: this.values.handling,
+          keybinds: this.values.keybinds,
+        },
+      });
     });
     
     this.uiDisplay.appendChild(backButton);
@@ -727,6 +760,16 @@ const spentrisMenus = {
     this.uiDisplay.appendChild(menuSelection.outer);
   },
   
+  inGame: function () {
+    this.uiDisplay.className = "menu window-fill";
+    
+    // create a render canvas
+    const renderCanvas = document.createElement("canvas");
+    renderCanvas.id = "renderCanvas";
+    
+    uiDisplay.appendChild(renderCanvas);
+  },
+  
   template: function () {
     this.uiDisplay.className = "padding-inside";
     const backButton = this.uiFunctions.createButton("Back");
@@ -757,6 +800,11 @@ class MenuHandlerV2 {
     
     this.event = new EventEmitter();
     this.values = data.values ?? values;
+    
+    // set the current language
+    setLanguage(
+      data.values.language ?? values.language
+    );
   }
   
   showMenu(menu) {
