@@ -4,8 +4,9 @@ import { standardModes, standardFunctionLocations } from "../../engine/modes/sta
 // file locations
 import { files } from "../../engine/functionLibrary.js";
 
-// copyObjByTraversal
-import { functionLocationAccessor, copyObjByTraversal } from "../../engine/util.js";
+import { functionLocationAccessor } from "../../engine/util.js";
+
+import { copyObjByTraversal } from "../../util.js";
 
 /**
  * converts `gameStart` event data format to `Stacker.generateSettings` data format

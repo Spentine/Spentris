@@ -139,6 +139,7 @@ const translations = {
         ppsTitle: "pps",
         
         // basically english
+        // 基本的に英語
         clearConvert: (clear) => {
           const lineClears = {
             1: "Single",
@@ -163,6 +164,8 @@ const translations = {
           text.secondary = [];
           
           if (clear.b2b >= 2) {
+            // i think japanese people use btb for back-to-back
+            // 日本人はバックトゥバックのためにbtbを使うと思います
             text.secondary.push(`BTB x${clear.b2b - 1}`);
           }
           
@@ -214,8 +217,8 @@ const translations = {
         
         // settings
         menuSettingsButtonBack: "戻る",
-        menuSettingsButtonHandling: "操作",
-        menuSettingsButtonKeybinds: "キーバインド",
+        menuSettingsButtonHandling: "ハンドリング",
+        menuSettingsButtonKeybinds: "キーコンフィグ",
         
         // handling
         menuHandlingButtonBack: "戻る",
@@ -229,12 +232,12 @@ const translations = {
         
         // keybinds
         menuKeybindsButtonBack: "戻る",
-        menuKeybindsLeftLabel: "左",
-        menuKeybindsRightLabel: "右",
+        menuKeybindsLeftLabel: "左に移動",
+        menuKeybindsRightLabel: "右に移動",
         menuKeybindsSoftDropLabel: "ソフトドロップ",
         menuKeybindsHardDropLabel: "ハードドロップ",
-        menuKeybindsRotateCCWLabel: "反時計回り",
-        menuKeybindsRotateCWLabel: "時計回り",
+        menuKeybindsRotateCCWLabel: "左回転",
+        menuKeybindsRotateCWLabel: "右回転",
         menuKeybindsRotate180Label: "180度回転",
         menuKeybindsHoldPieceLabel: "ホールド",
         menuKeybindsResetGameLabel: "リセット",
@@ -269,16 +272,16 @@ const translations = {
           const text = {};
           
           const textPrimary = {
-            "clear.spin": clear.spin,
-            "clear.piece": clear.piece,
-            "clear.lines": clear.lines,
-            "clear.perfectClear": clear.perfectClear,
+            "spin": clear.spin,
+            "piece": clear.piece,
+            "lines": clear.lines,
           };
           text.primary = JSON.stringify(textPrimary);
           
           const textSecondary = {
-            "clear.b2b": clear.b2b,
-            "clear.combo": clear.combo,
+            "b2b": clear.b2b,
+            "combo": clear.combo,
+            "perfectClear": clear.perfectClear,
           };
           text.secondary = JSON.stringify(textSecondary);
           

@@ -804,9 +804,9 @@ const spentrisMenus = {
       english: this.uiFunctions.createButton(
         this.uiText.menuLanguageButtonEnglish
       ),
-      // japanese: this.uiFunctions.createButton(
-      //   this.uiText.menuLanguageButtonJapanese
-      // ),
+      japanese: this.uiFunctions.createButton(
+        this.uiText.menuLanguageButtonJapanese
+      ),
       dev: this.uiFunctions.createButton(
         this.uiText.menuLanguageButtonDev
       ),
@@ -814,20 +814,31 @@ const spentrisMenus = {
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
     
+    // set font family for buttons
+    buttons.english.style.setProperty(
+      "font-family", translations.en.font.ui
+    );
+    buttons.japanese.style.setProperty(
+      "font-family", translations.ja.font.ui
+    );
+    buttons.dev.style.setProperty(
+      "font-family", translations.dev.font.ui
+    );
+    
     // functionality
     backButton.addEventListener("click", () => {
       this.showMenu("home");
     });
     buttons.english.addEventListener("click", () => {
-      this.changeLanguage("en");
+      this.loadLanguage("en");
       this.showMenu("home");
     });
-    // buttons.japanese.addEventListener("click", () => {
-    //   this.changeLanguage("ja");
-    //   this.showMenu("home");
-    // });
+    buttons.japanese.addEventListener("click", () => {
+      this.loadLanguage("ja");
+      this.showMenu("home");
+    });
     buttons.dev.addEventListener("click", () => {
-      this.changeLanguage("dev");
+      this.loadLanguage("dev");
       this.showMenu("home");
     });
     
@@ -880,6 +891,8 @@ class MenuHandler {
     this.values = data.values ?? values;
     
     this.uiText = translations[this.values.language ?? "en"].translations.ui;
+    
+    this.loadLanguage();
   }
   
   showMenu(menu) {
@@ -895,13 +908,28 @@ class MenuHandler {
     });
   }
   
-  changeLanguage(lang, lsSave=true) {
-    this.values.language = lang;
-    if (lsSave) {
-      ls.values.language = lang;
-      ls.save();
+  /**
+   * will load the language translations
+   * @param {string|null} lang - the language to load, if null, it will use the current language
+   * @param {boolean} lsSave - whether to save the language to localStorage
+   */
+  loadLanguage(lang=null, lsSave=true) {
+    if (lang) {
+      this.values.language = lang;
+      if (lsSave) {
+        ls.values.language = lang;
+        ls.save();
+      }
     }
-    this.uiText = translations[lang ?? "en"].translations.ui;
+    
+    const langTranslations = translations[
+      this.values.language ?? "en"
+    ];
+    
+    this.uiText = langTranslations.translations.ui;
+    this.uiDisplay.style.setProperty(
+      "font-family", langTranslations.font.ui
+    ); 
   }
 }
 

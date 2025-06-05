@@ -1,7 +1,7 @@
 import { assertEquals } from "jsr:@std/assert";
 
 // testing copyObjByTraversal function
-import { copyObjByTraversal } from "../engine/util.js";
+import { copyObjByTraversal } from "../util.js";
 
 Deno.test("single-depth key copy 1", () => {
   const source = {

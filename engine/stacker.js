@@ -2,7 +2,8 @@
 import { standardFunctions } from "./stackerFunctions/standardRules.js";
 
 // utilities
-import { functionLocationAccessor, copyObjByTraversal } from "./util.js";
+import { functionLocationAccessor } from "./util.js";
+import { copyObjByTraversal } from "../util.js";
 
 class Stacker {
   /**

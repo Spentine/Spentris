@@ -590,7 +590,7 @@ Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese 
 - `unitTests`
   - *contains scripts to perform unit tests.*
   - `copyObjByTraversal.js`
-    - *performs various unit tests on the function `copyObjByTraversal` in `engine/util.js`. it is a bit redundant now, but it is good to keep!
+    - *performs various unit tests on the function `copyObjByTraversal` in `util.js`. it is a bit redundant now, but it is good to keep!
 - `eventEmitter.js`
   - *contains a class to emit events much like `addEventListener` but for objects*
 - `index.html`
