@@ -56,6 +56,7 @@ function main() {
     const ctx = renderCanvas.getContext("2d");
     const rState = new RenderGameState({ // converter
       game: game,
+      language: startEvent.settings.language,
     });
     const gRender = new GameRenderer({ // renderer
       time: 0,

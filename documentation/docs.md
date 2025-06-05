@@ -358,7 +358,7 @@ result = {
 ```
 
 > **Reference Directory**
-> - [Object `initializationData`](#stacker parameters)
+> - [Object `initializationData`](#stacker-parameters)
 
 ## Future Object Formats
 
@@ -448,7 +448,7 @@ this.values = {
 ```js
 handling: { // {key: {number}}
   arr: 0,         // Auto Repeat Rate
-  das: 100,     // Delayed Auto Shift
+  das: 100,       // Delayed Auto Shift
   sdf: Infinity,  // Soft Drop Factor
   dcd: 0,         // DAS Cut Delay
   msg: 1000,      // Minimum SDF Gravity

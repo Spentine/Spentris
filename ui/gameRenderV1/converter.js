@@ -1,7 +1,7 @@
 // converts Stacker object to renderGameState object
 
 import { SRSData } from "./rsData.js";
-import { translations, currentLanguage } from "../../localization/language.js";
+import { translations } from "../../localization/language.js";
 
 // texture type map
 const ttMap = {
@@ -25,6 +25,7 @@ class RenderGameState {
     data = data ?? {};
     
     this.game = data.game ?? null;
+    this.language = data.language
     
     this.board = null;
     this.next = null;
@@ -42,7 +43,7 @@ class RenderGameState {
     this.game.event.on("clear", (e) => {
       if (e.lines > 0) {
         // console.log(e);
-        const convertedClear = RenderGameState.convertClear(e);
+        const convertedClear = this.convertClear(e);
         // console.log(convertedClear);
         this.clears.push(convertedClear);
       };
@@ -59,15 +60,20 @@ class RenderGameState {
    * @param {object} clear - clear object
    * @returns {object} - digestible clear object
    */
-  static convertClear(clear) {
+  convertClear(clear) {
     return {
       time: clear.time, // for expiry
       original: clear, // for debugging
-      text: translations[currentLanguage].translations.game.clearConvert(clear),
+      text: translations[this.language].translations.game.clearConvert(clear),
     }
   }
   
-  static convertPiece(piece) {
+  /**
+   * converts a piece object into a renderer-digestible format
+   * @param {object} piece - piece object
+   * @returns {object} - digestible piece object
+   **/
+  convertPiece(piece) { // can be static
     const matrix = [];
     
     // convert piece matrix to string matrix
@@ -122,37 +128,37 @@ class RenderGameState {
     this.next = this.game.nextQueue;
     this.nextAmount = 5; // max number of next pieces
     this.hold = this.game.hold;
-    this.current = RenderGameState.convertPiece(
+    this.current = this.convertPiece(
       this.game.currentPiece
     );
     this.currentLockdown = this.game.currentPieceLockdown / this.game.lockDelay;
-    this.ghost = RenderGameState.convertPiece(
+    this.ghost = this.convertPiece(
       ghostPiece
     );
     this.values = {
       score: {
-        title: translations[currentLanguage].translations.game.scoreTitle,
+        title: translations[this.language].translations.game.scoreTitle,
         value: this.game.score,
         
         side: "left",
         height: 0,
       },
       lines: {
-        title: translations[currentLanguage].translations.game.linesTitle,
+        title: translations[this.language].translations.game.linesTitle,
         value: this.game.lines,
         
         side: "left",
         height: 1,
       },
       level: {
-        title: translations[currentLanguage].translations.game.levelTitle,
+        title: translations[this.language].translations.game.levelTitle,
         value: this.game.level,
         
         side: "left",
         height: 2,
       },
       time: {
-        title: translations[currentLanguage].translations.game.timeTitle,
+        title: translations[this.language].translations.game.timeTitle,
         value: this.game.time,
         
         side: "left",
@@ -163,7 +169,7 @@ class RenderGameState {
       // i will keep these ones for future debugging
       /*
       spin: {
-        title: translations[currentLanguage].translations.gameSpinTitle,
+        title: translations[this.language].translations.gameSpinTitle,
         value: this.game.spin,
         
         side: "right",
@@ -211,7 +217,7 @@ class RenderGameState {
         height: 0,
       },
       piecesPlaced: {
-        title: translations[currentLanguage].translations.game.ppsTitle,
+        title: translations[this.language].translations.game.ppsTitle,
         value: Math.round(1000000 * this.game.piecesPlaced / this.game.time) / 1000,
         
         side: "right",
@@ -227,7 +233,7 @@ class RenderGameState {
     this.textClearSecondarySize = 16 / 24;
     this.textClearMargin = 10 / 24;
     
-    this.textFont = translations[currentLanguage].font.gameStats;
+    this.textFont = translations[this.language].font.gameStats;
     
     this.rs = SRSData; // rs = rotation system
     

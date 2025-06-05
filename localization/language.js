@@ -108,11 +108,14 @@ const translations = {
         menuKeybindsRotate180Label: "Rotate 180",
         menuKeybindsHoldPieceLabel: "Hold Piece",
         menuKeybindsResetGameLabel: "Reset Game",
+        menuKeybindsAddKeybindButton: "Add Keybind",
+        menuKeybindsAwaitingInputButton: "Awaiting Input",
         
         // language
         menuLanguageButtonBack: "Back",
         menuLanguageButtonEnglish: "English",
         menuLanguageButtonJapanese: "日本語",
+        menuLanguageButtonDev: "</>",
       }
     },
     font: {
@@ -125,7 +128,7 @@ const translations = {
   // thanks in advance
   // 翻訳できる場合はお手伝いください
   // お願いします
-  jp: {
+  ja: {
     translations: {
       game: {
         scoreTitle: "スコア",
@@ -135,15 +138,14 @@ const translations = {
         spinTitle: "スピン",
         ppsTitle: "pps",
         
-        // too much katakana spam
-        // カタカナが多すぎる
+        // basically english
         clearConvert: (clear) => {
           const lineClears = {
-            1: "シングル",
-            2: "ダブル",
-            3: "トリプル",
-            4: "クアドルプル",
-            5: "クインタプル",
+            1: "Single",
+            2: "Double",
+            3: "Triple",
+            4: "Quadruple",
+            5: "Quinuple",
           };
           
           const text = {};
@@ -151,25 +153,25 @@ const translations = {
           if (clear.spin === null) {
             text.primary = lineClears[clear.lines];
           } else if (clear.spin === "mini") {
-            text.primary = `ミニ ${clear.piece}-スピン ${lineClears[clear.lines]}`;
+            text.primary = `Mini ${clear.piece}-Spin ${lineClears[clear.lines]}`;
           } else if (clear.spin === "full") {
-            text.primary = `${clear.piece}-スピン ${lineClears[clear.lines]}`;
+            text.primary = `${clear.piece}-Spin ${lineClears[clear.lines]}`;
           } else {
-            text.primary = `無効 ${clear.spin} ${clear.piece}-スピン ${lineClears[clear.lines]}`;
-          }
-          
-          if (clear.perfectClear) {
-            text.primary += " パフェ";
+            text.primary = `無効 ${clear.spin} ${clear.piece}-Spin ${lineClears[clear.lines]}`;
           }
           
           text.secondary = [];
           
           if (clear.b2b >= 2) {
-            text.secondary.push(`バックトゥバック x${clear.b2b - 1}`);
+            text.secondary.push(`BTB x${clear.b2b - 1}`);
           }
           
           if (clear.combo >= 2) {
             text.secondary.push(`${clear.combo - 1} REN`);
+          }
+          
+          if (clear.perfectClear) {
+            text.secondary += " 全消し";
           }
           
           text.secondary = text.secondary.join(" ");
@@ -236,11 +238,14 @@ const translations = {
         menuKeybindsRotate180Label: "180度回転",
         menuKeybindsHoldPieceLabel: "ホールド",
         menuKeybindsResetGameLabel: "リセット",
+        menuKeybindsAddKeybindButton: "キーバインド追加",
+        menuKeybindsAwaitingInputButton: "入力待ち",
         
         // language
         menuLanguageButtonBack: "戻る",
         menuLanguageButtonEnglish: "English",
         menuLanguageButtonJapanese: "日本語",
+        menuLanguageButtonDev: "</>",
       }
     },
     font: {
@@ -248,14 +253,112 @@ const translations = {
       gameStats: "Kaisotai",
     },
   },
-}
+  dev: {
+    translations: {
+      game: {
+        scoreTitle: "scoreTitle",
+        linesTitle: "linesTitle",
+        levelTitle: "levelTitle",
+        timeTitle: "timeTitle",
+        spinTitle: "spinTitle",
+        ppsTitle: "ppsTitle",
+        
+        // too much katakana spam
+        // カタカナが多すぎる
+        clearConvert: (clear) => {
+          const text = {};
+          
+          const textPrimary = {
+            "clear.spin": clear.spin,
+            "clear.piece": clear.piece,
+            "clear.lines": clear.lines,
+            "clear.perfectClear": clear.perfectClear,
+          };
+          text.primary = JSON.stringify(textPrimary);
+          
+          const textSecondary = {
+            "clear.b2b": clear.b2b,
+            "clear.combo": clear.combo,
+          };
+          text.secondary = JSON.stringify(textSecondary);
+          
+          return text;
+        },
+      },
+      ui: {
+        // home
+        menuHomeButtonGame: "menuHomeButtonGame",
+        menuHomeButtonSettings: "menuHomeButtonSettings",
+        menuHomeButtonLanguage: "menuHomeButtonLanguage",
+        
+        // game
+        menuGameButtonBack: "menuGameButtonBack",
+        menuGameButtonStandardGamemodes: "menuGameButtonStandardGamemodes",
+        menuGameButtonPuzzles: "menuGameButtonPuzzles",
+        
+        // puzzles
+        menuPuzzlesButtonBack: "menuPuzzlesButtonBack",
+        menuPuzzlesButtonPlay: "menuPuzzlesButtonPlay",
+        menuPuzzlesButtonCreate: "menuPuzzlesButtonCreate",
+        
+        // play puzzles
+        menuPlayPuzzlesButtonBack: "menuPlayPuzzlesButtonBack",
+        menuPlayPuzzlesButtonListing: "menuPlayPuzzlesButtonListing",
+        menuPlayPuzzlesButtonImport: "menuPlayPuzzlesButtonImport",
+        
+        // create puzzles
+        menuCreatePuzzlesButtonBack: "menuCreatePuzzlesButtonBack",
+        menuCreatePuzzlesButtonNew: "menuCreatePuzzlesButtonNew",
+        menuCreatePuzzlesButtonTemplate: "menuCreatePuzzlesButtonTemplate",
+        menuCreatePuzzlesButtonImport: "menuCreatePuzzlesButtonImport",
+        
+        // standard gamemodes
+        menuStandardGamemodesButtonBack: "menuStandardGamemodesButtonBack",
+        menuStandardGamemodesButtonMarathon: "menuStandardGamemodesButtonMarathon",
+        menuStandardGamemodesButtonSprint: "menuStandardGamemodesButtonSprint",
+        menuStandardGamemodesButtonUltra: "menuStandardGamemodesButtonUltra",
+        
+        // settings
+        menuSettingsButtonBack: "menuSettingsButtonBack",
+        menuSettingsButtonHandling: "menuSettingsButtonHandling",
+        menuSettingsButtonKeybinds: "menuSettingsButtonKeybinds",
+        
+        // handling
+        menuHandlingButtonBack: "menuHandlingButtonBack",
+        menuHandlingARRLabel: "menuHandlingARRLabel",
+        menuHandlingDASLabel: "menuHandlingDASLabel",
+        menuHandlingSDFLabel: "menuHandlingSDFLabel",
+        menuHandlingDCDLabel: "menuHandlingDCDLabel",
+        menuHandlingMSGLabel: "menuHandlingMSGLabel",
+        menuHandlingARELabel: "menuHandlingARELabel",
+        menuHandlingLCALabel: "menuHandlingLCALabel",
+        
+        // keybinds
+        menuKeybindsButtonBack: "menuKeybindsButtonBack",
+        menuKeybindsLeftLabel: "menuKeybindsLeftLabel",
+        menuKeybindsRightLabel: "menuKeybindsRightLabel",
+        menuKeybindsSoftDropLabel: "menuKeybindsSoftDropLabel",
+        menuKeybindsHardDropLabel: "menuKeybindsHardDropLabel",
+        menuKeybindsRotateCCWLabel: "menuKeybindsRotateCCWLabel",
+        menuKeybindsRotateCWLabel: "menuKeybindsRotateCWLabel",
+        menuKeybindsRotate180Label: "menuKeybindsRotate180Label",
+        menuKeybindsHoldPieceLabel: "menuKeybindsHoldPieceLabel",
+        menuKeybindsResetGameLabel: "menuKeybindsResetGameLabel",
+        menuKeybindsAddKeybindButton: "menuKeybindsAddKeybindButton",
+        menuKeybindsAwaitingInputButton: "menuKeybindsAwaitingInputButton",
+        
+        // language
+        menuLanguageButtonBack: "menuLanguageButtonBack",
+        menuLanguageButtonEnglish: "menuLanguageButtonEnglish",
+        menuLanguageButtonJapanese: "menuLanguageButtonJapanese",
+        menuLanguageButtonDev: "menuLanguageButtonDev",
+      }
+    },
+    font: {
+      ui: `"Bloxyl", sans-serif`,
+      gameStats: "Bloxyl",
+    },
+  },
+};
 
-var currentLanguage = null;
-
-// set the current language
-// when exporting currentLanguage it becomes a constant
-function setLanguage(lang) {
-  currentLanguage = lang;
-}
-
-export { translations, currentLanguage, setLanguage };
+export { translations };

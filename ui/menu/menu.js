@@ -11,7 +11,7 @@ import { ls } from "../../localStorage/localStorage.js";
 import { functionLocationAccessor } from "../../engine/util.js";
 
 // languages
-import { translations, currentLanguage, setLanguage } from "../../localization/language.js";
+import { translations } from "../../localization/language.js";
 
 // game engine
 import { Stacker } from "../../engine/stacker.js";
@@ -88,9 +88,15 @@ const spentrisMenus = {
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      game: this.uiFunctions.createButton("Game"),
-      settings: this.uiFunctions.createButton("Settings"),
-      language: this.uiFunctions.createButton("Language"),
+      game: this.uiFunctions.createButton(
+        this.uiText.menuHomeButtonGame
+      ),
+      settings: this.uiFunctions.createButton(
+        this.uiText.menuHomeButtonSettings
+      ),
+      language: this.uiFunctions.createButton(
+        this.uiText.menuHomeButtonLanguage
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -111,12 +117,18 @@ const spentrisMenus = {
   
   game: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuGameButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      standardGamemodes: this.uiFunctions.createButton("Standard Gamemodes"),
-      puzzles: this.uiFunctions.createButton("Puzzles"),
+      standardGamemodes: this.uiFunctions.createButton(
+        this.uiText.menuGameButtonStandardGamemodes
+      ),
+      puzzles: this.uiFunctions.createButton(
+        this.uiText.menuGameButtonPuzzles
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -138,13 +150,21 @@ const spentrisMenus = {
   
   standardGamemodes: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuStandardGamemodesButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      marathon: this.uiFunctions.createButton("Marathon"),
-      sprint: this.uiFunctions.createButton("Sprint"),
-      ultra: this.uiFunctions.createButton("Ultra"),
+      marathon: this.uiFunctions.createButton(
+        this.uiText.menuStandardGamemodesButtonMarathon
+      ),
+      sprint: this.uiFunctions.createButton(
+        this.uiText.menuStandardGamemodesButtonSprint
+      ),
+      ultra: this.uiFunctions.createButton(
+        this.uiText.menuStandardGamemodesButtonUltra
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -164,6 +184,7 @@ const spentrisMenus = {
         settings: {
           handling: this.values.handling,
           keybinds: this.values.keybinds,
+          language: this.values.language,
         },
       });
     });
@@ -175,6 +196,7 @@ const spentrisMenus = {
         settings: {
           handling: this.values.handling,
           keybinds: this.values.keybinds,
+          language: this.values.language,
         },
       });
     });
@@ -186,6 +208,7 @@ const spentrisMenus = {
         settings: {
           handling: this.values.handling,
           keybinds: this.values.keybinds,
+          language: this.values.language,
         },
       });
     });
@@ -196,12 +219,18 @@ const spentrisMenus = {
   
   puzzles: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuPuzzlesButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      play: this.uiFunctions.createButton("Play"),
-      create: this.uiFunctions.createButton("Create"),
+      play: this.uiFunctions.createButton(
+        this.uiText.menuPuzzlesButtonPlay
+      ),
+      create: this.uiFunctions.createButton(
+        this.uiText.menuPuzzlesButtonCreate
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -223,12 +252,18 @@ const spentrisMenus = {
   
   playPuzzles: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuPlayPuzzlesButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      listing: this.uiFunctions.createButton("Listing"),
-      import: this.uiFunctions.createButton("Import"),
+      listing: this.uiFunctions.createButton(
+        this.uiText.menuPlayPuzzlesButtonListing
+      ),
+      import: this.uiFunctions.createButton(
+        this.uiText.menuPlayPuzzlesButtonImport
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -244,13 +279,21 @@ const spentrisMenus = {
   
   createPuzzles: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuCreatePuzzlesButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      new: this.uiFunctions.createButton("New"),
-      template: this.uiFunctions.createButton("Template"),
-      import: this.uiFunctions.createButton("Import"),
+      new: this.uiFunctions.createButton(
+        this.uiText.menuCreatePuzzlesButtonNew
+      ),
+      template: this.uiFunctions.createButton(
+        this.uiText.menuCreatePuzzlesButtonTemplate
+      ),
+      import: this.uiFunctions.createButton(
+        this.uiText.menuCreatePuzzlesButtonImport
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -266,12 +309,18 @@ const spentrisMenus = {
   
   settings: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuSettingsButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
-      handling: this.uiFunctions.createButton("Handling"),
-      keybinds: this.uiFunctions.createButton("Keybinds"),
+      handling: this.uiFunctions.createButton(
+        this.uiText.menuSettingsButtonHandling
+      ),
+      keybinds: this.uiFunctions.createButton(
+        this.uiText.menuSettingsButtonKeybinds
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -293,7 +342,9 @@ const spentrisMenus = {
   
   handling: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuHandlingButtonBack
+    );
     
     // create display
     const outer = document.createElement("div");
@@ -311,7 +362,7 @@ const spentrisMenus = {
      */
     const handlingOptions = {
       "arr": {
-        "text": "ARR",
+        "text": this.uiText.menuHandlingARRLabel,
         "id": "menuHandlingARR",
         "enabled": true,
         "valid": function (value) {
@@ -329,7 +380,7 @@ const spentrisMenus = {
         },
       },
       "das": {
-        "text": "DAS",
+        "text": this.uiText.menuHandlingDASLabel,
         "id": "menuHandlingDAS",
         "enabled": true,
         "valid": function (value) {
@@ -347,7 +398,7 @@ const spentrisMenus = {
         },
       },
       "sdf": {
-        "text": "SDF",
+        "text": this.uiText.menuHandlingSDFLabel,
         "id": "menuHandlingSDF",
         "enabled": true,
         "valid": function (value) {
@@ -365,7 +416,7 @@ const spentrisMenus = {
         },
       },
       "dcd": {
-        "text": "DCD",
+        "text": this.uiText.menuHandlingDCDLabel,
         "id": "menuHandlingDCD",
         "enabled": false,
         "valid": function (value) {
@@ -383,7 +434,7 @@ const spentrisMenus = {
         },
       },
       "msg": {
-        "text": "MSG",
+        "text": this.uiText.menuHandlingMSGLabel,
         "id": "menuHandlingMSG",
         "enabled": true,
         "valid": function (value) {
@@ -401,7 +452,7 @@ const spentrisMenus = {
         },
       },
       "are": {
-        "text": "ARE",
+        "text": this.uiText.menuHandlingARELabel,
         "id": "menuHandlingARE",
         "enabled": false,
         "valid": function (value) {
@@ -419,7 +470,7 @@ const spentrisMenus = {
         },
       },
       "lca": {
-        "text": "LCA",
+        "text": this.uiText.menuHandlingLCALabel,
         "id": "menuHandlingLCA",
         "enabled": false,
         "valid": function (value) {
@@ -491,7 +542,9 @@ const spentrisMenus = {
   
   keybinds: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuKeybindsButtonBack
+    );
     
     const outer = document.createElement("div");
     outer.className = "padding-inside";
@@ -508,47 +561,47 @@ const spentrisMenus = {
      */
     const actionOptions = {
       moveLeft: {
-        text: "Left",
+        text: this.uiText.menuKeybindsLeftLabel,
         id: "menuKeybindsLeftContainer",
         input: ["play", "moveLeftInput"],
       },
       moveRight: {
-        text: "Right",
+        text: this.uiText.menuKeybindsRightLabel,
         id: "menuKeybindsRightContainer",
         input: ["play", "moveRightInput"],
       },
       softDrop: {
-        text: "Soft Drop",
+        text: this.uiText.menuKeybindsSoftDropLabel,
         id: "menuKeybindsSoftDropContainer",
         input: ["play", "softDropInput"],
       },
       hardDrop: {
-        text: "Hard Drop",
+        text: this.uiText.menuKeybindsHardDropLabel,
         id: "menuKeybindsHardDropContainer",
         input: ["play", "hardDropInput"],
       },
-      rotateLeft: {
-        text: "Rotate CCW",
+      rotateCCW: {
+        text: this.uiText.menuKeybindsRotateCCWLabel,
         id: "menuKeybindsRotateCCWContainer",
         input: ["play", "rotateCCWInput"],
       },
-      rotateRight: {
-        text: "Rotate CW",
+      rotateCW: {
+        text: this.uiText.menuKeybindsRotateCWLabel,
         id: "menuKeybindsRotateCWContainer",
         input: ["play", "rotateCWInput"],
       },
       rotate180: {
-        text: "Rotate 180",
+        text: this.uiText.menuKeybindsRotate180Label,
         id: "menuKeybindsRotate180Container",
         input: ["play", "rotate180Input"],
       },
       holdPiece: {
-        text: "Hold Piece",
+        text: this.uiText.menuKeybindsHoldPieceLabel,
         id: "menuKeybindsHoldPieceContainer",
         input: ["play", "holdPieceInput"],
       },
       resetGame: {
-        text: "Reset Game",
+        text: this.uiText.menuKeybindsResetGameLabel,
         id: "menuKeybindsResetGameContainer",
         input: ["meta", "resetInput"],
       },
@@ -648,7 +701,7 @@ const spentrisMenus = {
       // add "add keybind" button
       const addKeybind = document.createElement("button");
       addKeybind.className = "add-keybind";
-      addKeybind.textContent = "Add Keybind";
+      addKeybind.textContent = this.uiText.menuKeybindsAddKeybindButton;
       container.appendChild(addKeybind);
       
       let awaitingInput = false;
@@ -667,7 +720,7 @@ const spentrisMenus = {
         
         // reset awaitingInput state
         awaitingInput = false;
-        addKeybind.textContent = "Add Keybind";
+        addKeybind.textContent = this.uiText.menuKeybindsAddKeybindButton;
       };
       
       /**
@@ -717,7 +770,7 @@ const spentrisMenus = {
         }
         
         awaitingInput = true;
-        addKeybind.textContent = "Awaiting Input";
+        addKeybind.textContent = this.uiText.menuKeybindsAwaitingInputButton;
         
         // handles key input and esc cancellation
         document.addEventListener("keydown", keyDown);
@@ -741,18 +794,40 @@ const spentrisMenus = {
   
   language: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      this.uiText.menuLanguageButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
+    // japanese translation is mostly ai generated so i'm not including it
     const buttons = {
-      english: this.uiFunctions.createButton("English"),
-      japanese: this.uiFunctions.createButton("日本語"),
+      english: this.uiFunctions.createButton(
+        this.uiText.menuLanguageButtonEnglish
+      ),
+      // japanese: this.uiFunctions.createButton(
+      //   this.uiText.menuLanguageButtonJapanese
+      // ),
+      dev: this.uiFunctions.createButton(
+        this.uiText.menuLanguageButtonDev
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
     
     // functionality
     backButton.addEventListener("click", () => {
+      this.showMenu("home");
+    });
+    buttons.english.addEventListener("click", () => {
+      this.changeLanguage("en");
+      this.showMenu("home");
+    });
+    // buttons.japanese.addEventListener("click", () => {
+    //   this.changeLanguage("ja");
+    //   this.showMenu("home");
+    // });
+    buttons.dev.addEventListener("click", () => {
+      this.changeLanguage("dev");
       this.showMenu("home");
     });
     
@@ -772,7 +847,10 @@ const spentrisMenus = {
   
   template: function () {
     this.uiDisplay.className = "padding-inside";
-    const backButton = this.uiFunctions.createButton("Back");
+    const backButton = this.uiFunctions.createButton(
+      /* insert the correct translation id here */
+      this.uiText.menuTemplateButtonBack
+    );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
     const buttons = {
@@ -801,10 +879,7 @@ class MenuHandler {
     this.event = new EventEmitter();
     this.values = data.values ?? values;
     
-    // set the current language
-    setLanguage(
-      data.values.language ?? values.language
-    );
+    this.uiText = translations[this.values.language ?? "en"].translations.ui;
   }
   
   showMenu(menu) {
@@ -818,6 +893,15 @@ class MenuHandler {
       previousMenu: previousMenu,
       currentMenu: this.currentMenu,
     });
+  }
+  
+  changeLanguage(lang, lsSave=true) {
+    this.values.language = lang;
+    if (lsSave) {
+      ls.values.language = lang;
+      ls.save();
+    }
+    this.uiText = translations[lang ?? "en"].translations.ui;
   }
 }
 
