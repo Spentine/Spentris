@@ -284,7 +284,7 @@ puzzle = {
 ```
 
 ```js
-puzzleFunction: {
+puzzleFunction = {
   version: 1, // version of puzzle function
   type: // {string} the type of end condition or function
   parameters: // {object} the data for end condition or function
@@ -399,6 +399,10 @@ translations = {  // {Key: string} each string is 2-letter language code
         // {string} key: {string} translation
         // may also contain functions in the future but they will be indicated
       }
+    },
+    font: {
+      ui: // {string} the font-family style for the ui
+      gameStats: // {string} the font-family style for the game
     }
   }
 }
@@ -446,7 +450,7 @@ this.values = {
 ### Handling
 
 ```js
-handling: { // {key: {number}}
+handling = { // {key: {number}}
   arr: 0,         // Auto Repeat Rate
   das: 100,       // Delayed Auto Shift
   sdf: Infinity,  // Soft Drop Factor
@@ -893,7 +897,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [x] Update localization support for the UI
   - [ ] Create ending screen for games 
   - [x] Prevent SDF from going below 1
-  - V2
+  - [x] V2
     - [x] Create `MenuHandlerV2` Class
     - [x] Implement all current features of `MenuHandler` Class
     - [x] Deprecate V1 and try to remove traces of it
@@ -913,6 +917,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator
+    - [ ] Support the creation of puzzles with a particular clear as the win requirement
+    - [ ] Support the creation of puzzles with particular piece placements as the win requirement
   - [ ] Automatically generate puzzles
   - [x] Make puzzle format JSON-compliant
 - [ ] Lessons

@@ -836,6 +836,10 @@ class MenuHandler {
     this.loadLanguage();
   }
   
+  /**
+   * overwrites the current menu with a new one
+   * @param {string} menu - the name of the menu to show
+   */
   showMenu(menu) {
     const previousMenu = this.currentMenu;
     this.currentMenu = menu;
