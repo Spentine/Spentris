@@ -51,6 +51,10 @@ class Puzzle {
     this.allFunctions = null;
   }
   
+  /**
+   * constructs all functions that are used in the puzzle
+   * @returns {Puzzle} this
+   */
   makeAllFunctions() {
     const functions = [
       this.parameters.initFunction,
@@ -68,6 +72,10 @@ class Puzzle {
     return this;
   }
   
+  /**
+   * exports the puzzle to a JSON object
+   * @returns {object} JSON object of the puzzle
+   */
   exportJSON() {
     const data = {
       parameters: {
@@ -83,6 +91,11 @@ class Puzzle {
     return data;
   }
   
+  /**
+   * creates a Puzzle object from a JSON object
+   * @param {object} json - JSON object to create the Puzzle from
+   * @return {Puzzle} Puzzle object created from the JSON
+   */
   static fromJSON(json) {
     json = structuredClone(json);
     

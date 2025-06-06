@@ -463,6 +463,14 @@ handling = { // {key: {number}}
 
 Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese word あれ used to refer to the entry delay.
 
+## Puzzles
+
+Puzzles are an important component of the project mainly because it provides purpose and reason to play the game. It is also sufficiently complex to warrant having an independent section on this documentation.
+
+### JSON Compliance
+
+Puzzles contain many abstracts that aren't easy to replicate in JSON, most particularly, functions. To resolve this issue, a separate class `PuzzleFunction` has been created that takes in JSON parameters and outputs a function. In this sense, a function can be effectively encoded as if it were a JSON.
+
 ## Current File Structure
 
 - `.github`

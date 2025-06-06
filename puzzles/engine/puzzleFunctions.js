@@ -1,6 +1,5 @@
 /**
  * contains functions
- * @typedef {Object} puzzleFunctions
  */
 const puzzleFunctions = {
   none: function () {
