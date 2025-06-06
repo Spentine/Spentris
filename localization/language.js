@@ -164,8 +164,8 @@ const translations = {
           text.secondary = [];
           
           if (clear.b2b >= 2) {
-            // i think japanese people use btb for back-to-back
-            // 日本人はバックトゥバックのためにbtbを使うと思います
+            // i think japanese uses btb for back-to-back
+            // 日本語はバックトゥバックのためにbtbを使うと思います
             text.secondary.push(`BTB x${clear.b2b - 1}`);
           }
           
@@ -266,8 +266,6 @@ const translations = {
         spinTitle: "spinTitle",
         ppsTitle: "ppsTitle",
         
-        // too much katakana spam
-        // カタカナが多すぎる
         clearConvert: (clear) => {
           const text = {};
           

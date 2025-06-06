@@ -174,6 +174,12 @@ const spentrisMenus = {
       this.showMenu("game");
     });
     
+    const standardSettings = {
+      handling: this.values.handling,
+      keybinds: this.values.keybinds,
+      language: this.values.language,
+    };
+    
     // these buttons are using a new version of the game start event
     // engine/modes/standardModes.js handles most of the mode specifications
     buttons.marathon.addEventListener("click", () => {
@@ -181,11 +187,7 @@ const spentrisMenus = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "marathon",
-        settings: {
-          handling: this.values.handling,
-          keybinds: this.values.keybinds,
-          language: this.values.language,
-        },
+        settings: standardSettings,
       });
     });
     buttons.sprint.addEventListener("click", () => {
@@ -193,11 +195,7 @@ const spentrisMenus = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "sprint",
-        settings: {
-          handling: this.values.handling,
-          keybinds: this.values.keybinds,
-          language: this.values.language,
-        },
+        settings: standardSettings,
       });
     });
     buttons.ultra.addEventListener("click", () => {
@@ -205,11 +203,7 @@ const spentrisMenus = {
       this.event.emit("gameStart", {
         time: Date.now(),
         mode: "ultra",
-        settings: {
-          handling: this.values.handling,
-          keybinds: this.values.keybinds,
-          language: this.values.language,
-        },
+        settings: standardSettings,
       });
     });
     
@@ -355,6 +349,23 @@ const spentrisMenus = {
     
     outer.appendChild(inner);
     
+    // handling function because it is reused a lot
+    const generateValidationFunction = function (defaultValue, minValue=0) {
+      return function (value) {
+        value = parseFloat(value);
+        
+        if (isNaN(value)) { // default value
+          return defaultValue;
+        }
+        
+        if (value < minValue) { // minimum value
+          return minValue;
+        }
+        
+        return value;
+      };
+    };
+    
     /**
      * handling options
      * - text: the text to display
@@ -365,127 +376,57 @@ const spentrisMenus = {
         "text": this.uiText.menuHandlingARRLabel,
         "id": "menuHandlingARR",
         "enabled": true,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.arr;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.arr, 0
+        ),
       },
       "das": {
         "text": this.uiText.menuHandlingDASLabel,
         "id": "menuHandlingDAS",
         "enabled": true,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.das;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.das, 0
+        ),
       },
       "sdf": {
         "text": this.uiText.menuHandlingSDFLabel,
         "id": "menuHandlingSDF",
         "enabled": true,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.sdf;
-          }
-          
-          if (value < 1) { // minimum value
-            return 1;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.sdf, 1
+        ),
       },
       "dcd": {
         "text": this.uiText.menuHandlingDCDLabel,
         "id": "menuHandlingDCD",
         "enabled": false,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.dcd;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.dcd, 0
+        ),
       },
       "msg": {
         "text": this.uiText.menuHandlingMSGLabel,
         "id": "menuHandlingMSG",
         "enabled": true,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.msg;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.msg, 0
+        ),
       },
       "are": {
         "text": this.uiText.menuHandlingARELabel,
         "id": "menuHandlingARE",
         "enabled": false,
-        "valid": function (value) {
-          value = parseFloat(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.are;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.are, 0
+        ),
       },
       "lca": {
         "text": this.uiText.menuHandlingLCALabel,
         "id": "menuHandlingLCA",
         "enabled": false,
-        "valid": function (value) {
-          value = Number(value);
-          
-          if (isNaN(value)) { // default value
-            return defaultValues.handling.lca;
-          }
-          
-          if (value < 0) { // minimum value
-            return 0;
-          }
-          
-          return value;
-        },
+        "valid": generateValidationFunction(
+          defaultValues.handling.lca, 0
+        ),
       },
     };
     
