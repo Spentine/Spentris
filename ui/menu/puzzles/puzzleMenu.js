@@ -42,6 +42,40 @@ const puzzleUiFunctions = {
       menuBar.className = "puzzleMenuBar";
       
       /**
+       * construct interact event listener
+       * @param {Object} item - the item to interact with
+       * @return {Function} - the event listener function
+       */
+      const constructInteractListener = function (item) {
+        return function () {
+          if (typeof item.interact === "function") {
+            item.interact(); // call the interact function
+          } else {
+            console.warn("No interact function defined for", item.text);
+          }
+        };
+      };
+      
+      /**
+       * creates tree hover event listeners
+       * @param {HTMLElement} container - the container to create hover listeners for
+       * @param {HTMLElement} subMenu - the sub-menu element to show/hide
+       * @return {null} - no return value, just adds event listeners
+       */
+      const constructHoverListeners = function (container, subMenu) {
+        // hide sub-menu by default
+        subMenu.style.display = "none";
+        
+        // add event listener for hover
+        container.addEventListener("mouseover", () => {
+          subMenu.style.display = ""; // set to default
+        });
+        container.addEventListener("mouseout", () => {
+          subMenu.style.display = "none"; // hide
+        });
+      };
+      
+      /**
        * constructs a sub-menu tree
        * @param {Array} subItems - array of sub-menu items
        * @param {Object} position - position of the sub-menu
@@ -51,9 +85,11 @@ const puzzleUiFunctions = {
         subMenu.className = "puzzleSubMenu";
         
         for (const subItem of subItems) {
+          // container of both the item and the sub-menu
           const subContainer = document.createElement("div");
           subContainer.className = "puzzleSubMenuContainer";
           
+          // the actual item (the ui button or interactable)
           const subItemElement = document.createElement("div");
           subItemElement.className = "puzzleSubMenuItem";
           
@@ -65,25 +101,27 @@ const puzzleUiFunctions = {
           subContainer.appendChild(subItemElement);
           
           if (subItem.type === "tree") {
-            // i need to place it to the right but for some reason having a container that is absolute would break
+            // i need to place it to the right but for some reason having a container that is positioned `absolute` would break
             const nonAbsolute = document.createElement("div");
             nonAbsolute.className = "puzzleMenuNonAbsolute";
             // expand recursively
             const nestedSubMenu = constructSubTree(subItem.sub);
             
-            // hide nested sub-menu by default
-            nestedSubMenu.style.display = "none";
-            
-            // add event listener for hover
-            subContainer.addEventListener("mouseover", () => {
-              nestedSubMenu.style.display = ""; // set to default
-            });
-            subContainer.addEventListener("mouseout", () => {
-              nestedSubMenu.style.display = "none"; // hide
-            });
+            // add hover listeners for the sub-menu and handle showing/hiding
+            constructHoverListeners(subContainer, nestedSubMenu);
             
             nonAbsolute.appendChild(nestedSubMenu);
             subContainer.appendChild(nonAbsolute);
+            
+            // add arrow to indicate sub-menu
+            const faintText = document.createElement("p");
+            faintText.className = "faintText";
+            faintText.style.marginLeft = "8px"; // add some spacing
+            faintText.textContent = "▶";
+            subItemElement.appendChild(faintText);
+          } else if (subItem.type === "button") {
+            // add event listener for button interaction
+            subItemElement.addEventListener("click", constructInteractListener(subItem));
           }
           
           subMenu.appendChild(subContainer);
@@ -112,18 +150,13 @@ const puzzleUiFunctions = {
         if (headerItem.type === "tree") {
           const subMenu = constructSubTree(headerItem.sub);
           
-          // hide sub-menu by default
-          subMenu.style.display = "none";
-          
-          // add event listener
-          container.addEventListener("mouseover", () => {
-            subMenu.style.display = ""; // set to default
-          });
-          container.addEventListener("mouseout", () => {
-            subMenu.style.display = "none"; // hide
-          });
+          // add hover listeners for the item and handle showing/hiding
+          constructHoverListeners(container, subMenu);
           
           container.appendChild(subMenu);
+        } else if (headerItem.type === "button") {
+          // add event listener for button interaction
+          item.addEventListener("click", constructInteractListener(headerItem));
         }
         
         menuBar.appendChild(container);
@@ -152,7 +185,7 @@ const puzzleMenus = {
                 {
                   text: "Export as JSON",
                   type: "button",
-                  interact: () => {}, // placeholder
+                  interact: null, // placeholder
                 },
               ],
             },
@@ -163,14 +196,14 @@ const puzzleMenus = {
                 {
                   text: "Import from JSON",
                   type: "button",
-                  interact: () => {}, // placeholder
+                  interact: null, // placeholder
                 },
               ],
             },
             {
               text: "Save Puzzle to LocalStorage",
               type: "button",
-              interact: () => {}, // placeholder
+              interact: null, // placeholder
             },
           ],
         },
@@ -181,12 +214,12 @@ const puzzleMenus = {
             {
               text: "Undo",
               type: "button",
-              interact: () => {}, // placeholder
+              interact: null, // placeholder
             },
             {
               text: "Redo",
               type: "button",
-              interact: () => {}, // placeholder
+              interact: null, // placeholder
             },
             {
               text: "Mirror",
@@ -195,12 +228,12 @@ const puzzleMenus = {
                 {
                   text: "Everything",
                   type: "button",
-                  interact: () => {}, // placeholder
+                  interact: null, // placeholder
                 },
                 {
                   text: "Board State",
                   type: "button",
-                  interact: () => {}, // placeholder
+                  interact: null, // placeholder
                 },
               ],
             },
@@ -213,7 +246,7 @@ const puzzleMenus = {
             {
               text: "Navigate to Parent Set",
               type: "button",
-              interact: () => {}, // placeholder
+              interact: null, // placeholder
             },
           ],
         },

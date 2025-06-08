@@ -1,3 +1,6 @@
+/* === header === */
+
+/* the header div */
 .puzzleMenuBar {
   background-color: #444444;
   width: 100%;
@@ -11,10 +14,12 @@
   padding: 4px;
 }
 
+/* the container for both the item and its menus */
 .puzzleMenuContainer {
   
 }
 
+/* the header item */
 .puzzleMenuItem {
   background-color: #555555;
   border: 2px solid;
@@ -35,11 +40,7 @@
   text-align: center;
 }
 
-.puzzleMenuNonAbsolute {
-  /* for alignment */
-  transform: translate(4px, -8px);
-}
-
+/* the submenus */
 .puzzleSubMenu {
   position: absolute;
   
@@ -58,27 +59,46 @@
   border-radius: 4px;
 }
 
+/* container of subitem and submenus */
 .puzzleSubMenuContainer {
   display: flex;
   flex-direction: row;
+}
+
+/* to allow for horizontal placement relative to flex */
+.puzzleMenuNonAbsolute {
+  /* for alignment */
+  /* it has to be moved to the left a little bit (hence the 0) because if not then the hover boundaries are glitchy */
+  transform: translate(0, -4px);
+}
+
+/* subitem interactable */
+.puzzleSubMenuItem {
+  white-space: nowrap;
+  width: 100%;
   
   background-color: #555555;
   border-radius: 4px;
   
   padding: 4px;
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-.puzzleSubMenuContainer:hover {
+.puzzleSubMenuItem:hover {
   background-color: #666666;
-}
-
-.puzzleSubMenuItem {
-  white-space: nowrap;
-  width: 100%;
 }
 
 .puzzleSubMenuItemText {
   color: #ffffff;
   font-size: 20px;
   text-align: left;
+}
+
+.faintText {
+  font-size: 16px;
+  color: #ffffff44;
+  transform: translateY(-2px);
 }
