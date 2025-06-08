@@ -22,10 +22,12 @@ import { debugPuzzles } from "../../puzzles/packs/test.js";
 
 // puzzle menus
 import {
-  PuzzleMenuHandler,
   puzzleUiFunctions,
   puzzleMenus,
 } from "./puzzles/puzzleMenu.js";
+import {
+  PuzzleMenuHandler
+} from "./puzzles/puzzleMenuHandler.js";
 
 const uiDisplay = document.getElementById("uiDisplay");
 
@@ -784,14 +786,17 @@ const spentrisMenus = {
       this.showMenu("home");
     });
     buttons.english.addEventListener("click", () => {
+      this.saveLanguage("en");
       this.loadLanguage("en");
       this.showMenu("home");
     });
     buttons.japanese.addEventListener("click", () => {
+      this.saveLanguage("ja");
       this.loadLanguage("ja");
       this.showMenu("home");
     });
     buttons.dev.addEventListener("click", () => {
+      this.saveLanguage("dev");
       this.loadLanguage("dev");
       this.showMenu("home");
     });
@@ -852,64 +857,7 @@ const spentrisMenus = {
   },
 };
 
-class MenuHandler {
-  constructor(data) {
-    this.currentMenu = data.currentMenu ?? "home";
-    this.uiFunctions = data.uiFunctions ?? uiFunctions;
-    this.menus = data.menus ?? spentrisMenus;
-    this.uiDisplay = data.uiDisplay ?? uiDisplay;
-    
-    this.event = new EventEmitter();
-    this.values = data.values ?? values;
-    
-    this.loadLanguage();
-  }
-  
-  /**
-   * overwrites the current menu with a new one
-   * @param {string} menu - the name of the menu to show
-   * @param {array} args - arguments passed into the menu function
-   */
-  showMenu(menu, ...args) {
-    const previousMenu = this.currentMenu;
-    this.currentMenu = menu;
-    this.uiFunctions.resetDisplay.call(this);
-    this.menus[menu].call(this, ...args); // pass in the arguments
-    
-    this.event.emit("menuChange", {
-      time: Date.now(),
-      previousMenu: previousMenu,
-      currentMenu: this.currentMenu,
-    });
-  }
-  
-  /**
-   * will load the language translations
-   * @param {string|null} lang - the language to load, if null, it will use the current language
-   * @param {boolean} lsSave - whether to save the language to localStorage
-   */
-  loadLanguage(lang=null, lsSave=true) {
-    if (lang) {
-      this.values.language = lang;
-      if (lsSave) {
-        ls.values.language = lang;
-        ls.save();
-      }
-    }
-    
-    const langTranslations = translations[
-      this.values.language ?? "en"
-    ];
-    
-    this.uiText = langTranslations.translations.ui;
-    this.uiDisplay.style.setProperty(
-      "font-family", langTranslations.font.ui
-    ); 
-  }
-}
-
 export {
-  MenuHandler,
   uiFunctions,
   spentrisMenus,
   uiDisplay,

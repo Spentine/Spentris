@@ -17,7 +17,6 @@ import { ls } from "../../../localStorage/localStorage.js";
 // languages
 import { translations } from "../../../localization/language.js";
 
-
 // puzzles
 import { PuzzleFunction, Puzzle } from "../../../puzzles/engine/puzzle.js";
 import { debugPuzzles } from "../../../puzzles/packs/test.js";
@@ -51,62 +50,7 @@ const puzzleMenus = {
   },
 };
 
-/**
- * basically identical to MenuHandler
- * consider making it actually menuhandler or whatever
- */
-class PuzzleMenuHandler {
-  constructor(data) {
-    this.currentMenu = data.currentMenu ?? "puzzleEditor";
-    this.uiFunctions = data.uiFunctions ?? puzzleUiFunctions;
-    this.menus = data.menus ?? puzzleMenus;
-    this.uiDisplay = data.uiDisplay;
-    
-    this.event = new EventEmitter();
-    this.values = data.values;
-    
-    this.loadLanguage();
-  }
-  
-  /**
-   * overwrites the current menu with a new one
-   * @param {string} menu - the name of the menu to show
-   * @param {array} args - arguments passed into the menu function
-   */
-  showMenu(menu, ...args) {
-    const previousMenu = this.currentMenu;
-    this.currentMenu = menu;
-    this.uiFunctions.resetDisplay.call(this);
-    this.menus[menu].call(this, ...args);
-    this.event.emit("menuChange", {
-      time: Date.now(),
-      previousMenu: previousMenu,
-      currentMenu: this.currentMenu,
-    });
-  }
-  
-  /**
-   * will load the language translations (does not save because this isn't the main menus)
-   * @param {string|null} lang - the language to load, if null, it will use the current language
-   */
-  loadLanguage(lang=null) {
-    if (lang) {
-      this.values.language = lang;
-    }
-    
-    const langTranslations = translations[
-      this.values.language ?? "en"
-    ];
-    
-    this.uiText = langTranslations.translations.ui;
-    this.uiDisplay.style.setProperty(
-      "font-family", langTranslations.font.ui
-    ); 
-  }
-}
-
 export {
-  PuzzleMenuHandler,
   puzzleUiFunctions,
   puzzleMenus,
 };

@@ -11,12 +11,14 @@ import { Stacker } from "./engine/stacker.js";
 
 // menus
 import {
-  MenuHandler,
   uiFunctions,
   spentrisMenus,
   uiDisplay,
   values,
 } from "./ui/menu/menu.js";
+import {
+  MenuHandler
+} from "./ui/menu/menuHandler.js";
 
 // convert game start event
 import { convertGameStartEvent } from "./ui/menu/converter.js";
