@@ -54,9 +54,11 @@ The main menu that allows for puzzle creation. It should be very interactive and
     - Export Puzzle
       - Export as JSON (button)
     - Import puzzle
-      - Import as JSON (button)
+      - Import from JSON (button)
     - Save Puzzle to LocalStorage
   - Edit
+    - Undo (button)
+    - Redo (button)
     - Mirror
       - Everything (button)
       - Board State (button)

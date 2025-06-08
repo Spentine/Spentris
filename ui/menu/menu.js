@@ -106,6 +106,9 @@ const spentrisMenus = {
       language: this.uiFunctions.createButton(
         this.uiText.menuHomeButtonLanguage
       ),
+      jumpToPuzzleEditor: this.uiFunctions.createButton(
+        "I am debugging, please ignore this"
+      ),
     };
     
     this.uiFunctions.appendButtons(menuSelection, buttons);
@@ -119,6 +122,11 @@ const spentrisMenus = {
     });
     buttons.language.addEventListener("click", () => {
       this.showMenu("language");
+    });
+    buttons.jumpToPuzzleEditor.addEventListener("click", () => {
+      this.showMenu("puzzleMenu", {
+        currentMenu: "puzzleEditor",
+      });
     });
     
     this.uiDisplay.appendChild(menuSelection.outer);

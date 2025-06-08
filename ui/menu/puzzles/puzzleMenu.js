@@ -32,21 +32,120 @@ const puzzleUiFunctions = {
   },
   
   /**
-   * create header
+   * create complex header for puzzle menus
+   * refer to the docs
+   * @param {Object} data - data for the header
    */
-  createHeader: function () {
-    
+  createHeader: function (data) {
+    if (data.type === "menuBar") { // menu bar
+      const menuBar = document.createElement("div");
+      menuBar.className = "puzzleMenuBar";
+      
+      const headerRoot = data.root;
+      for (const headerItem of headerRoot) {
+        const item = document.createElement("div");
+        item.className = "puzzleMenuItem";
+        
+        const innerText = document.createElement("p");
+        innerText.className = "puzzleMenuItemText";
+        innerText.textContent = headerItem.text;
+        
+        item.appendChild(innerText);
+        menuBar.appendChild(item);
+      }
+      
+      return menuBar;
+    }
   },
 };
 
 const puzzleMenus = {
   puzzleEditor: function () {
-    this.uiDisplay.className = "";
+    this.uiDisplay.className = "window-fill";
     
-    const testElement = document.createElement("p");
-    testElement.textContent = "im on the fucking airplane i dont get no github copilot here smh smh ts pmo 😭😭😭😭 also i dont even remember how to use `extends` because i forgot so right now im just doing it really jankily get me off of here";
+    const header = this.uiFunctions.createHeader({
+      type: "menuBar",
+      root: [
+        {
+          text: "File",
+          type: "tree",
+          sub: [
+            {
+              text: "Export Puzzle",
+              type: "tree",
+              sub: [
+                {
+                  text: "Export as JSON",
+                  type: "button",
+                  interact: () => {}, // placeholder
+                },
+              ],
+            },
+            {
+              text: "Import Puzzle",
+              type: "tree",
+              sub: [
+                {
+                  text: "Import from JSON",
+                  type: "button",
+                  interact: () => {}, // placeholder
+                },
+              ],
+            },
+            {
+              text: "Save Puzzle to LocalStorage",
+              type: "button",
+              interact: () => {}, // placeholder
+            },
+          ],
+        },
+        {
+          text: "Edit",
+          type: "tree",
+          sub: [
+            {
+              text: "Undo",
+              type: "button",
+              interact: () => {}, // placeholder
+            },
+            {
+              text: "Redo",
+              type: "button",
+              interact: () => {}, // placeholder
+            },
+            {
+              text: "Mirror",
+              type: "tree",
+              sub: [
+                {
+                  text: "Everything",
+                  type: "button",
+                  interact: () => {}, // placeholder
+                },
+                {
+                  text: "Board State",
+                  type: "button",
+                  interact: () => {}, // placeholder
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: "Listing",
+          type: "tree",
+          sub: [
+            {
+              text: "Navigate to Parent Set",
+              type: "button",
+              interact: () => {}, // placeholder
+            },
+          ],
+        },
+      ],
+    });
     
-    this.uiDisplay.appendChild(testElement);
+    this.uiDisplay.appendChild(header);
   },
 };
 

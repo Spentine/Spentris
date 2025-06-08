@@ -416,6 +416,35 @@ A new approach should be taken when considering the interaction between the UI a
 
 The UI data type should be, in many ways, similar to the `LocalStorageHandler` data type.
 
+### Puzzle Menu `createHeader` Data Format
+The data format specifies how the `PuzzleMenuHandler` creates a complex header with many options.
+
+```js
+puzzleUiFunctions.createHeader(data) {
+  
+}
+```
+
+```js
+data = {
+  type: "menuBar" // {string} specifies a menu bar with a hierarchical structure
+  
+  // type: "menuBar"
+  root: [ // {object[]} start of hierarchy
+    {
+      text: // {string} button text
+      
+      type: "button", // an interactable button
+      interact: // {function} when pressed
+      
+      type: "tree", // more buttons
+      sub: // {array} "sublevel" (same type as root)
+    },
+    /* ... */
+  ],
+}
+```
+
 ## Object Formats (Misc)
 
 ### `LocalStorageHandler`
