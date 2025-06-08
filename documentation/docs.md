@@ -573,14 +573,23 @@ Puzzles contain many abstracts that aren't easy to replicate in JSON, most parti
       - *will also render other stuff besides minos but not now*
   - `menu` (in development)
     - *contains scripts to process the menu UIs*
+    - *current (and 2nd) version of the menus with more centralization and a function-based approach*
+    - *do not mention v2 any more when referencing it, it is a bit redundant to keep repeating it*
+    - *in the future, if this is replaced, use V3 at the end of class names (or not depending on how much i change)*
+    - `puzzles`
+      - *contains a UI designated specifically for the puzzle feature of the game (`PuzzleMenuHandler`)*
+      - `puzzleMenu.js`
+        - *contains the functions used to render the menus for `PuzzleMenuHandler`*
+      - `puzzleMenuHandler.js`
+        - *contains the core definition of `PuzzleMenuHandler` as an extension of `MenuHandler`*
     - `converter.js`
       - *converts formats between the `MenuHandler` and the game engine, particularly `Stacker`.*
     - `defaultValues.js`
       - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
     - `menu.js`
-      - *current (and 2nd) version of `MenuHandler` more centralized menus and a function-based approach*
-      - *do not mention v2 any more when referencing it, it is a bit redundant to keep repeating it*
-      - *in the future, if this is replaced, use V3 at the end of class names (or not depending on how much i change)*
+      - *contains the functions used to render the menus for `MenuHandler`*
+    - `menuHandler.js`
+      - *contains the core definition of `MenuHandler`*
   - `skins`
     - *contains images with texture data*
     - *ghost.png also contains images for the next piece spawn*
