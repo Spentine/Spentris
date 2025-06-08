@@ -11,6 +11,10 @@
   padding: 4px;
 }
 
+.puzzleMenuContainer {
+  
+}
+
 .puzzleMenuItem {
   background-color: #555555;
   border: 2px solid;
@@ -24,4 +28,30 @@
   color: #ffffff;
   font-size: 24px;
   text-align: center;
+}
+
+.puzzleSubMenu {
+  position: absolute;
+  
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  
+  background-color: #550055;
+}
+
+.puzzleSubMenuContainer {
+  
+}
+
+.puzzleSubMenuItem {
+  background-color: #555500;
+}
+
+.puzzleSubMenuItemText {
+  color: #ffffff;
+  font-size: 20px;
+  text-align: left;
 }

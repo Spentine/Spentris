@@ -41,17 +41,88 @@ const puzzleUiFunctions = {
       const menuBar = document.createElement("div");
       menuBar.className = "puzzleMenuBar";
       
+      /**
+       * constructs a sub-menu tree
+       * @param {Array} subItems - array of sub-menu items
+       * @param {Object} position - position of the sub-menu
+       */
+      const constructSubTree = function (subItems) {
+        const subMenu = document.createElement("div");
+        subMenu.className = "puzzleSubMenu";
+        
+        for (const subItem of subItems) {
+          const subContainer = document.createElement("div");
+          subContainer.className = "puzzleSubMenuContainer";
+          
+          const subItemElement = document.createElement("div");
+          subItemElement.className = "puzzleSubMenuItem";
+          
+          const subInnerText = document.createElement("p");
+          subInnerText.className = "puzzleSubMenuItemText";
+          subInnerText.textContent = subItem.text;
+          subItemElement.appendChild(subInnerText);
+          
+          subContainer.appendChild(subItemElement);
+          
+          if (subItem.type === "tree") {
+            // expand recursively
+            const nestedSubMenu = constructSubTree(subItem.sub);
+            
+            // hide nested sub-menu by default
+            nestedSubMenu.style.display = "none";
+            
+            // add event listener for hover
+            subContainer.addEventListener("mouseover", () => {
+              nestedSubMenu.style.display = ""; // set to default
+            });
+            subContainer.addEventListener("mouseout", () => {
+              nestedSubMenu.style.display = "none"; // hide
+            });
+            
+            subContainer.appendChild(nestedSubMenu);
+          }
+          
+          subMenu.appendChild(subContainer);
+        }
+        
+        return subMenu;
+      }
+      
       const headerRoot = data.root;
       for (const headerItem of headerRoot) {
+        // the actual container for the headerItem
+        const container = document.createElement("div");
+        container.className = "puzzleMenuContainer";
+        
+        // construct the item (the ui button or interactable)
         const item = document.createElement("div");
         item.className = "puzzleMenuItem";
         
         const innerText = document.createElement("p");
         innerText.className = "puzzleMenuItemText";
         innerText.textContent = headerItem.text;
-        
         item.appendChild(innerText);
-        menuBar.appendChild(item);
+        
+        container.appendChild(item);
+        
+        if (headerItem.type === "tree") {
+          const subMenu = constructSubTree(headerItem.sub);
+          
+          // hide sub-menu by default
+          subMenu.style.display = "none";
+          
+          // add event listener
+          container.addEventListener("mouseover", () => {
+            subMenu.style.display = ""; // set to default
+          });
+          container.addEventListener("mouseout", () => {
+            subMenu.style.display = "none"; // hide
+          });
+          
+          container.appendChild(subMenu);
+        }
+        
+        menuBar.appendChild(container);
       }
       
       return menuBar;
