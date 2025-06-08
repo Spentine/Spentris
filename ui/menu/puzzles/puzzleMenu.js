@@ -65,6 +65,9 @@ const puzzleUiFunctions = {
           subContainer.appendChild(subItemElement);
           
           if (subItem.type === "tree") {
+            // i need to place it to the right but for some reason having a container that is absolute would break
+            const nonAbsolute = document.createElement("div");
+            nonAbsolute.className = "puzzleMenuNonAbsolute";
             // expand recursively
             const nestedSubMenu = constructSubTree(subItem.sub);
             
@@ -79,7 +82,8 @@ const puzzleUiFunctions = {
               nestedSubMenu.style.display = "none"; // hide
             });
             
-            subContainer.appendChild(nestedSubMenu);
+            nonAbsolute.appendChild(nestedSubMenu);
+            subContainer.appendChild(nonAbsolute);
           }
           
           subMenu.appendChild(subContainer);

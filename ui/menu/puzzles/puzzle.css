@@ -24,10 +24,20 @@
   min-width: 80px;
 }
 
+.puzzleMenuItem:hover {
+  background-color: #666666;
+  border-color: #777777;
+}
+
 .puzzleMenuItemText {
   color: #ffffff;
   font-size: 24px;
   text-align: center;
+}
+
+.puzzleMenuNonAbsolute {
+  /* for alignment */
+  transform: translate(4px, -8px);
 }
 
 .puzzleSubMenu {
@@ -37,17 +47,34 @@
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch; /* or flex-start */
   
-  background-color: #550055;
+  padding: 2px;
+  gap: 2px;
+  
+  background-color: #444444;
+  border: 2px solid;
+  border-color: #666666;
+  border-radius: 4px;
 }
 
 .puzzleSubMenuContainer {
+  display: flex;
+  flex-direction: row;
   
+  background-color: #555555;
+  border-radius: 4px;
+  
+  padding: 4px;
+}
+
+.puzzleSubMenuContainer:hover {
+  background-color: #666666;
 }
 
 .puzzleSubMenuItem {
-  background-color: #555500;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .puzzleSubMenuItemText {
