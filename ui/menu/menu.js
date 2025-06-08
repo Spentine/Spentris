@@ -20,6 +20,13 @@ import { Stacker } from "../../engine/stacker.js";
 import { PuzzleFunction, Puzzle } from "../../puzzles/engine/puzzle.js";
 import { debugPuzzles } from "../../puzzles/packs/test.js";
 
+// puzzle menus
+import {
+  PuzzleMenuHandler,
+  puzzleUiFunctions,
+  puzzleMenus,
+} from "./puzzles/puzzleMenu.js";
+
 const uiDisplay = document.getElementById("uiDisplay");
 
 const uiFunctions = {
@@ -295,6 +302,11 @@ const spentrisMenus = {
     // functionality
     backButton.addEventListener("click", () => {
       this.showMenu("puzzles");
+    });
+    buttons.new.addEventListener("click", () => {
+      this.showMenu("puzzleMenu", {
+        currentMenu: "puzzleEditor",
+      });
     });
     
     this.uiDisplay.appendChild(backButton);
@@ -740,7 +752,8 @@ const spentrisMenus = {
     );
     const menuSelection = this.uiFunctions.createMenuSelection();
     
-    // japanese translation is mostly ai generated so i'm not including it
+    // i think i should hide the japanese translation until i actually get a native speaker to translate it because my comprehension of the language is terrible
+    // 俺の日本語翻訳最悪だ！！！！！　タスケテくれぇぇ！！！！
     const buttons = {
       english: this.uiFunctions.createButton(
         this.uiText.menuLanguageButtonEnglish
@@ -797,6 +810,24 @@ const spentrisMenus = {
     uiDisplay.appendChild(renderCanvas);
   },
   
+  /**
+   * this menu is handled by PuzzleMenuHandler
+   * @param data - i havent decided what this does really
+   */
+  puzzleMenu: function (data) {
+    const puzzleMH = new PuzzleMenuHandler({
+      currentMenu: data.currentMenu ?? "puzzleEditor",
+      uiFunctions: puzzleUiFunctions,
+      menus: puzzleMenus,
+      uiDisplay: uiDisplay, // i think this is a great idea
+      values: {
+        language: this.values.language,
+      },
+    });
+    puzzleMH.showMenu(puzzleMH.currentMenu);
+    // how to dispose of this menu object after the menu changes? i dont want to cause a memory leak
+  },
+  
   template: function () {
     this.uiDisplay.className = "padding-inside";
     const backButton = this.uiFunctions.createButton(
@@ -831,20 +862,19 @@ class MenuHandler {
     this.event = new EventEmitter();
     this.values = data.values ?? values;
     
-    this.uiText = translations[this.values.language ?? "en"].translations.ui;
-    
     this.loadLanguage();
   }
   
   /**
    * overwrites the current menu with a new one
    * @param {string} menu - the name of the menu to show
+   * @param {array} args - arguments passed into the menu function
    */
-  showMenu(menu) {
+  showMenu(menu, ...args) {
     const previousMenu = this.currentMenu;
     this.currentMenu = menu;
     this.uiFunctions.resetDisplay.call(this);
-    this.menus[menu].call(this);
+    this.menus[menu].call(this, ...args); // pass in the arguments
     
     this.event.emit("menuChange", {
       time: Date.now(),
