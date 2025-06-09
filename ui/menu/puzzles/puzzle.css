@@ -127,8 +127,36 @@
   
   background-color: #333333;
   box-shadow: 0 0 4px #00000080;
+  
+  padding: 16px;
 }
 
 .puzzleMiddleContainer {
   flex: 1;
+}
+
+.puzzleButton {
+  background-color: #444444;
+  border: 2px solid;
+  border-color: #555555;
+  border-radius: 4px;
+  
+  padding: 8px 12px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.puzzleButton:hover {
+  background-color: #555555;
+  border-color: #666666;
+}
+
+.puzzleButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin: 8px 0;
 }

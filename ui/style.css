@@ -39,18 +39,21 @@ body {
 h1 {
   font-family: inherit;
   font-size: 48px;
+  font-weight: normal;
   margin: 0px;
 }
 
 h2 {
   font-family: inherit;
   font-size: 36px;
+  font-weight: normal;
   margin: 0px;
 }
 
 h3 {
   font-family: inherit;
   font-size: 24px;
+  font-weight: normal;
   margin: 0px;
 }
 
@@ -67,27 +70,17 @@ label {
   padding-top: 8px;
 }
 
+hr {
+  border: 1px solid #ffffff44;
+  border-radius: 1px;
+}
+
 /* inputs and interactions */
 
 button { 
   font-family: inherit;
   font-size: 18px;
   color: #ffffff;
-  
-  padding: 8px;
-  
-  background-color: #333333;
-  border: solid 2px #444444;
-  border-radius: 4px;
-  
-  box-shadow: 0px 0px 8px #ffffff44;
-  
-  transition: 0.1s;
-}
-
-button:hover {
-  background-color: #444444;
-  border: solid 2px #555555;
 }
 
 input {
@@ -165,14 +158,17 @@ input:hover {
 
 /* inputs and interactions */
 
-button.large {
-  font-size: 36px;
-  
-  /* padding: 16px 16px 8px 16px; */
-  padding: 16px;
-}
-
 button.menuButton {
+  padding: 8px;
+  
+  background-color: #333333;
+  border: solid 2px #444444;
+  border-radius: 4px;
+  
+  box-shadow: 0px 0px 8px #ffffff44;
+  
+  transition: 0.1s;
+  
   font-size: 36px;
   
   /* padding: 16px 16px 8px 16px; */
@@ -180,13 +176,29 @@ button.menuButton {
   /* margin: 4px; */
 }
 
+button.menuButton:hover {
+  background-color: #444444;
+  border: solid 2px #555555;
+}
+
+button.large {
+  font-size: 36px;
+  
+  /* padding: 16px 16px 8px 16px; */
+  padding: 16px;
+}
+
 button.keybind {
   font-size: 24px;
   
   margin: 4px;
+  padding: 8px;
   
   background-color: #444444;
   border: outset 4px #666666;
+  
+  box-shadow: 0px 0px 8px #ffffff44;
+  transition: 0.1s;
 }
 
 button.keybind:hover {
@@ -198,10 +210,15 @@ button.add-keybind {
   color: #aaccaa;
   font-size: 18px;
   
+  border: solid 2px #444444;
+  border-radius: 4px;
+  
   margin-left: 16px;
+  padding: 8px;
   
   background-color: #444444;
   box-shadow: 0px 0px 8px #ffffff33;
+  transition: 0.1s;
 }
 
 button.add-keybind:hover {
@@ -219,6 +236,10 @@ input.large {
 
 label.large {
   font-size: 36px;
+}
+
+.centeredText {
+  text-align: center;
 }
 
 /* ==== id styles ==== */

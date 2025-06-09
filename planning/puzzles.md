@@ -72,3 +72,7 @@ The main menu that allows for puzzle creation. It should be very interactive and
 ### Puzzle Set Menu
 
 *unfinished documents*
+
+## `puzzleModification.js`
+
+This script should handle the actual puzzle modifications while the UI will present the actions to the user. It will be in charge of also saving and loading puzzles from JSON.

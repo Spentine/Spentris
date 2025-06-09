@@ -309,16 +309,76 @@ const puzzleMenus = {
             },
           ],
         },
+        {
+          text: "Help",
+          type: "tree",
+          sub: [
+            {
+              text: "Give Up",
+              type: "button",
+              interact: () => {
+                alert("no");
+              }, // placeholder
+            },
+          ],
+        },
+        {
+          text: "Exit",
+          type: "button",
+          interact: null, // placeholder
+        },
       ],
     });
     
     const containers = this.uiFunctions.createDoubleSideBar();
     
     // destructure the containers
-    const fullContainer = containers.fullContainer;
-    const leftContainer = containers.leftContainer;
-    const middleContainer = containers.middleContainer;
-    const rightContainer = containers.rightContainer;
+    const [
+      fullContainer,
+      leftContainer,
+      middleContainer,
+      rightContainer,
+    ] = Object.values(containers);
+    
+    // add to left side bar
+    {
+      const header = document.createElement("h2");
+      header.className = "centeredText";
+      header.textContent = "Puzzle Editor";
+      leftContainer.appendChild(header);
+      
+      const hr = document.createElement("hr");
+      hr.style.margin = "16px 0px";
+      leftContainer.appendChild(hr);
+      
+      const infoText = document.createElement("p");
+      infoText.textContent = "This is the Spentris Puzzle Editor. Please give feedback on the functionality and usability of this editor by contacting me directly on Discord.";
+      leftContainer.appendChild(infoText);
+      
+      const buttonContainer = document.createElement("div");
+      buttonContainer.className = "puzzleButtonContainer";
+      leftContainer.appendChild(buttonContainer);
+      
+      const buttons = {
+        editGameState: this.uiFunctions.createButton(
+          "Edit Game State", true,
+        ),
+        editPuzzleSolution: this.uiFunctions.createButton(
+          "Edit Puzzle Solution", true,
+        ),
+        editPuzzleMetadata: this.uiFunctions.createButton(
+          "Edit Puzzle Metadata", true,
+        ),
+        playtestPuzzle: this.uiFunctions.createButton(
+          "Playtest Puzzle", true,
+        ),
+      };
+      
+      const keys = Object.keys(buttons);
+      for (const key of keys) {
+        buttonContainer.appendChild(buttons[key]);
+      }
+    }
     
     puzzleEditorContainer.appendChild(header);
     puzzleEditorContainer.appendChild(fullContainer);
