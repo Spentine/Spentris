@@ -165,11 +165,70 @@ const puzzleUiFunctions = {
       return menuBar;
     }
   },
+  
+  /**
+   * create two side bars
+   * @returns {Object}
+   */
+  createDoubleSideBar: function () {
+    const fullContainer = document.createElement("div");
+    fullContainer.className = "puzzleFullContainer";
+    
+    const leftContainer = document.createElement("div");
+    leftContainer.className = "puzzleSideContainer";
+    
+    const middleContainer = document.createElement("div");
+    middleContainer.className = "puzzleMiddleContainer";
+    
+    const rightContainer = document.createElement("div");
+    rightContainer.className = "puzzleSideContainer";
+    
+    fullContainer.appendChild(leftContainer);
+    fullContainer.appendChild(middleContainer);
+    fullContainer.appendChild(rightContainer);
+    
+    return {
+      fullContainer: fullContainer,
+      leftContainer: leftContainer,
+      middleContainer: middleContainer,
+      rightContainer: rightContainer,
+    };
+  },
+  
+  /**
+   * create a button
+   * @param {string} text - the text to display on the button
+   * @param {boolean} - whether it should indicate that it is a menu button
+   * @param {(function|null)} callback - the function to call when the button is clicked
+   */
+  createButton: function (text, isMenuButton=false, callback=null) {
+    const button = document.createElement("button");
+    button.className = "puzzleButton";
+    
+    const buttonText = document.createElement("p");
+    buttonText.className = "puzzleButtonText";
+    buttonText.textContent = text;
+    button.appendChild(buttonText);
+    
+    if (isMenuButton) {
+      const faintText = document.createElement("p");
+      faintText.className = "faintText";
+      faintText.textContent = "▶"; // arrow to indicate menu
+      button.appendChild(faintText);
+    }
+    
+    if (callback) button.addEventListener("click", callback);
+    
+    return button;
+  },
 };
 
 const puzzleMenus = {
   puzzleEditor: function () {
     this.uiDisplay.className = "window-fill";
+    
+    const puzzleEditorContainer = document.createElement("div");
+    puzzleEditorContainer.className = "window-fill puzzleFlex";
     
     const header = this.uiFunctions.createHeader({
       type: "menuBar",
@@ -253,7 +312,17 @@ const puzzleMenus = {
       ],
     });
     
-    this.uiDisplay.appendChild(header);
+    const containers = this.uiFunctions.createDoubleSideBar();
+    
+    // destructure the containers
+    const fullContainer = containers.fullContainer;
+    const leftContainer = containers.leftContainer;
+    const middleContainer = containers.middleContainer;
+    const rightContainer = containers.rightContainer;
+    
+    puzzleEditorContainer.appendChild(header);
+    puzzleEditorContainer.appendChild(fullContainer);
+    this.uiDisplay.appendChild(puzzleEditorContainer);
   },
 };
 
