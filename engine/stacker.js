@@ -51,10 +51,16 @@ class Stacker {
     const handling = data.settings.handling ?? {};
     
     // copy handling data
-    copyObjByTraversal(
-      initData.settings.initialization.parameters.state,
-      handling
-    );
+    const handlingKeys = copyObjByTraversal(handling);
+    const state = initData.settings.initialization.parameters.state;
+    for (let key in handlingKeys) {
+      const previousValue = state[key];
+      
+      // if it's undefined or null, set it to the handling value
+      if (!previousValue) {
+        state[key] = handling[key];
+      }
+    }
     
     return {
       initData: initData,

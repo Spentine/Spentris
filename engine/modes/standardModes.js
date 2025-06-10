@@ -75,9 +75,21 @@ const standardModes = {
         initialization: {
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-              startingLevel: 1, levelling: true, masterLevels: true,
+              // null values for handling settings are replaced by the user preferences
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
+              gravity: 1000,
+              lockDelay: 500,
+              maxLockDelay: 5000,
+              startingLevel: 1,
+              levelling: true,
+              masterLevels: true,
             },
             rotationSystem: SRSPlusData,
           },

@@ -27,11 +27,18 @@ The main menu that allows for puzzle creation. It should be very interactive and
 
 - **Sidebar Menu Settings**
   - Edit Game State
-    - Edit Board Width (number)
-    - Edit Board Height (number)
-    - Edit Next Queue (list of pieces)
-    - Edit Hold Queue (piece)
-    - Edit Current Piece (piece)
+    - Board Width (number)
+    - Board Height (number)
+    - Next Queue (list of pieces)
+    - Hold Queue (piece)
+    - Current Piece (piece)
+  - Edit Gameplay Settings
+    - Gravity (number)
+    - Lock Delay (number)
+    - Max Lock Delay (number)
+    - Levelling (boolean)
+    - Starting Level (number)
+    - Master Levels (boolean)
   - Edit Puzzle Solution
     - Select Puzzle Solution (selection)
       - Particular Line Clears
@@ -75,4 +82,4 @@ The main menu that allows for puzzle creation. It should be very interactive and
 
 ## `puzzleModification.js`
 
-This script should handle the actual puzzle modifications while the UI will present the actions to the user. It will be in charge of also saving and loading puzzles from JSON.
+This script should handle the actual puzzle modifications while the UI will present the actions to the user. It will be in charge of also saving and loading puzzles from JSON. The puzzle modifier should inherently be separate from the `Puzzle` class, but still provide a method to convert to and from it.

@@ -74,10 +74,15 @@ initializationData = {
         state: {
           // keys are optional
           
-          das: 83.33, // {number} ms/delay
-          arr: 0, // {number} ms/repeat
-          sdf: Infinity, // {number} factor (× gravity, higher number is faster)
-          msg: 1000, // {number} ms/drop (minimum sdf gravity)
+          // if the handling settings are set to null, it will be overriden by the user settings
+          // all of type {(number | null)}
+          arr: null // ms/repeat
+          das: null, // ms/delay
+          sdf: null, // factor (× gravity, higher number is faster)
+          dcd: null,
+          msg: null, // ms/drop (minimum sdf gravity)
+          are: null,
+          lca: null,
           
           gravity: Infinity, // {number} ms/drop
           lockDelay: 500, // {number} ms/lock
@@ -481,12 +486,25 @@ this.values = {
 ```js
 handling = { // {key: {number}}
   arr: 0,         // Auto Repeat Rate
+                  // ms / repeat
+  
   das: 100,       // Delayed Auto Shift
+                  // ms / delay
+  
   sdf: Infinity,  // Soft Drop Factor
+                  // factor (× gravity, higher number is faster)
+  
   dcd: 0,         // DAS Cut Delay
+                  // ms / delay
+  
   msg: 1000,      // Minimum SDF Gravity
+                  // ms / line
+  
   are: 0,         // Entry Delay
+                  // ms / delay
+  
   lca: 0          // Line Clear ARE
+                  // ms / delay
 }
 ```
 

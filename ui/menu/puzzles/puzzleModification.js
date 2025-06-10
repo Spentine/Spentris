@@ -7,3 +7,9 @@ a puzzle modification layer which actually has the code logic to modify puzzles 
 makes the code prettier i think
 
 */
+
+class PuzzleModifier {
+  constructor(data) {
+    
+  }
+}
