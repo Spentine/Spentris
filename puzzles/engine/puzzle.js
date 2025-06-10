@@ -38,7 +38,7 @@ class Puzzle {
     this.parameters = data.parameters ?? {
       values: data.values ?? {},
       
-      // unspecifiable so it will remain like this
+      // might be vestigial, consider removing
       initFunction: function (game) {},
     };
     
@@ -120,7 +120,7 @@ class Puzzle {
         standardFunctionLocations,
         files
       ),
-      settings: this.parameters.values.settings,
+      settings: structuredClone(this.parameters.values.settings),
     };
     return standard;
   }

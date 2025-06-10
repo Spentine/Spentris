@@ -12,19 +12,101 @@ import {
   Puzzle,
 } from "../../../puzzles/engine/puzzle.js";
 
+import {
+  standardFunctionLocations,
+} from "../../../engine/modes/standardModes.js";
+
+import {
+  SRSPlusData,
+} from "../../../engine/rsData.js";
+
+import {
+  Board,
+  Piece
+} from "../../../engine/stackerObjects.js";
+
 class PuzzleModifier {
+  /**
+   * creates a new puzzle modifier for the puzzle editor
+   * @param {object} data - the puzzle modifier data
+   */
   constructor(data) {
+    /**
+     * {width: number, height: number, matrix: (string|null)[][]}
+     */
     this.board = data.board;
+    
     this.nextQueue = data.nextQueue;
-    this.holdQueue = data.holdQueue;
+    this.holdPiece = data.holdPiece;
     this.currentPiece = data.currentPiece;
     
     this.gameplaySettings = data.gameplaySettings;
-    this.puzzleSolution = data.puzzleSolution;
+    this.puzzleWinConditions = data.puzzleWinConditions;
+    this.puzzleLossConditions = data.puzzleLossConditions;
     this.puzzleMetadata = data.puzzleMetadata;
   }
   
   toPuzzle() {
+    const data = {
+      parameters: {
+        values: {
+          version: 1,
+          settings: {
+            functionLocations: standardFunctionLocations,
+            initialization: {
+              parameters: {
+                state: {
+                  // null values for handling settings are replaced by the user preferences
+                  arr: null,
+                  das: null,
+                  sdf: null,
+                  dcd: null,
+                  msg: null,
+                  are: null,
+                  lca: null,
+                  
+                  gravity: 1000,
+                  lockDelay: 500,
+                  maxLockDelay: 5000,
+                  startingLevel: 1,
+                  levelling: true,
+                  masterLevels: true,
+                },
+                rotationSystem: SRSPlusData,
+              },
+            },
+          },
+        },
+      },
+      winConditions: [],
+      lossConditions: [],
+    };
     
+    const params = data.parameters.values.initialization.parameters;
+    
+    // set the board
+    params.board = Board.fromSimpleArray(this.board);
+    
+    // set the next queue
+    params.nextQueue = this.nextQueue;
+    
+    // set the current piece
+    params.currentPiece = this.currentPiece;
+    
+    // set the hold piece
+    params.holdPiece = this.holdPiece;
+    
+    // add win and loss conditions
+    for (const winCondition of this.puzzleWinConditions) {
+      data.winConditions.push(new PuzzleFunction(winCondition));
+    }
+    for (const lossCondition of this.puzzleLossConditions) {
+      data.lossConditions.push(new PuzzleFunction(lossCondition));
+    }
+    
+    const puzzle = new Puzzle(data);
+    return puzzle;
   }
 }
+
+export { PuzzleModifier };

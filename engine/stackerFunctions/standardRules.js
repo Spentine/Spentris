@@ -355,7 +355,7 @@ const initialize = function(params) {
   this.generateNext();
   
   // spawn the first piece
-  this.currentPiece = null;
+  this.currentPiece = params.currentPiece ?? null;
   this.spawnPiece(this.nextQueue.shift());
   
   // persistent gaEventHandler values
@@ -376,7 +376,7 @@ const initialize = function(params) {
   
   // create hold piece
   this.hold = {
-    piece: null,
+    piece: params.holdPiece ?? null,
     allowed: true,
   };
   

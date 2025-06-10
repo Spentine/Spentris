@@ -115,6 +115,9 @@ initializationData = {
         
         nextQueue: [], // {string[]} where each string represents a piece
         refillQueue: 5, // {number} mininum number of pieces in the queue at any given time
+        currentPiece: // {Piece} where it is the current piece
+        
+        holdPiece: // {(string | null) the current hold piece represented by a string
         
         eventEmitter: new EventEmitter(); // {EventEmitter}
       }

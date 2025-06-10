@@ -21,6 +21,9 @@ import { translations } from "../../../localization/language.js";
 import { PuzzleFunction, Puzzle } from "../../../puzzles/engine/puzzle.js";
 import { debugPuzzles } from "../../../puzzles/packs/test.js";
 
+// puzzle modifier
+import { PuzzleModifier } from "../../../ui/menu/puzzles/puzzleModification.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay

@@ -70,6 +70,7 @@ const standardFunctionLocations = {
 const standardModes = {
   marathon: {
     values: {
+      version: 1,
       settings: {
         functionLocations: standardFunctionLocations,
         initialization: {
@@ -108,9 +109,20 @@ const standardModes = {
         initialization: {
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-              startingLevel: 1, levelling: false, masterLevels: false,
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
+              gravity: 1000,
+              lockDelay: 500,
+              maxLockDelay: 5000,
+              startingLevel: 1,
+              levelling: false,
+              masterLevels: false,
             },
             rotationSystem: SRSPlusData,
           },
@@ -137,9 +149,20 @@ const standardModes = {
         initialization: {
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-              startingLevel: 1, levelling: true, masterLevels: true,
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
+              gravity: 1000,
+              lockDelay: 500,
+              maxLockDelay: 5000,
+              startingLevel: 1,
+              levelling: true,
+              masterLevels: true,
             },
             rotationSystem: SRSPlusData,
           },
@@ -167,9 +190,20 @@ const standardModes = {
         initialization: {
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
-              gravity: 1000, lockDelay: 500, maxLockDelay: 5000,
-              startingLevel: 1, levelling: false, masterLevels: false,
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
+              gravity: 1000,
+              lockDelay: 500,
+              maxLockDelay: 5000,
+              startingLevel: 1,
+              levelling: false,
+              masterLevels: false,
             },
             rotationSystem: SRSPlusData,
           },

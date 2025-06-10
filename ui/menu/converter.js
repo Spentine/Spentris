@@ -17,7 +17,13 @@ const convertGameStartEvent = function (e) {
   
   if (e.mode === "puzzle") {
     const puzzle = e.settings.puzzle;
+    
+    // method to generate the standard data
     var standard = puzzle.getStandard();
+    
+    // generate the init function
+    puzzle.makeAllFunctions();
+    var initFunction = puzzle.allFunctions;
   } else {
     const standardMode = standardModes[e.mode];
     // create standard initialization data
