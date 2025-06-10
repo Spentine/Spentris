@@ -366,6 +366,9 @@ const puzzleMenus = {
         editPuzzleSolution: this.uiFunctions.createButton(
           "Edit Puzzle Solution", true,
         ),
+        editGameplaySettings: this.uiFunctions.createButton(
+          "Edit Gameplay Settings", true,
+        ),
         editPuzzleMetadata: this.uiFunctions.createButton(
           "Edit Puzzle Metadata", true,
         ),

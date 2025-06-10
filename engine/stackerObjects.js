@@ -16,6 +16,9 @@ class BoardMino {
     this.texture = texture;
   }
   
+  /**
+   * clears the mino, setting it to be empty
+   */
   clear() {
     this.type = 0;
     this.texture = 0;
@@ -40,6 +43,9 @@ class PieceMino {
     this.rotation = rotation;
   }
   
+  /**
+   * clears the mino, setting it to be empty
+   */
   clear() {
     this.type = 0;
     this.texture = 0;
@@ -67,6 +73,10 @@ class Board {
     this.height = height;
   }
   
+  /**
+   * converts a regular object to a Board object
+   * @param {object} data
+   */
   static fromArray(data) {
     data ??= {};
     
@@ -86,12 +96,21 @@ class Board {
     return board;
   }
   
+  /**
+   * converts a JSON compatible array to a Board object
+   * called "simple" only because it can only handle standard minos and functionality
+   * @param {object} data
+   * @param {object} data.matrix the matrix of the board
+   * @param {number} data.width the width of the board
+   * @param {number} data.height the height of the board
+   * @return {Board}
+   */
   static fromSimpleArray(data) {
     data ??= {};
     
     const arr = data.matrix;
-    const width = data.width;
-    const height = data.height;
+    const width = data.width ?? arr[0].length;
+    const height = data.height ?? arr.length;
     
     // modify array
     for (let row of arr) {
@@ -128,7 +147,7 @@ class Piece {
   }
   
   /**
-   * Only update the matrix when the rotation changes.
+   * only update the matrix when the rotation changes (for standard rules)
    */
   updateMatrix() {
     this.matrix = SRSData.matrices[this.type][this.rotation];
@@ -145,6 +164,7 @@ class Piece {
   }
   
   /**
+   * creates a copy of the piece
    * @returns {Piece}
    */
   copy(data) {

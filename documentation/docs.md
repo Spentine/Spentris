@@ -807,6 +807,7 @@ Puzzles contain many abstracts that aren't easy to replicate in JSON, most parti
       settings: { // {object} the settings for the game
         handling: // {handling}
         keybinds: // keybinds
+        puzzle: // puzzle
       }
     });
     ```

@@ -1,4 +1,6 @@
 import { standardFunctionLocations } from "../../engine/modes/standardModes.js";
+import { functionLocationAccessor } from "../../engine/util.js";
+import { files } from "../../engine/functionLibrary.js";
 
 import { puzzleFunctions } from "./puzzleFunctions.js";
 
@@ -105,6 +107,22 @@ class Puzzle {
     json.initFunction = new PuzzleFunction(json.initFunction);
     
     return new Puzzle(json);
+  }
+  
+  /**
+   * gets the stacker parameters for the puzzle
+   * @returns {object} stacker parameters for the puzzle
+   */
+  getStandard() {
+    const standard = {
+      version: 1,
+      functions: functionLocationAccessor(
+        standardFunctionLocations,
+        files
+      ),
+      settings: this.parameters.values.settings,
+    };
+    return standard;
   }
 }
 

@@ -15,24 +15,30 @@ import { copyObjByTraversal } from "../../util.js";
  */
 const convertGameStartEvent = function (e) {
   
-  const standardMode = standardModes[e.mode];
-  // create standard initialization data
-  // refer to `initializationData` in docs.md
-  const standard = {
-    version: 1,
-    functions: functionLocationAccessor(
-      standardFunctionLocations,
-      files
-    ),
-    settings: standardMode.values.settings,
-  };
-  
-  const initFunction = standardMode.initFunction;
+  if (e.mode === "puzzle") {
+    const puzzle = e.settings.puzzle;
+    var standard = puzzle.getStandard();
+  } else {
+    const standardMode = standardModes[e.mode];
+    // create standard initialization data
+    // refer to `initializationData` in docs.md
+    var standard = {
+      version: 1,
+      functions: functionLocationAccessor(
+        standardMode.values.settings.functionLocations,
+        files
+      ),
+      settings: standardMode.values.settings,
+    };
+    
+    var initFunction = standardMode.initFunction;
+  }
   
   const settings = {};
   
   const excludeKeys = {
     keybinds: true, // exclude keybinds because they are not used in Stacker
+    puzzle: true, // puzzle is an entirely separate mode
   }
   
   // copy the settings from the event to the standard settings
