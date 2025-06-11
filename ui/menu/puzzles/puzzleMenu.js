@@ -24,6 +24,17 @@ import { debugPuzzles } from "../../../puzzles/packs/test.js";
 // puzzle modifier
 import { PuzzleModifier } from "../../../ui/menu/puzzles/puzzleModification.js";
 
+// srs data
+import {
+  SRSPlusData,
+} from "../../../engine/rsData.js";
+
+// stacker objects
+import {
+  Board,
+  Piece
+} from "../../../engine/stackerObjects.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -229,6 +240,9 @@ const puzzleUiFunctions = {
 const puzzleMenus = {
   puzzleEditor: function () {
     this.uiDisplay.className = "window-fill";
+    
+    // puzzle modifier
+    const pM = PuzzleModifier.default();
     
     const puzzleEditorContainer = document.createElement("div");
     puzzleEditorContainer.className = "window-fill puzzleFlex";

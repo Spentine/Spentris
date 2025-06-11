@@ -129,6 +129,32 @@ class Board {
     
     return Board.fromArray({width, height, matrix: arr});
   }
+  
+  /**
+   * converts the board to a JSON compatible array
+   * @returns {object} - the JSON compatible array
+   */
+  toSimpleArray() {
+    const arr = [];
+    
+    for (let row of this.matrix) {
+      const newRow = [];
+      for (let mino of row) {
+        if (mino.type === 0) {
+          newRow.push(null); // empty
+        } else {
+          newRow.push(mino.texture); // mino
+        }
+      }
+      arr.push(newRow);
+    }
+    
+    return {
+      matrix: arr,
+      width: this.width,
+      height: this.height
+    };
+  }
 }
 
 // The Block Stacker Piece

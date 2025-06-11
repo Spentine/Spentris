@@ -54,6 +54,7 @@ The main menu that allows for puzzle creation. It should be very interactive and
   - Edit Puzzle Metadata
     - Edit Puzzle Name (string)
     - Edit Puzzle Author (string)
+    - Edit Puzzle Description (string)
     - Edit Puzzle Creation Date (datetime)
   - Playtest Puzzle
 - **Header Menu Settings**
@@ -71,6 +72,8 @@ The main menu that allows for puzzle creation. It should be very interactive and
       - Board State (button)
   - Listing
     - Navigate to Parent Set
+  - Help
+  - Exit
 - **Center Graphics**
   - *The center will contain the board state as-is*
   - *It should be possible to interact with the board state to change various properties of it.*

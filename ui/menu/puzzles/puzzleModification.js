@@ -46,6 +46,38 @@ class PuzzleModifier {
     this.puzzleMetadata = data.puzzleMetadata;
   }
   
+  /**
+   * creates a default puzzle modifier
+   */
+  static default() {
+    const pM = new PuzzleModifier({
+      board: new Board(10, 40).toSimpleArray(),
+      nextQueue: [],
+      holdPiece: null,
+      currentPiece: null,
+      
+      gameplaySettings: {
+        gravity: 1000,
+        lockDelay: 500,
+        maxLockDelay: 5000,
+        startingLevel: 1,
+        levelling: false,
+        masterLevels: false,
+        rotationSystem: SRSPlusData,
+      },
+      
+      puzzleWinConditions: [],
+      puzzleLossConditions: [],
+      puzzleMetadata: {
+        name: "New Puzzle",
+        author: "",
+        description: "",
+        dateCreated: new Date().toISOString(),
+      },
+    });
+    return pM;
+  }
+  
   toPuzzle() {
     const data = {
       parameters: {
@@ -65,14 +97,14 @@ class PuzzleModifier {
                   are: null,
                   lca: null,
                   
-                  gravity: 1000,
-                  lockDelay: 500,
-                  maxLockDelay: 5000,
-                  startingLevel: 1,
-                  levelling: true,
-                  masterLevels: true,
+                  gravity: this.gameplaySettings.gravity,
+                  lockDelay: this.gameplaySettings.lockDelay,
+                  maxLockDelay: this.gameplaySettings.maxLockDelay,
+                  startingLevel: this.gameplaySettings.startingLevel,
+                  levelling: this.gameplaySettings.levelling,
+                  masterLevels: this.gameplaySettings.masterLevels,
                 },
-                rotationSystem: SRSPlusData,
+                rotationSystem: this.gameplaySettings.rotationSystem ?? SRSPlusData,
               },
             },
           },
