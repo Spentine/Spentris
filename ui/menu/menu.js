@@ -602,6 +602,13 @@ const spentrisMenus = {
       const keybindsData = keybinds[type][action];
       
       /**
+       * the text for the buttons
+       * has to be created because `this` doesn't carry into the button
+       */
+      const addKeybindText = this.uiText.menuKeybindsAddKeybindButton;
+      const awaitingInputText = this.uiText.menuKeybindsAwaitingInputButton;
+      
+      /**
        * deletion of keybinds (very confusing code)
        * - when a keybind is deleted, it:
        *   - removes the keybind from the keybindsData array
@@ -664,7 +671,7 @@ const spentrisMenus = {
       // add "add keybind" button
       const addKeybind = document.createElement("button");
       addKeybind.className = "add-keybind";
-      addKeybind.textContent = this.uiText.menuKeybindsAddKeybindButton;
+      addKeybind.textContent = addKeybindText;
       container.appendChild(addKeybind);
       
       let awaitingInput = false;
@@ -683,7 +690,7 @@ const spentrisMenus = {
         
         // reset awaitingInput state
         awaitingInput = false;
-        addKeybind.textContent = this.uiText.menuKeybindsAddKeybindButton;
+        addKeybind.textContent = addKeybindText;
       };
       
       /**
@@ -733,7 +740,7 @@ const spentrisMenus = {
         }
         
         awaitingInput = true;
-        addKeybind.textContent = this.uiText.menuKeybindsAwaitingInputButton;
+        addKeybind.textContent = awaitingInputText;
         
         // handles key input and esc cancellation
         document.addEventListener("keydown", keyDown);
