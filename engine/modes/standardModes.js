@@ -1,5 +1,8 @@
 import { SRSPlusData } from "../rsData.js";
 
+// addons
+import { BiRSData } from "../../addons/biRS/biRSData.js";
+
 const standardFunctionLocations = {
   update: {file: "standardRules.js", name: "update"},
   tick: {file: "standardRules.js", name: "tick"},
@@ -23,6 +26,7 @@ const standardFunctionLocations = {
   generateNext: {file: "standardRules.js", name: "generateNext"},
   clearLines: {file: "standardRules.js", name: "clearLines"},
   kickSystem: {file: "standardRules.js", name: "kickSystem"},
+  // kickSystem: {file: "bidirectionalRS.js", name: "bidirectionalKickSystem"},
   rotationSystem: {file: "standardRules.js", name: "rotationSystem"},
   spawnPiece: {file: "standardRules.js", name: "spawnPiece"},
   refillNextQueue: {file: "standardRules.js", name: "refillNextQueue"},
@@ -37,7 +41,7 @@ const standardFunctionLocations = {
   isTspin: {file: "standardRules.js", name: "isTspin"},
   immobilityRule: {file: "allSpin.js", name: "immobilityRule"},
   // isSpin: {file: "standardRules.js", name: "isSpin"},
-  // isSpin: {file: "allSpin.js", name: "isAllSpin"},
+  isSpin: {file: "allSpin.js", name: "isAllSpin"},
   // isSpin: {file: "allSpin.js", name: "isMiniSpin"},
   isSpin: {file: "allSpin.js", name: "isMiniSpinPlus"},
   rotate: {file: "standardRules.js", name: "rotate"},
@@ -67,6 +71,9 @@ const standardFunctionLocations = {
   calculateGhostPiece: {file: "standardRules.js", name: "calculateGhostPiece"},
 };
 
+const standardRotationSystem = SRSPlusData; // the standard rotation system is srs+
+// const standardRotationSystem = BiRSData; // implemented for fun
+
 const standardModes = {
   marathon: {
     values: {
@@ -92,7 +99,7 @@ const standardModes = {
               levelling: true,
               masterLevels: true,
             },
-            rotationSystem: SRSPlusData,
+            rotationSystem: standardRotationSystem,
           },
         },
       },
@@ -124,7 +131,7 @@ const standardModes = {
               levelling: false,
               masterLevels: false,
             },
-            rotationSystem: SRSPlusData,
+            rotationSystem: standardRotationSystem,
           },
         },
       },
@@ -164,7 +171,7 @@ const standardModes = {
               levelling: true,
               masterLevels: true,
             },
-            rotationSystem: SRSPlusData,
+            rotationSystem: standardRotationSystem,
           },
         },
       },
@@ -205,7 +212,7 @@ const standardModes = {
               levelling: false,
               masterLevels: false,
             },
-            rotationSystem: SRSPlusData,
+            rotationSystem: standardRotationSystem,
           },
         },
       },

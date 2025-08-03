@@ -1056,7 +1056,7 @@ const isTspin = function(piece, board) {
     {x: piece.position.x + 2, y: piece.position.y + 2}, // top right
     {x: piece.position.x, y: piece.position.y}, // bottom left
     {x: piece.position.x + 2, y: piece.position.y}, // bottom right
-  ]
+  ];
   
   const checkSolidity = (pos) => {
     return this.inBounds(pos, board)
@@ -1064,7 +1064,7 @@ const isTspin = function(piece, board) {
       ? this.isBoardMinoSolid(board.matrix[pos.y][pos.x])
         // out of bounds so assume solid
       : null;
-  }
+  };
   
   const unrotatedCorners = [
     checkSolidity(uCornerPos[0]), // A

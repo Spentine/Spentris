@@ -7,8 +7,8 @@ import { copyObjByTraversal } from "../util.js";
 
 class Stacker {
   /**
-    @param {object} data
-  */
+   * @param {object} data
+   */
   constructor(data) {
     // check for stacker data version
     // this is important for backwards compatibility
