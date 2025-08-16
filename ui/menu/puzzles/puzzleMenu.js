@@ -251,6 +251,27 @@ const puzzleUiFunctions = {
   },
   
   /**
+   * create a label-input pair
+   * @param {string} labelText - the text for the label
+   * @param {element} inputElement - the input element to use
+   */
+  createLabelInputPair: function (labelText, inputElement) {
+    const container = document.createElement("div");
+    container.className = "labelInputPair";
+
+    const label = document.createElement("label");
+    label.className = "label";
+    label.textContent = labelText;
+    container.appendChild(label);
+
+    container.appendChild(inputElement);
+
+    return {
+      element: container
+    };
+  },
+
+  /**
    * create a standard input
    * @param {Object} data - the input data
    */
@@ -612,39 +633,58 @@ const puzzleMenus = {
         inputs.className = "puzzleInputsContainer";
         
         const elements = {
-          boardWidth: this.uiFunctions.createStandardInput({
-            placeholder: "Enter Board Width",
-            value: 10,
-            type: "int",
-            min: 1,
-            max: Infinity,
-            step: 1,
-          }),
-          boardHeight: this.uiFunctions.createStandardInput({
-            placeholder: "Enter Board Height",
-            value: 10,
-            type: "int",
-            min: 1,
-            max: Infinity,
-            step: 1,
-          }),
-          nextQueue: this.uiFunctions.createPieceQueueInput({
-            placeholder: "Enter Next Queue",
-            value: null,
-          }),
-          holdPiece: this.uiFunctions.createPieceInput({
-            placeholder: "Enter Hold Piece",
-            value: null,
-          }),
-          currentPiece: this.uiFunctions.createPieceInput({
-            placeholder: "Enter Current Piece",
-            value: null,
-          }),
+          boardWidth: {
+            label: "Board Width",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Board Width",
+              value: 10,
+              type: "int",
+              min: 1,
+              max: Infinity,
+              step: 1,
+            }),
+          },
+          boardHeight: {
+            label: "Board Height",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Board Height",
+              value: 10,
+              type: "int",
+              min: 1,
+              max: Infinity,
+              step: 1,
+            }),
+          },
+          nextQueue: {
+            label: "Next Queue",
+            input: this.uiFunctions.createPieceQueueInput({
+              placeholder: "Enter Next Queue",
+              value: null,
+            }),
+          },
+          holdPiece: {
+            label: "Hold Piece",
+            input: this.uiFunctions.createPieceInput({
+              placeholder: "Enter Hold Piece",
+              value: null,
+            }),
+          },
+          currentPiece: {
+            label: "Current Piece",
+            input: this.uiFunctions.createPieceInput({
+              placeholder: "Enter Current Piece",
+              value: null,
+            }),
+          },
         };
         
         const keys = Object.keys(elements);
         for (const key of keys) {
-          const element = elements[key].element;
+          console.log(elements[key]);
+          const element = this.uiFunctions.createLabelInputPair(
+            elements[key].label,
+            elements[key].input.element
+          ).element;
           inputs.appendChild(element);
         }
         
