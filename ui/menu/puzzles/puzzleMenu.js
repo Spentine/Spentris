@@ -35,13 +35,25 @@ import {
   Piece
 } from "../../../engine/stackerObjects.js";
 
+// copy obj by traversal
+import {
+  copyObjByTraversal
+} from "../../../util.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
    */
   resetDisplay: function () {
-    while (this.uiDisplay.firstChild) {
-      this.uiDisplay.removeChild(this.uiDisplay.firstChild);
+    puzzleUiFunctions.clearContainer(this.uiDisplay);
+  },
+  
+  /**
+   * delete all elements in a container
+   */
+  clearContainer: function (container) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
     }
   },
   
@@ -233,7 +245,49 @@ const puzzleUiFunctions = {
     
     if (callback) button.addEventListener("click", callback);
     
-    return button;
+    return {
+      element: button
+    };
+  },
+  
+  /**
+   * create a standard input
+   * @param {Object} data - the input data
+   */
+  createStandardInput: function (data) {
+    data = data ?? {};
+    copyObjByTraversal(data,
+      {
+        placeholder: "",
+        value: "",
+        type: "text",
+        min: -Infinity,
+        max: Infinity,
+        step: 1,
+      }
+    );
+    
+    const element = document.createElement("input");
+    element.className = "puzzleStandardInput";
+    element.placeholder = data.placeholder;
+    
+    switch (data.type) {
+      case "text":
+        element.type = "text";
+        break;
+      case "number":
+        element.type = "number";
+        element.min = data.min;
+        element.max = data.max;
+        element.step = data.step;
+        break;
+      default:
+        throw new Error(`Unknown input type: ${data.type}`);
+    }
+    
+    return {
+      element: element
+    };
   },
 };
 
@@ -358,7 +412,13 @@ const puzzleMenus = {
     ] = Object.values(containers);
     
     // add to left side bar
-    {
+    // placeholder function name
+    const addToLeftSideBar = () => {
+      // remove everything in left side bar
+      while (leftContainer.firstChild) {
+        leftContainer.removeChild(leftContainer.firstChild);
+      }
+      
       const header = document.createElement("h2");
       header.className = "centeredText";
       header.textContent = "Puzzle Editor";
@@ -378,7 +438,7 @@ const puzzleMenus = {
       
       const buttons = {
         editGameState: this.uiFunctions.createButton(
-          "Edit Game State", true,
+          "Edit Game State", true, rightSideBarMenus.editGameState
         ),
         editPuzzleSolution: this.uiFunctions.createButton(
           "Edit Puzzle Solution", true,
@@ -396,10 +456,35 @@ const puzzleMenus = {
       
       const keys = Object.keys(buttons);
       for (const key of keys) {
-        buttonContainer.appendChild(buttons[key]);
+        buttonContainer.appendChild(buttons[key].element);
       }
     }
     
+    // right side bar menus
+    const rightSideBarMenus = {
+      editGameState: () => {
+        this.uiFunctions.clearContainer(rightContainer);
+        
+        const elements = {
+          boardWidth: this.uiFunctions.createStandardInput({
+            placeholder: "Enter Board Width",
+            value: 10,
+            type: "number",
+            min: 1,
+            max: Infinity,
+            step: 1,
+          }),
+        };
+        
+        const keys = Object.keys(elements);
+        for (const key of keys) {
+          const element = elements[key].element;
+          rightContainer.appendChild(element);
+        }
+      },
+    };
+    
+    addToLeftSideBar();
     puzzleEditorContainer.appendChild(header);
     puzzleEditorContainer.appendChild(fullContainer);
     this.uiDisplay.appendChild(puzzleEditorContainer);

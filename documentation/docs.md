@@ -513,6 +513,23 @@ handling = { // {key: {number}}
 
 Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese word あれ used to refer to the entry delay.
 
+## Localized Object Formats
+
+### `createStandardInput`
+
+```js
+data = {
+  placeholder: "", // {string} the placeholder text
+  value: "", // {any} the default value
+  type: "text", // {string} the type of input
+  
+  // type: "number"
+  min: -Infinity, // {number} the minimum value
+  max: Infinity, // {number} the maximum value
+  step: 1, // {number} the stepping value
+}
+```
+
 ## Puzzles
 
 Puzzles are an important component of the project mainly because it provides purpose and reason to play the game. It is also sufficiently complex to warrant having an independent section on this documentation.
@@ -871,6 +888,35 @@ Main Menu
 > **Reference Directory**
 > - [Object `translations`](#translations)
 
+### Puzzle Editor / Menu
+
+The header currently doesn't do anything right now. Currently, this is for planning purposes and may be changed in the future.
+
+- (Header)
+  - File
+    - Export Puzzle
+      - Export as JSON
+    - Import Puzzle
+      - Import from JSON
+    - Save Puzzle to LocalStorage
+  - Edit
+    - Undo
+    - Redo
+    - Mirror
+      - Everything
+      - Board State
+  - Listing
+    - Navigate to Parent Set
+  - Help
+    - Give Up
+  - Exit
+- (Sidebars)
+  - Edit Game State
+  - Edit Puzzle Solution
+  - Edit Gameplay Settings
+  - Edit Puzzle Metadata
+  - Playtest Puzzle
+
 ## Mathematics
 
 ### Current Level
@@ -969,6 +1015,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [x] Create `MenuHandlerV2` Class
     - [x] Implement all current features of `MenuHandler` Class
     - [x] Deprecate V1 and try to remove traces of it
+  - [ ] Remove `resetDisplay` and instead replace with `clearContainer`
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file

@@ -111,7 +111,8 @@
   transform: translateY(-2px);
 }
 
-/* main puzzle container content */
+/* === main puzzle container content === */
+
 .puzzleFullContainer {
   flex: 1; /* take up all the space below the header */
   
@@ -134,6 +135,8 @@
 .puzzleMiddleContainer {
   flex: 1;
 }
+
+/* === ui elements === */
 
 .puzzleButton {
   background-color: #444444;
@@ -159,4 +162,17 @@
   align-items: stretch;
   gap: 4px;
   margin: 8px 0;
+}
+
+.puzzleStandardInput {
+  background-color: #444444;
+  border: 2px solid;
+  border-color: #555555;
+  border-radius: 4px;
+  
+  padding: 8px 12px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
