@@ -267,7 +267,7 @@ const puzzleUiFunctions = {
     container.appendChild(inputElement);
 
     return {
-      element: container
+      element: container,
     };
   },
 
@@ -338,7 +338,9 @@ const puzzleUiFunctions = {
       this.value = value;
       
       // callback
-      data.callback();
+      if (data.callback) data.callback({
+        event, value
+      });
     });
     
     return {
@@ -382,8 +384,13 @@ const puzzleUiFunctions = {
       
       this.value = value;
       
+      // if the value is empty, set it to null
+      if (!value) value = null;
+      
       // callback
-      data.callback();
+      if (data.callback) data.callback({
+        event, value
+      });
     });
     
     return {
@@ -429,7 +436,10 @@ const puzzleUiFunctions = {
       this.value = value;
       
       // callback
-      data.callback();
+      if (data.callback) data.callback({
+        event,
+        value: value.split(""), // return array with individual pieces
+      });
     });
     
     return {
@@ -637,50 +647,64 @@ const puzzleMenus = {
             label: "Board Width",
             input: this.uiFunctions.createStandardInput({
               placeholder: "Enter Board Width",
-              value: 10,
+              value: this.puzzleModifier.board.width,
               type: "int",
               min: 1,
               max: Infinity,
               step: 1,
+              callback: (data) => {
+                this.puzzleModifier.board.width = data.value;
+              }
             }),
           },
           boardHeight: {
             label: "Board Height",
             input: this.uiFunctions.createStandardInput({
               placeholder: "Enter Board Height",
-              value: 10,
+              value: this.puzzleModifier.board.height,
               type: "int",
               min: 1,
               max: Infinity,
               step: 1,
+              callback: (data) => {
+                this.puzzleModifier.board.height = data.value;
+              }
             }),
           },
           nextQueue: {
             label: "Next Queue",
             input: this.uiFunctions.createPieceQueueInput({
               placeholder: "Enter Next Queue",
-              value: null,
+              value: this.puzzleModifier.nextQueue.join(""),
+              callback: (data) => {
+                this.puzzleModifier.nextQueue = data.value;
+              }
             }),
           },
           holdPiece: {
             label: "Hold Piece",
             input: this.uiFunctions.createPieceInput({
               placeholder: "Enter Hold Piece",
-              value: null,
+              value: this.puzzleModifier.holdPiece,
+              callback: (data) => {
+                this.puzzleModifier.holdPiece = data.value;
+              }
             }),
           },
           currentPiece: {
             label: "Current Piece",
             input: this.uiFunctions.createPieceInput({
               placeholder: "Enter Current Piece",
-              value: null,
+              value: this.puzzleModifier.currentPiece,
+              callback: (data) => {
+                this.puzzleModifier.currentPiece = data.value;
+              }
             }),
           },
         };
         
         const keys = Object.keys(elements);
         for (const key of keys) {
-          console.log(elements[key]);
           const element = this.uiFunctions.createLabelInputPair(
             elements[key].label,
             elements[key].input.element

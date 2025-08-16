@@ -1,5 +1,6 @@
 // menu handler to extend from
 import { MenuHandler } from "../../../ui/menu/menuHandler.js";
+import { PuzzleModifier } from "./puzzleModification.js";
 
 /**
  * PuzzleMenuHandler class - handles the puzzle menus
@@ -13,8 +14,20 @@ class PuzzleMenuHandler extends MenuHandler {
    * - constructor
    * - showMenu
    * - loadLanguage
-   * - saveLangauge (do not use!!)
+   * - saveLanguage (do not use!!)
    */
+  
+  /**
+   * constructor
+   * @param {object} data - the menu handler data
+   */
+  constructor(data) {
+    super(data);
+    
+    // special puzzleHandler functionality
+    // note: replace with actual PuzzleModifier instance
+    this.puzzleModifier = PuzzleModifier.default();
+  }
   
   saveLanguage() {
     console.warn("PuzzleMenuHandler does not support saving language settings.");

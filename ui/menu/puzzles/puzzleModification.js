@@ -25,6 +25,10 @@ import {
   Piece
 } from "../../../engine/stackerObjects.js";
 
+const rotationSystemMap = {
+  "SRS+": SRSPlusData,
+};
+
 class PuzzleModifier {
   /**
    * creates a new puzzle modifier for the puzzle editor
@@ -63,7 +67,7 @@ class PuzzleModifier {
         startingLevel: 1,
         levelling: false,
         masterLevels: false,
-        rotationSystem: SRSPlusData,
+        rotationSystem: "SRS+",
       },
       
       puzzleWinConditions: [],
@@ -104,7 +108,7 @@ class PuzzleModifier {
                   levelling: this.gameplaySettings.levelling,
                   masterLevels: this.gameplaySettings.masterLevels,
                 },
-                rotationSystem: this.gameplaySettings.rotationSystem ?? SRSPlusData,
+                rotationSystem: rotationSystemMap[this.gameplaySettings.rotationSystem] ?? SRSPlusData,
               },
             },
           },

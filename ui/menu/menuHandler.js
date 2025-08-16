@@ -8,6 +8,10 @@ import { ls } from "../../localStorage/localStorage.js";
 import { translations } from "../../localization/language.js";
 
 class MenuHandler {
+  /**
+   * constructor
+   * @param {object} data - the menu handler data
+   */
   constructor(data) {
     this.currentMenu = data.currentMenu;
     this.uiFunctions = data.uiFunctions;
