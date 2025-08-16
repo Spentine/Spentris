@@ -527,6 +527,9 @@ data = {
   min: -Infinity, // {number} the minimum value
   max: Infinity, // {number} the maximum value
   step: 1, // {number} the stepping value
+  
+  callback: null, // {function} callback for change
+  coerce: null, // {function} how to convert input to valid type
 }
 ```
 
@@ -1016,6 +1019,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [x] Implement all current features of `MenuHandler` Class
     - [x] Deprecate V1 and try to remove traces of it
   - [ ] Remove `resetDisplay` and instead replace with `clearContainer`
+  - [ ] Puzzles
+    - [ ] Replace placeholder piece input with actual piece input
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file

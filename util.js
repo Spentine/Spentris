@@ -16,7 +16,11 @@ function copyObjByTraversal(head, copy, disallowed) {
      */
     if (disallowed[key] === true) continue;
     
-    if (typeof value === "object" && !Array.isArray(value)) {
+    if (
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      value !== null // why the fuck is null an object
+    ) {
       head[key] ??= {};
       copyObjByTraversal(head[key], value, disallowed[key]);
     } else {

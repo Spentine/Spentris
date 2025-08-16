@@ -262,6 +262,8 @@ const puzzleUiFunctions = {
       min: -Infinity,
       max: Infinity,
       step: 1,
+      callback: null,
+      coerce: null,
     };
     copyObjByTraversal(data, inputData);
     
@@ -278,15 +280,141 @@ const puzzleUiFunctions = {
         element.min = data.min;
         element.max = data.max;
         element.step = data.step;
+        
+        // implement generic number coersion
+        if (!data.coerce) {
+          data.coerce = function (value) {
+            const parsed = parseFloat(value);
+            if (!parsed) return "";
+            return String(parsed);
+          };
+        }
+        break;
+      case "int":
+        element.type = "number";
+        element.min = data.min;
+        element.max = data.max;
+        element.step = data.step;
+        
+        // implement generic number coersion
+        if (!data.coerce) {
+          data.coerce = function (value) {
+            const parsed = parseInt(value);
+            if (!parsed) return "";
+            return String(parsed);
+          };
+        }
         break;
       default:
         throw new Error(`Unknown input type: ${data.type}`);
     }
+    element.value = data.value;
+    
+    // coersion
+    element.addEventListener("change", function (event) {
+      let value = this.value;
+      if (data.coerce) value = data.coerce(value);
+      this.value = value;
+      
+      // callback
+      data.callback();
+    });
     
     return {
       element: element
     };
   },
+  
+  /**
+   * create a piece input
+   * @param {Object} inputData - the input data
+   */
+  createPieceInput: function (inputData) {
+    const data = {
+      placeholder: "Enter Piece",
+      value: null,
+      callback: null,
+    };
+    copyObjByTraversal(data, inputData);
+    
+    // note: this is a placeholder!
+    // i'll replace it with an actual piece input later when i feel like it
+    const element = document.createElement("input");
+    element.className = "puzzleStandardInput";
+    element.type = "text";
+    element.placeholder = data.placeholder;
+    element.value = data.value ?? "";
+    
+    // generic coersion function
+    const coersion = function (value) {
+      value = value.trim().toUpperCase()[0];
+      if (!value) return "";
+      if (!"ZLOSIJT".includes(value)) return "";
+      return value;
+    }
+    
+    // coersion application
+    element.addEventListener("change", function (event) {
+      let value = this.value;
+      
+      value = coersion(value);
+      
+      this.value = value;
+      
+      // callback
+      data.callback();
+    });
+    
+    return {
+      element: element
+    };
+  },
+  
+  /**
+   * create a piece queue input
+   * @param {Object} inputData - the input data
+   */
+  createPieceQueueInput: function (inputData) {
+    const data = {
+      placeholder: "Enter Piece Queue",
+      value: null,
+      callback: null,
+    };
+    copyObjByTraversal(data, inputData);
+    
+    // note: this is a placeholder
+    const element = document.createElement("input");
+    element.className = "puzzleStandardInput";
+    element.type = "text";
+    element.placeholder = data.placeholder;
+    element.value = data.value ?? "";
+    
+    // generic coersion function
+    const coersion = function (value) {
+      value = value.trim().toUpperCase();
+      let valid = "";
+      for (const char of value) {
+        if ("ZLOSIJT".includes(char)) valid += char;
+      }
+      return valid;
+    }
+    
+    // coersion application
+    element.addEventListener("change", function (event) {
+      let value = this.value;
+      
+      value = coersion(value);
+      
+      this.value = value;
+      
+      // callback
+      data.callback();
+    });
+    
+    return {
+      element: element
+    };
+  }
 };
 
 const puzzleMenus = {
@@ -417,6 +545,7 @@ const puzzleMenus = {
         leftContainer.removeChild(leftContainer.firstChild);
       }
       
+      // text
       const header = document.createElement("h2");
       header.className = "centeredText";
       header.textContent = "Puzzle Editor";
@@ -430,6 +559,7 @@ const puzzleMenus = {
       infoText.textContent = "This is the Spentris Puzzle Editor. Please give feedback on the functionality and usability of this editor by contacting me directly on Discord.";
       leftContainer.appendChild(infoText);
       
+      // inputs
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "puzzleInputsContainer";
       leftContainer.appendChild(buttonContainer);
@@ -463,6 +593,21 @@ const puzzleMenus = {
       editGameState: () => {
         this.uiFunctions.clearContainer(rightContainer);
         
+        // text
+        const gameStateTitle = document.createElement("h2");
+        gameStateTitle.className = "centeredText";
+        gameStateTitle.textContent = "Edit Game State";
+        rightContainer.appendChild(gameStateTitle);
+        
+        const hr = document.createElement("hr");
+        hr.style.margin = "16px 0px";
+        rightContainer.appendChild(hr);
+        
+        const paragraph = document.createElement("p");
+        paragraph.textContent = "This is the game state editor. You can edit the current game state of the puzzle here.";
+        rightContainer.appendChild(paragraph);
+        
+        // inputs
         const inputs = document.createElement("div");
         inputs.className = "puzzleInputsContainer";
         
@@ -470,10 +615,30 @@ const puzzleMenus = {
           boardWidth: this.uiFunctions.createStandardInput({
             placeholder: "Enter Board Width",
             value: 10,
-            type: "number",
+            type: "int",
             min: 1,
             max: Infinity,
             step: 1,
+          }),
+          boardHeight: this.uiFunctions.createStandardInput({
+            placeholder: "Enter Board Height",
+            value: 10,
+            type: "int",
+            min: 1,
+            max: Infinity,
+            step: 1,
+          }),
+          nextQueue: this.uiFunctions.createPieceQueueInput({
+            placeholder: "Enter Next Queue",
+            value: null,
+          }),
+          holdPiece: this.uiFunctions.createPieceInput({
+            placeholder: "Enter Hold Piece",
+            value: null,
+          }),
+          currentPiece: this.uiFunctions.createPieceInput({
+            placeholder: "Enter Current Piece",
+            value: null,
           }),
         };
         
