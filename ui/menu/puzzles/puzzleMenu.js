@@ -254,18 +254,16 @@ const puzzleUiFunctions = {
    * create a standard input
    * @param {Object} data - the input data
    */
-  createStandardInput: function (data) {
-    data = data ?? {};
-    copyObjByTraversal(data,
-      {
-        placeholder: "",
-        value: "",
-        type: "text",
-        min: -Infinity,
-        max: Infinity,
-        step: 1,
-      }
-    );
+  createStandardInput: function (inputData) {
+    const data = {
+      placeholder: "",
+      value: "",
+      type: "text",
+      min: -Infinity,
+      max: Infinity,
+      step: 1,
+    };
+    copyObjByTraversal(data, inputData);
     
     const element = document.createElement("input");
     element.className = "puzzleStandardInput";
@@ -433,7 +431,7 @@ const puzzleMenus = {
       leftContainer.appendChild(infoText);
       
       const buttonContainer = document.createElement("div");
-      buttonContainer.className = "puzzleButtonContainer";
+      buttonContainer.className = "puzzleInputsContainer";
       leftContainer.appendChild(buttonContainer);
       
       const buttons = {
@@ -465,6 +463,9 @@ const puzzleMenus = {
       editGameState: () => {
         this.uiFunctions.clearContainer(rightContainer);
         
+        const inputs = document.createElement("div");
+        inputs.className = "puzzleInputsContainer";
+        
         const elements = {
           boardWidth: this.uiFunctions.createStandardInput({
             placeholder: "Enter Board Width",
@@ -479,8 +480,10 @@ const puzzleMenus = {
         const keys = Object.keys(elements);
         for (const key of keys) {
           const element = elements[key].element;
-          rightContainer.appendChild(element);
+          inputs.appendChild(element);
         }
+        
+        rightContainer.appendChild(inputs);
       },
     };
     

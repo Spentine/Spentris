@@ -464,7 +464,7 @@ const spentrisMenus = {
       label.textContent = optionData.text;
       
       const input = document.createElement("input");
-      input.className = "large";
+      input.className = "menuInput large";
       input.type = "text";
       input.id = optionData.id;
       input.value = String(
