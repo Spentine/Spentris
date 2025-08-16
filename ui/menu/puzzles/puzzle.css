@@ -110,7 +110,7 @@
 .faintText {
   font-size: 16px;
   color: #ffffff44;
-  transform: translateY(-2px);
+  transform: translateY(0px);
 }
 
 /* === main puzzle container content === */
@@ -185,4 +185,42 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+/* checkbox */
+
+.puzzleCheckboxContainer {
+  display: flex;
+}
+
+.puzzleCheckbox {
+  display: none;
+}
+
+.puzzleCheckboxLabel {
+  border-radius: 4px;
+  padding: 4px;
+  flex: 1;
+  
+  transition: 0.1s;
+}
+
+.puzzleCheckbox:checked + .puzzleCheckboxLabel {
+  background-color: #305030;
+  border: 2px solid #407040;
+}
+
+.puzzleCheckbox:not(:checked) + .puzzleCheckboxLabel {
+  background-color: #503030;
+  border: 2px solid #604040;
+}
+
+.puzzleCheckbox:checked + .puzzleCheckboxLabel::after {
+  content: "True";
+  color: #80b080;
+}
+
+.puzzleCheckbox:not(:checked) + .puzzleCheckboxLabel::after {
+  content: "False";
+  color: #b08080;
 }

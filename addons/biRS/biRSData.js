@@ -249,8 +249,6 @@ for (const piece in pieceKicks) {
   kicks[1][2] = a; kicks[2][1] = b; kicks[3][2] = b; kicks[2][3] = a;
 }
 
-console.log(pieceKicks);
-
 const BiRSData = {
   pieces: ["Z", "L", "O", "S", "I", "J", "T"],
   matrices: tetrominoMatrices,

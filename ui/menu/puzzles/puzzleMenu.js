@@ -40,6 +40,11 @@ import {
   copyObjByTraversal
 } from "../../../util.js";
 
+// for random id generation
+import {
+  generateRandomId
+} from "../../util.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -253,7 +258,7 @@ const puzzleUiFunctions = {
   /**
    * create a label-input pair
    * @param {string} labelText - the text for the label
-   * @param {element} inputElement - the input element to use
+   * @param {Object} inputElement - the input element to use
    */
   createLabelInputPair: function (labelText, inputElement) {
     const container = document.createElement("div");
@@ -262,12 +267,53 @@ const puzzleUiFunctions = {
     const label = document.createElement("label");
     label.className = "label";
     label.textContent = labelText;
+    label.setAttribute("for", inputElement.id);
+    
     container.appendChild(label);
-
-    container.appendChild(inputElement);
-
+    container.appendChild(inputElement.element);
+    
     return {
       element: container,
+    };
+  },
+  
+  /**
+   * create a boolean input
+   * @param {Object} inputData - the input data
+   */
+  createBooleanInput: function (inputData) {
+    const data = {
+      checked: false,
+      callback: null,
+    };
+    copyObjByTraversal(data, inputData);
+    
+    const element = document.createElement("div");
+    element.className = "puzzleCheckboxContainer";
+    const id = generateRandomId();
+    
+    const checkbox = document.createElement("input");
+    checkbox.className = "puzzleCheckbox";
+    checkbox.type = "checkbox";
+    checkbox.checked = data.checked;
+    checkbox.id = id;
+    
+    checkbox.addEventListener("change", function (event) {
+      if (data.callback) data.callback({
+        event, value: this.checked
+      });
+    });
+    
+    const interactionLabel = document.createElement("label");
+    interactionLabel.className = "puzzleCheckboxLabel";
+    interactionLabel.setAttribute("for", id);
+    
+    element.appendChild(checkbox);
+    element.appendChild(interactionLabel);
+    
+    return {
+      element: element,
+      id: id,
     };
   },
 
@@ -287,10 +333,12 @@ const puzzleUiFunctions = {
       coerce: null,
     };
     copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
     
     const element = document.createElement("input");
     element.className = "puzzleStandardInput";
     element.placeholder = data.placeholder;
+    element.id = id;
     
     switch (data.type) {
       case "text":
@@ -344,7 +392,8 @@ const puzzleUiFunctions = {
     });
     
     return {
-      element: element
+      element: element,
+      id: id,
     };
   },
   
@@ -359,6 +408,7 @@ const puzzleUiFunctions = {
       callback: null,
     };
     copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
     
     // note: this is a placeholder!
     // i'll replace it with an actual piece input later when i feel like it
@@ -367,6 +417,7 @@ const puzzleUiFunctions = {
     element.type = "text";
     element.placeholder = data.placeholder;
     element.value = data.value ?? "";
+    element.id = id;
     
     // generic coersion function
     const coersion = function (value) {
@@ -394,7 +445,8 @@ const puzzleUiFunctions = {
     });
     
     return {
-      element: element
+      element: element,
+      id: id
     };
   },
   
@@ -409,6 +461,7 @@ const puzzleUiFunctions = {
       callback: null,
     };
     copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
     
     // note: this is a placeholder
     const element = document.createElement("input");
@@ -416,6 +469,7 @@ const puzzleUiFunctions = {
     element.type = "text";
     element.placeholder = data.placeholder;
     element.value = data.value ?? "";
+    element.id = id;
     
     // generic coersion function
     const coersion = function (value) {
@@ -443,7 +497,8 @@ const puzzleUiFunctions = {
     });
     
     return {
-      element: element
+      element: element,
+      id: id,
     };
   }
 };
@@ -599,11 +654,11 @@ const puzzleMenus = {
         editGameState: this.uiFunctions.createButton(
           "Edit Game State", true, rightSideBarMenus.editGameState
         ),
+        editGameplaySettings: this.uiFunctions.createButton(
+          "Edit Gameplay Settings", true, rightSideBarMenus.editGameplaySettings
+        ),
         editPuzzleSolution: this.uiFunctions.createButton(
           "Edit Puzzle Solution", true,
-        ),
-        editGameplaySettings: this.uiFunctions.createButton(
-          "Edit Gameplay Settings", true,
         ),
         editPuzzleMetadata: this.uiFunctions.createButton(
           "Edit Puzzle Metadata", true,
@@ -617,7 +672,7 @@ const puzzleMenus = {
       for (const key of keys) {
         buttonContainer.appendChild(buttons[key].element);
       }
-    }
+    };
     
     // right side bar menus
     const rightSideBarMenus = {
@@ -625,18 +680,13 @@ const puzzleMenus = {
         this.uiFunctions.clearContainer(rightContainer);
         
         // text
-        const gameStateTitle = document.createElement("h2");
-        gameStateTitle.className = "centeredText";
-        gameStateTitle.textContent = "Edit Game State";
-        rightContainer.appendChild(gameStateTitle);
-        
-        const hr = document.createElement("hr");
-        hr.style.margin = "16px 0px";
-        rightContainer.appendChild(hr);
-        
-        const paragraph = document.createElement("p");
-        paragraph.textContent = "This is the game state editor. You can edit the current game state of the puzzle here.";
-        rightContainer.appendChild(paragraph);
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <h2 class="centeredText">Game State</h2>
+          <hr style="margin: 16px 0px;">
+          <p>Edit the current game state, such as the board configuration, next pieces, and held pieces.</p>
+        `;
+        rightContainer.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -707,13 +757,103 @@ const puzzleMenus = {
         for (const key of keys) {
           const element = this.uiFunctions.createLabelInputPair(
             elements[key].label,
-            elements[key].input.element
+            elements[key].input
           ).element;
           inputs.appendChild(element);
         }
         
         rightContainer.appendChild(inputs);
       },
+      editGameplaySettings: () => {
+        this.uiFunctions.clearContainer(rightContainer);
+        
+        // text
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <h2 class="centeredText">Gameplay Settings</h2>
+          <hr style="margin: 16px 0px;">
+          <p>This is the gameplay settings editor. Change the difficulty and rules of the game here.</p>
+        `;
+        rightContainer.appendChild(infoDiv);
+        
+        // inputs
+        const inputs = document.createElement("div");
+        inputs.className = "puzzleInputsContainer";
+        
+        const elements = {
+          gravity: {
+            label: "Gravity",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Gravity",
+              value: this.puzzleModifier.gameplaySettings.gravity,
+              type: "number",
+              min: 0,
+              max: Infinity,
+              step: 0,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.gravity = data.value;
+              }
+            }),
+          },
+          lockDelay: {
+            label: "Lock Delay",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Lock Delay",
+              value: this.puzzleModifier.gameplaySettings.lockDelay,
+              type: "number",
+              min: 0,
+              max: Infinity,
+              step: 0,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.lockDelay = data.value;
+              }
+            }),
+          },
+          maxLockDelay: {
+            label: "Max Lock Delay",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Max Lock Delay",
+              value: this.puzzleModifier.gameplaySettings.maxLockDelay,
+              type: "number",
+              min: 0,
+              max: Infinity,
+              step: 0,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.maxLockDelay = data.value;
+              }
+            }),
+          },
+          levelling: {
+            label: "Levelling",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.gameplaySettings.levelling,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.levelling = data.value;
+              }
+            })
+          },
+          masterLevels: {
+            label: "Master Levels",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.gameplaySettings.masterLevels,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.masterLevels = data.value;
+              }
+            })
+          }
+        };
+        
+        const keys = Object.keys(elements);
+        for (const key of keys) {
+          const element = this.uiFunctions.createLabelInputPair(
+            elements[key].label,
+            elements[key].input
+          ).element;
+          inputs.appendChild(element);
+        }
+        
+        rightContainer.appendChild(inputs);
+      }
     };
     
     addToLeftSideBar();

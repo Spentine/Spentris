@@ -26,4 +26,20 @@ function humanTime(time) {
   return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
-export { humanTime };
+/**
+ * generates a random ID for HTML classes and IDs
+ * @param {number} len - length of the ID
+ * @returns {string} - the random ID
+ */
+function generateRandomId(len=8) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  let id = "";
+  for (let i = 0; i < len; i++) {
+    id += charset[
+      Math.floor(Math.random() * charset.length)
+    ];
+  }
+  return id;
+}
+
+export { humanTime, generateRandomId };

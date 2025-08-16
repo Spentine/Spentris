@@ -368,27 +368,6 @@ result = {
 > **Reference Directory**
 > - [Object `initializationData`](#stacker-parameters)
 
-## Future Object Formats
-
-### Puzzle Set
-
-```js
-puzzleSet = {
-  name: // {string}
-  
-  // keys will map to puzzles
-  // it is not an array because it's easier to organize keys
-  puzzles: {
-    // {key: Puzzle}
-  },
-  
-  // randomization distribution
-  // the key refers to the puzzle and the default weighing is 1
-  // change to a higher number for a better chance at being chosen
-  distribution: // {key: Number}
-}
-```
-
 ## Object Formats (UI)
 
 ### Translations
@@ -453,6 +432,57 @@ data = {
 }
 ```
 
+### Puzzle Menu `createStandardInput` Data Format
+The data format specifies how the `PuzzleMenuHandler` creates a standard input, such as a button.
+
+```js
+data = {
+  placeholder: "", // {string} the placeholder text
+  value: "", // {any} the default value
+  type: "text", // {string} the type of input
+  
+  // type: "number"
+  min: -Infinity, // {number} the minimum value
+  max: Infinity, // {number} the maximum value
+  step: 1, // {number} the stepping value
+  
+  callback: null, // {function} callback for change
+  coerce: null, // {function} how to convert input to valid type
+}
+```
+
+### `PuzzleModifier` Constructor
+```js
+data = {
+  board: // {object} in the format `board`
+  nextQueue: // {string[]} contains next pieces
+  holdPiece: // {null | string}
+  currentPiece: // {null | string}
+  
+  gameplaySettings: {
+    gravity: // {number}
+    lockDelay: // {number}
+    maxLockDelay: // {number}
+    startinglevel: // {number}
+    levelling: // {bool}
+    masterLevels: // {bool}
+    rotationSystem: // {"SRS+"}
+  },
+  
+  puzzleWinConditions: // {puzzleFunction[]}
+  puzzleLossConditions: // {puzzleFunction[]}
+  puzzleMetadata: {
+    name: // {string} name of the puzzle
+    author: // {string} the creator of the puzzle
+    description: // {string} description of puzzle
+    dateCreated: // {ISOString} the datetime it was created
+  }
+}
+```
+
+> **Reference Directory**
+> - [Object `Board`](#object-board)
+
 ## Object Formats (Misc)
 
 ### `LocalStorageHandler`
@@ -513,26 +543,6 @@ handling = { // {key: {number}}
 
 Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese word あれ used to refer to the entry delay.
 
-## Localized Object Formats
-
-### `createStandardInput`
-
-```js
-data = {
-  placeholder: "", // {string} the placeholder text
-  value: "", // {any} the default value
-  type: "text", // {string} the type of input
-  
-  // type: "number"
-  min: -Infinity, // {number} the minimum value
-  max: Infinity, // {number} the maximum value
-  step: 1, // {number} the stepping value
-  
-  callback: null, // {function} callback for change
-  coerce: null, // {function} how to convert input to valid type
-}
-```
-
 ## Puzzles
 
 Puzzles are an important component of the project mainly because it provides purpose and reason to play the game. It is also sufficiently complex to warrant having an independent section on this documentation.
@@ -540,6 +550,27 @@ Puzzles are an important component of the project mainly because it provides pur
 ### JSON Compliance
 
 Puzzles contain many abstracts that aren't easy to replicate in JSON, most particularly, functions. To resolve this issue, a separate class `PuzzleFunction` has been created that takes in JSON parameters and outputs a function. In this sense, a function can be effectively encoded as if it were a JSON.
+
+## Future Object Formats
+
+### Puzzle Set
+
+```js
+puzzleSet = {
+  name: // {string}
+  
+  // keys will map to puzzles
+  // it is not an array because it's easier to organize keys
+  puzzles: {
+    // {key: Puzzle}
+  },
+  
+  // randomization distribution
+  // the key refers to the puzzle and the default weighing is 1
+  // change to a higher number for a better chance at being chosen
+  distribution: // {key: Number}
+}
+```
 
 ## Current File Structure
 

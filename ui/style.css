@@ -67,6 +67,9 @@ label {
   font-family: inherit;
   font-size: 18px;
   margin: 0px;
+}
+
+label.menuLabel {
   padding-top: 8px;
 }
 

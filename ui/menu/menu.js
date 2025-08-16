@@ -459,7 +459,7 @@ const spentrisMenus = {
       
       // label and input
       const label = document.createElement("label");
-      label.className = "large";
+      label.className = "menuLabel large";
       label.for = optionData.id;
       label.textContent = optionData.text;
       
