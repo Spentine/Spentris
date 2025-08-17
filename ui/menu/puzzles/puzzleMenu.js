@@ -658,10 +658,10 @@ const puzzleMenus = {
           "Edit Gameplay Settings", true, rightSideBarMenus.editGameplaySettings
         ),
         editPuzzleSolution: this.uiFunctions.createButton(
-          "Edit Puzzle Solution", true,
+          "Edit Puzzle Solution", true, rightSideBarMenus.editPuzzleSolution
         ),
         editPuzzleMetadata: this.uiFunctions.createButton(
-          "Edit Puzzle Metadata", true,
+          "Edit Puzzle Metadata", true, rightSideBarMenus.editPuzzleMetadata
         ),
         playtestPuzzle: this.uiFunctions.createButton(
           "Playtest Puzzle", true,
@@ -832,12 +832,122 @@ const puzzleMenus = {
               }
             })
           },
+          startingLevel: {
+            label: "Starting Level",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Starting Level",
+              value: this.puzzleModifier.gameplaySettings.startingLevel,
+              type: "number",
+              min: 1,
+              max: Infinity,
+              step: 1,
+              callback: (data) => {
+                this.puzzleModifier.gameplaySettings.startingLevel = data.value;
+              }
+            })
+          },
           masterLevels: {
             label: "Master Levels",
             input: this.uiFunctions.createBooleanInput({
               checked: this.puzzleModifier.gameplaySettings.masterLevels,
               callback: (data) => {
                 this.puzzleModifier.gameplaySettings.masterLevels = data.value;
+              }
+            })
+          },
+          /* make rotation system afterwards */
+        };
+        
+        const keys = Object.keys(elements);
+        for (const key of keys) {
+          const element = this.uiFunctions.createLabelInputPair(
+            elements[key].label,
+            elements[key].input
+          ).element;
+          inputs.appendChild(element);
+        }
+        
+        rightContainer.appendChild(inputs);
+      },
+      editPuzzleSolution: () => {
+        this.uiFunctions.clearContainer(rightContainer);
+        
+        // text
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <h2 class="centeredText">Puzzle Solution</h2>
+          <hr style="margin: 16px 0px;">
+          <p>This is the puzzle solution editor. Change the puzzle solution here.</p>
+        `;
+        rightContainer.appendChild(infoDiv);
+        
+        // inputs
+        const inputs = document.createElement("div");
+        inputs.className = "puzzleInputsContainer";
+        
+        const elements = {
+          // nothing at the moment
+          // uses types that aren't implemented yet
+        };
+        
+        const keys = Object.keys(elements);
+        for (const key of keys) {
+          const element = this.uiFunctions.createLabelInputPair(
+            elements[key].label,
+            elements[key].input
+          ).element;
+          inputs.appendChild(element);
+        }
+        
+        rightContainer.appendChild(inputs);
+      },
+      editPuzzleMetadata: () => {
+        this.uiFunctions.clearContainer(rightContainer);
+        
+        // text
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <h2 class="centeredText">Puzzle Metadata</h2>
+          <hr style="margin: 16px 0px;">
+          <p>This is the puzzle metadata editor. Change the puzzle metadata here.</p>
+        `;
+        rightContainer.appendChild(infoDiv);
+        
+        // inputs
+        const inputs = document.createElement("div");
+        inputs.className = "puzzleInputsContainer";
+        
+        const elements = {
+          puzzleName: {
+            label: "Puzzle Name",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Puzzle Name",
+              value: this.puzzleModifier.puzzleMetadata.name,
+              type: "text",
+              callback: (data) => {
+                this.puzzleModifier.puzzleMetadata.name = data.value;
+              }
+            })
+          },
+          puzzleAuthor: {
+            label: "Puzzle Author",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Puzzle Author",
+              value: this.puzzleModifier.puzzleMetadata.author,
+              type: "text",
+              callback: (data) => {
+                this.puzzleModifier.puzzleMetadata.author = data.value;
+              }
+            })
+          },
+          puzzleDescription: {
+            label: "Puzzle Description",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Puzzle Description",
+              value: this.puzzleModifier.puzzleMetadata.description,
+              type: "text",
+              callback: (data) => {
+                this.puzzleModifier.puzzleMetadata.description = data.value;
               }
             })
           }
@@ -853,7 +963,7 @@ const puzzleMenus = {
         }
         
         rightContainer.appendChild(inputs);
-      }
+      },
     };
     
     addToLeftSideBar();

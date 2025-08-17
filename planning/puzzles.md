@@ -39,7 +39,7 @@ The main menu that allows for puzzle creation. It should be very interactive and
     - Levelling (boolean)
     - Starting Level (number)
     - Master Levels (boolean)
-    - Rotation System (select)
+    - Rotation System (selection)
   - Edit Puzzle Solution
     - Select Puzzle Solution (selection)
       - Particular Line Clears
