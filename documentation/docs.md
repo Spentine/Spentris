@@ -368,12 +368,69 @@ result = {
 > **Reference Directory**
 > - [Object `initializationData`](#stacker-parameters)
 
-## Object Formats (UI)
+## Object Format (UI In-Game)
+
+### Game Render `RenderGameState` Data Format
+
+A render state is not initialized on object creation, so immediately attempting to render the game would be insufficient. Before rendering, the render state must be updated from the game it is derived from.
+
+However, there are other cases where it may not be necessarily be the case, such as when rendering a puzzle state. This data format will be the values of the `RenderGameState` itself rather than the `data` parameter used to initialize the state.
+
+```js
+{
+  game: // {Stacker} the game attached to the rendering system
+  langauge: // {string} the language used by the UI
+  board: {
+    width: // {number} the width of the board
+    height: // {height} the height of the board
+    matrix: // {string[][]} matrix with piece type
+  },
+  renderHeight: // {number} the render height of the board (visual board height)
+  next: // {string[]} next queue
+  nextAmount: // {number} the number of next pieces to render
+  hold: // {null | string} hold piece
+  current: // {ConvertedPiece} piece data
+  currentLockdown: // {number} 0 = not locked, 1 = locked
+  ghost: // {ConvertedPiece} ghost piece data
+  values: {
+    score: {
+      title: // {string} title of value
+      value: // {string | number} value to display
+      side: // {"left" | "right"} the side to display value on
+      height: // {number} the height of the value (to not collide with others)
+    },
+    /* any key names acceptable */
+  },
+  textTitleSize: // {number} the text size of the value title
+  textValueSize: // {number} the text size of the value
+  textMargin: // {number} the size of the text margin
+  textClearPrimarySize: // {number} the text size of the primary clear text
+  textClearSecondarySize: // {number} the text size of the secondary clear text
+  textClearMargin: // {number} the margin between the clear text
+  textFont: // {string} the font used for the rendering
+  rs: // {RotationSystem} the current rotation system
+  time: // {number} the current timestamp of the game
+  clearRemovalTime: // {number} the number of ms before clear text removal
+  
+  clears: [
+    {
+      time: // {number} the time at which the clear was made
+      original: // {Clear} for debugging, to log original clear
+      text: {
+        primary: // {string} the primary text
+        secondary: // {string} the secondary text
+      }
+    }
+  ]
+}
+```
+
+## Object Formats (UI Menus)
 
 ### Translations
 
 ```js
-translations = {  // {Key: string} each string is 2-letter language code
+translations = {  // {key: string} each string is 2-letter language code
   en: { // {object} contains data for language
     translations: { // {object} contains translation data
       game: {

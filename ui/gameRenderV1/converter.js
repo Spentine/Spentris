@@ -25,7 +25,7 @@ class RenderGameState {
     data = data ?? {};
     
     this.game = data.game ?? null;
-    this.language = data.language
+    this.language = data.language;
     
     this.board = null;
     this.next = null;
