@@ -60,7 +60,7 @@ function main() {
     const rState = new RenderGameState({ // converter
       language: startEvent.settings.language,
     });
-    RenderGameState.addListeners(game, rState);
+    RenderGameState.inGame.addListeners(game, rState);
     
     const gRender = new GameRenderer({ // renderer
       time: 0,
@@ -95,7 +95,7 @@ function main() {
         gamePlaying = true;
         addListeners();
         initFunction(game);
-        RenderGameState.addListeners(game, rState);
+        RenderGameState.inGame.addListeners(game, rState);
         if (!playKeyboardListener.listenersAttached) {
           playKeyboardListener.addListeners();
         }
@@ -116,7 +116,7 @@ function main() {
       ctx.clearRect(0, 0, renderCanvas.width, renderCanvas.height);
       
       // get visual game state
-      const visualGameState = RenderGameState.update(game, rState);
+      const visualGameState = RenderGameState.inGame.update(game, rState);
       
       // get tile size
       const tileSize = gRender.getContainingScale(

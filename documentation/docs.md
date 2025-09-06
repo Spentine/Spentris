@@ -370,6 +370,20 @@ result = {
 
 ## Object Format (UI In-Game)
 
+### Game Render `ConvertedPiece` Output Format
+
+```js
+digestiblePiece = {
+  matrix: // {string[][]} the piece matrix
+  position: {
+    x: // {number} the x position
+    y: // {number} the y position
+  },
+  rotation: // {0 | 1 | 2 | 3} the rotation of the piece
+  type: // {string} the piece type
+}
+```
+
 ### Game Render `RenderGameState` Data Format
 
 A render state is not initialized on object creation, so immediately attempting to render the game would be insufficient. Before rendering, the render state must be updated from the game it is derived from.
@@ -377,8 +391,7 @@ A render state is not initialized on object creation, so immediately attempting 
 However, there are other cases where it may not be necessarily be the case, such as when rendering a puzzle state. This data format will be the values of the `RenderGameState` itself rather than the `data` parameter used to initialize the state.
 
 ```js
-{
-  game: // {Stacker} the game attached to the rendering system
+data = {
   langauge: // {string} the language used by the UI
   board: {
     width: // {number} the width of the board

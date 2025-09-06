@@ -33,13 +33,13 @@ class PuzzleMenuHandler extends MenuHandler {
     this.puzzleModifier = PuzzleModifier.default();
     
     // puzzle game rendering
-    // this.puzzleRenderState = new RenderGameState();
-    // this.puzzleRenderer = new GameRenderer({
-    //   time: 0,
-    //   // skin: tetrioSkin,
-    //   // nextPieces: 5,
-    //   // canvas: document.createElement("canvas"),
-    // });
+    this.puzzleRenderState = new RenderGameState();
+    this.puzzleRenderer = new GameRenderer({
+      time: 0,
+      // skin: tetrioSkin,
+      // nextPieces: 5,
+      // canvas: document.createElement("canvas"),
+    });
   }
   
   saveLanguage() {
