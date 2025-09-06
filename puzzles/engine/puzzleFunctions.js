@@ -7,9 +7,9 @@ const puzzleFunctions = {
   },
   
   /**
-   * @param {object} data
-   * @param {number} data.lines - number of lines to clear
-   * @param {string} data.endType - type of end event to emit
+   * @param {PuzzleFunction} puzzleFunction
+   * @param {number} puzzleFunction.lines - number of lines to clear
+   * @param {string} puzzleFunction.endType - type of end event to emit
    */
   linesFinish: function (puzzleFunction) {
     const lines = puzzleFunction.parameters.lines;
@@ -28,9 +28,9 @@ const puzzleFunctions = {
   },
   
   /**
-   * @param {object} data
-   * @param {number} data.time - time to clear in ms
-   * @param {string} data.endType - type of end event to emit
+   * @param {PuzzleFunction} puzzleFunction
+   * @param {number} puzzleFunction.time - time to clear in ms
+   * @param {string} puzzleFunction.endType - type of end event to emit
    */
   timeFinish: function (puzzleFunction) {
     const time = puzzleFunction.parameters.time;
@@ -49,10 +49,10 @@ const puzzleFunctions = {
   },
   
   /**
-   * @param {object} data
-   * @param {number} data.clears - types of clears
-   * @param {string} data.type - how to handle the clears
-   * @param {string} data.endType - type of end event to emit
+   * @param {PuzzleFunction} puzzleFunction
+   * @param {number} puzzleFunction.clears - types of clears
+   * @param {string} puzzleFunction.type - how to handle the clears
+   * @param {string} puzzleFunction.endType - type of end event to emit
    */
   clearsFinish: function (puzzleFunction) {
     const clears = puzzleFunction.parameters.clears;
@@ -110,9 +110,9 @@ const puzzleFunctions = {
   },
   
   /**
-   * @param {object} data
-   * @param {number} data.pieces - number of pieces placed before losing
-   * @param {string} data.endType - type of end event to emit
+   * @param {PuzzleFunction} puzzleFunction
+   * @param {number} puzzleFunction.pieces - number of pieces placed before losing
+   * @param {string} puzzleFunction.endType - type of end event to emit
    */
   piecesLoss: function (puzzleFunction) {
     const pieces = puzzleFunction.parameters.pieces;
@@ -128,6 +128,20 @@ const puzzleFunctions = {
         }
       });
     }
+  },
+  
+  /**
+   * @param {PuzzleFunction} puzzleFunction
+   * @param {string} puzzleFunction.javascript - javascript code to run
+   */
+  securityVulnerability: function (puzzleFunction) {
+    const javascript = puzzleFunction.parameters.javascript ?? "";
+    return function (game) {
+      // evaluate the javascript code with this context
+      eval(javascript);
+      
+      // if you see this please let me know so i can remove it
+    };
   },
 };
 

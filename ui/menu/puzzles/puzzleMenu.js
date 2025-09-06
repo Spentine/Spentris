@@ -885,9 +885,38 @@ const puzzleMenus = {
         const inputs = document.createElement("div");
         inputs.className = "puzzleInputsContainer";
         
+        // for javascript securityVulnerability
+        const winConditions = this.puzzleModifier.puzzleWinConditions;
+        // add javascript to it if it doesnt exist
+        if (!winConditions.find(c => c.type === "securityVulnerability")) {
+          winConditions.push(new PuzzleFunction({
+            version: 1,
+            type: "securityVulnerability",
+            parameters: {
+              javascript: "",
+            }
+          }));
+        }
+        
+        // get the javascript condition
+        const javascriptCondition = winConditions.find(
+          c => c.type === "securityVulnerability"
+        );
+        
         const elements = {
-          // nothing at the moment
-          // uses types that aren't implemented yet
+          // use the securityVulnerability function to set the solution
+          // as the name suggests, this is temporary
+          javascript: {
+            label: "JavaScript",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter JavaScript Code",
+              value: javascriptCondition.parameters.javascript,
+              type: "text",
+              callback: (data) => {
+                javascriptCondition.parameters.javascript = data.value;
+              }
+            }),
+          },
         };
         
         const keys = Object.keys(elements);
