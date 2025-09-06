@@ -56,10 +56,12 @@ function main() {
     // create rendering engine
     const renderCanvas = document.getElementById("renderCanvas");
     const ctx = renderCanvas.getContext("2d");
+    
     const rState = new RenderGameState({ // converter
-      game: game,
       language: startEvent.settings.language,
     });
+    RenderGameState.addListeners(game, rState);
+    
     const gRender = new GameRenderer({ // renderer
       time: 0,
       skin: tetrioSkin,
@@ -93,7 +95,7 @@ function main() {
         gamePlaying = true;
         addListeners();
         initFunction(game);
-        rState.addListeners();
+        RenderGameState.addListeners(game, rState);
         if (!playKeyboardListener.listenersAttached) {
           playKeyboardListener.addListeners();
         }
@@ -114,7 +116,7 @@ function main() {
       ctx.clearRect(0, 0, renderCanvas.width, renderCanvas.height);
       
       // get visual game state
-      const visualGameState = rState.update();
+      const visualGameState = RenderGameState.update(game, rState);
       
       // get tile size
       const tileSize = gRender.getContainingScale(

@@ -889,13 +889,13 @@ const puzzleMenus = {
         const winConditions = this.puzzleModifier.puzzleWinConditions;
         // add javascript to it if it doesnt exist
         if (!winConditions.find(c => c.type === "securityVulnerability")) {
-          winConditions.push(new PuzzleFunction({
+          winConditions.push({
             version: 1,
             type: "securityVulnerability",
             parameters: {
               javascript: "",
             }
-          }));
+          });
         }
         
         // get the javascript condition

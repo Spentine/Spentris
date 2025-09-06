@@ -24,7 +24,6 @@ class RenderGameState {
   constructor(data) {
     data = data ?? {};
     
-    this.game = data.game ?? null;
     this.language = data.language;
     
     this.board = null;
@@ -34,37 +33,41 @@ class RenderGameState {
     this.ghost = null;
     this.values = null;
     this.clears = [];
-    
-    this.addListeners();
   }
   
-  addListeners() {
+  /**
+   * adds event listeners to the game to update the game state
+   * @param {object} game - current game object
+   * @param {object} gameState - current game state object
+   */
+  static addListeners(game, gameState) {
     // add clear event listeners
-    this.game.event.on("clear", (e) => {
+    game.event.on("clear", (e) => {
       if (e.lines > 0) {
         // console.log(e);
-        const convertedClear = this.convertClear(e);
+        const convertedClear = RenderGameState.convertClear(e, gameState);
         // console.log(convertedClear);
-        this.clears.push(convertedClear);
+        gameState.clears.push(convertedClear);
       };
     });
     
     // when the game is reset
-    this.game.event.on("reset", (e) => {
-      this.clears = [];
+    game.event.on("reset", (e) => {
+      gameState.clears = [];
     });
   }
   
   /**
    * converts a clear object into a renderer-digestible format
    * @param {object} clear - clear object
+   * @param {object} gameState - current game state
    * @returns {object} - digestible clear object
    */
-  convertClear(clear) {
+  static convertClear(clear, gameState) {
     return {
       time: clear.time, // for expiry
       original: clear, // for debugging
-      text: translations[this.language].translations.game.clearConvert(clear),
+      text: translations[gameState.language].translations.game.clearConvert(clear),
     }
   }
   
@@ -73,7 +76,7 @@ class RenderGameState {
    * @param {object} piece - piece object
    * @returns {object} - digestible piece object
    **/
-  convertPiece(piece) { // can be static
+  static convertPiece(piece) { // can be static
     const matrix = [];
     
     // convert piece matrix to string matrix
@@ -99,14 +102,20 @@ class RenderGameState {
     return digestiblePiece;
   }
   
-  update() {
+  /**
+   * updates the game state to match the current game
+   * @param {object} game - current game object
+   * @param {object} gameState - current game state object
+   * @returns {object} - updated game state object
+   */
+  static update(game, gameState) {
     const matrix = [];
-    
-    for (let rowIndex=0; rowIndex<this.game.board.height; rowIndex++) {
+
+    for (let rowIndex=0; rowIndex<game.board.height; rowIndex++) {
       const row = [];
       
-      for (let columnIndex=0; columnIndex<this.game.board.width; columnIndex++) {
-        const mino = this.game.board.matrix[rowIndex][columnIndex];
+      for (let columnIndex=0; columnIndex<game.board.width; columnIndex++) {
+        const mino = game.board.matrix[rowIndex][columnIndex];
         
         row.push(ttMap[mino.type][mino.texture]);
       }
@@ -114,52 +123,52 @@ class RenderGameState {
       matrix.push(row);
     }
     
-    const ghostPiece = this.game.calculateGhostPiece(
-      this.game.currentPiece, this.game.board
+    const ghostPiece = game.calculateGhostPiece(
+      game.currentPiece, game.board
     );
     
     // set values
-    this.board = {
-      width: this.game.board.width,
-      height: this.game.board.height,
+    gameState.board = {
+      width: game.board.width,
+      height: game.board.height,
       matrix: matrix,
     }
-    this.renderHeight = 20;
-    this.next = this.game.nextQueue;
-    this.nextAmount = 5; // max number of next pieces
-    this.hold = this.game.hold;
-    this.current = this.convertPiece(
-      this.game.currentPiece
+    gameState.renderHeight = 20;
+    gameState.next = game.nextQueue;
+    gameState.nextAmount = 5; // max number of next pieces
+    gameState.hold = game.hold;
+    gameState.current = RenderGameState.convertPiece(
+      game.currentPiece
     );
-    this.currentLockdown = this.game.currentPieceLockdown / this.game.lockDelay;
-    this.ghost = this.convertPiece(
+    gameState.currentLockdown = game.currentPieceLockdown / game.lockDelay;
+    gameState.ghost = RenderGameState.convertPiece(
       ghostPiece
     );
-    this.values = {
+    gameState.values = {
       score: {
-        title: translations[this.language].translations.game.scoreTitle,
-        value: this.game.score,
+        title: translations[gameState.language].translations.game.scoreTitle,
+        value: game.score,
         
         side: "left",
         height: 0,
       },
       lines: {
-        title: translations[this.language].translations.game.linesTitle,
-        value: this.game.lines,
+        title: translations[gameState.language].translations.game.linesTitle,
+        value: game.lines,
         
         side: "left",
         height: 1,
       },
       level: {
-        title: translations[this.language].translations.game.levelTitle,
-        value: this.game.level,
+        title: translations[gameState.language].translations.game.levelTitle,
+        value: game.level,
         
         side: "left",
         height: 2,
       },
       time: {
-        title: translations[this.language].translations.game.timeTitle,
-        value: this.game.time,
+        title: translations[gameState.language].translations.game.timeTitle,
+        value: game.time,
         
         side: "left",
         height: 3,
@@ -169,8 +178,8 @@ class RenderGameState {
       // i will keep these ones for future debugging
       /*
       spin: {
-        title: translations[this.language].translations.gameSpinTitle,
-        value: this.game.spin,
+        title: translations[gameState.language].translations.gameSpinTitle,
+        value: game.spin,
         
         side: "right",
         height: 0,
@@ -179,14 +188,14 @@ class RenderGameState {
       /*
       leftInput: {
         title: "left",
-        value: this.game.leftInput,
+        value: game.leftInput,
         
         side: "right",
         height: 0,
       },
       rightInput: {
         title: "right",
-        value: this.game.rightInput,
+        value: game.rightInput,
         
         side: "right",
         height: 1,
@@ -195,14 +204,14 @@ class RenderGameState {
       /*
       gravity: {
         title: "gravity",
-        value: this.game.gravity,
+        value: game.gravity,
         
         side: "right",
         height: 0,
       },
       arrOffset: {
         title: "arr",
-        value: this.game.gaEventHandler.arrOffset,
+        value: game.gaEventHandler.arrOffset,
         
         side: "right",
         height: 1,
@@ -211,41 +220,41 @@ class RenderGameState {
       lockDelay: {
         title: "lockDelay",
         // master level lock delay numbers are not clean
-        value: Math.round(this.game.lockDelay * 1000) / 1000,
+        value: Math.round(game.lockDelay * 1000) / 1000,
         
         side: "right",
         height: 0,
       },
       piecesPlaced: {
-        title: translations[this.language].translations.game.ppsTitle,
-        value: Math.round(1000000 * this.game.piecesPlaced / this.game.time) / 1000,
+        title: translations[gameState.language].translations.game.ppsTitle,
+        value: Math.round(1000000 * game.piecesPlaced / game.time) / 1000,
         
         side: "right",
         height: 1,
       }
     };
     
-    this.textTitleSize = 20 / 24;
-    this.textValueSize = 24 / 24;
-    this.textMargin = 6 / 24;
+    gameState.textTitleSize = 20 / 24;
+    gameState.textValueSize = 24 / 24;
+    gameState.textMargin = 6 / 24;
     
-    this.textClearPrimarySize = 20 / 24;
-    this.textClearSecondarySize = 16 / 24;
-    this.textClearMargin = 10 / 24;
+    gameState.textClearPrimarySize = 20 / 24;
+    gameState.textClearSecondarySize = 16 / 24;
+    gameState.textClearMargin = 10 / 24;
     
-    this.textFont = translations[this.language].font.gameStats;
+    gameState.textFont = translations[gameState.language].font.gameStats;
     
-    this.rs = SRSData; // rs = rotation system
+    gameState.rs = SRSData; // rs = rotation system
     
-    this.time = this.game.time;
-    this.clearRemovalTime = 3000;
+    gameState.time = game.time;
+    gameState.clearRemovalTime = 3000;
     
     // remove outdated clears
-    while (this.clears[0] && this.clears[0].time < this.time - this.clearRemovalTime) {
-      this.clears.shift();
+    while (gameState.clears[0] && gameState.clears[0].time < gameState.time - gameState.clearRemovalTime) {
+      gameState.clears.shift();
     }
     
-    return this;
+    return gameState;
   }
 }
 
