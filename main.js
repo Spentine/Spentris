@@ -133,11 +133,10 @@ function main() {
         tileSize
       );
       
-      const gameRenderCanvas = gRender.render(visualGameState, {
+      gRender.render(visualGameState, {
         position: offset,
         tileSize: tileSize,
       });
-      ctx.drawImage(gameRenderCanvas, 0, 0);
       
       window.requestAnimationFrame(render);
     }

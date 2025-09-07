@@ -401,7 +401,10 @@ data = {
   renderHeight: // {number} the render height of the board (visual board height)
   next: // {string[]} next queue
   nextAmount: // {number} the number of next pieces to render
-  hold: // {null | string} hold piece
+  hold: {
+    piece: // {null | string} hold piece
+    allowed: // {bool} whether the piece is accessible
+  },
   current: // {ConvertedPiece} piece data
   currentLockdown: // {number} 0 = not locked, 1 = locked
   ghost: // {ConvertedPiece} ghost piece data
@@ -562,12 +565,11 @@ this.values = {
   handling: // {handling}
   keybinds: {
     /**
-     * {
-     *   type: {
-     *     action: {
-     *       keycode: integer, code: string}[]
-     *     }
+     * type: {
+     *   action: {
+     *     keycode: integer, code: string}[]
      *   }
+     * }
      */
     play: {
       moveLeftInput, moveRightInput, softDropInput, hardDropInput,

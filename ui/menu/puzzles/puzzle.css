@@ -224,3 +224,7 @@
   content: "False";
   color: #b08080;
 }
+
+.puzzleCanvas {
+  position: absolute;
+}

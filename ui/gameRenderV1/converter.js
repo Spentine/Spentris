@@ -262,13 +262,16 @@ class RenderGameState {
   
   // handles puzzle menu rendering state
   static puzzleMenu = {
-    update: function (puzzleModifier, gameState) {
+    update: function (puzzleModifier, gameState, language) {
       gameState.board = puzzleModifier.board;
       
       gameState.next = puzzleModifier.nextQueue;
       gameState.nextAmount = 5; // max number of next pieces
       
-      gameState.hold = puzzleModifier.holdPiece;
+      gameState.hold = {
+        piece: puzzleModifier.holdPiece,
+        allowed: true,
+      };
       
       // implement current piece later
       gameState.current = {
@@ -297,7 +300,7 @@ class RenderGameState {
       gameState.textClearSecondarySize = 16 / 24;
       gameState.textClearMargin = 10 / 24;
       
-      gameState.textFont = translations[gameState.language].font.gameStats;
+      gameState.textFont = translations[language].font.gameStats;
       
       gameState.rs = SRSData; // consider removal
       

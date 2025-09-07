@@ -45,6 +45,10 @@ import {
   generateRandomId
 } from "../../util.js";
 
+// for game rendering
+import { RenderGameState } from "../../gameRenderV1/converter.js";
+import { GameRenderer } from "../../gameRenderV1/renderer.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -507,8 +511,19 @@ const puzzleMenus = {
   puzzleEditor: function () {
     this.uiDisplay.className = "window-fill";
     
-    // puzzle modifier
-    const pM = PuzzleModifier.default();
+    // puzzle game rendering
+    const puzzleRenderState = new RenderGameState();
+    
+    const puzzleCanvas = document.createElement("canvas");
+    puzzleCanvas.className = "puzzleCanvas";
+    const puzzleCtx = puzzleCanvas.getContext("2d");
+    
+    const puzzleRenderer = new GameRenderer({
+      time: 0,
+      // skin: tetrioSkin,
+      // nextPieces: 5,
+      canvas: puzzleCanvas,
+    });
     
     const puzzleEditorContainer = document.createElement("div");
     puzzleEditorContainer.className = "window-fill puzzleFlex";
@@ -995,7 +1010,53 @@ const puzzleMenus = {
       },
     };
     
+    // update canvas
+    const updateCanvas = () => {
+      // resize canvas if necessary
+      if (
+        puzzleCanvas.width !== middleContainer.clientWidth ||
+        puzzleCanvas.height !== middleContainer.clientHeight
+      ) {
+        puzzleCanvas.width = middleContainer.clientWidth;
+        puzzleCanvas.height = middleContainer.clientHeight;
+      }
+      
+      // update puzzle renderer
+      const visualGameState = RenderGameState.puzzleMenu.update(
+        this.puzzleModifier, puzzleRenderState, "en"
+      );
+      
+      // get tile size
+      const tileSize = puzzleRenderer.getContainingScale(
+        visualGameState,
+        puzzleCanvas.width,
+        puzzleCanvas.height
+      );
+      
+      // center game
+      const offset = puzzleRenderer.getCenterOffset(
+        visualGameState,
+        puzzleCanvas.width,
+        puzzleCanvas.height,
+        tileSize
+      );
+      
+      puzzleRenderer.render(visualGameState, {
+        position: offset,
+        tileSize: tileSize,
+      });
+      window.requestAnimationFrame(updateCanvas);
+    }
+    updateCanvas();
+    
+    const createMiddleCanvas = () => {
+      this.uiFunctions.clearContainer(middleContainer);
+      
+      middleContainer.appendChild(puzzleCanvas);
+    }
+    
     addToLeftSideBar();
+    createMiddleCanvas();
     puzzleEditorContainer.appendChild(header);
     puzzleEditorContainer.appendChild(fullContainer);
     this.uiDisplay.appendChild(puzzleEditorContainer);
