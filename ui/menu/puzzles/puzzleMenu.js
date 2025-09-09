@@ -402,6 +402,80 @@ const puzzleUiFunctions = {
   },
   
   /**
+   * create textarea input
+   * @param {Object} data - the input data
+   */
+  createTextAreaInput: function (inputData) {
+    const data = {
+      placeholder: "",
+      value: "",
+      type: "text",
+      callback: null,
+      coerce: null,
+      convertValue: null,
+    };
+    copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
+    
+    const element = document.createElement("textarea");
+    element.className = "puzzleTextAreaInput";
+    element.placeholder = data.placeholder;
+    element.id = id;
+    
+    switch (data.type) {
+      case "text":
+        element.value = data.value;
+        break;
+      case "board":
+        // parse current board
+        element.value = (
+          data.value.map(row => (
+            row.map(cell =>
+              cell === null ? "-" : cell
+            ).join("")
+          )).join("\n")
+        );
+        
+        // implement convertValue
+        data.convertValue = (value) => {
+          const matrix = (
+            value.split("\n").map(row => (
+              row.split("").map(cell => (
+                cell === "-" ? null : cell
+              ))
+            ))
+          );
+          return matrix;
+        }
+        break;
+      default:
+        break;
+    }
+    
+    // coersion
+    element.addEventListener("change", function (event) {
+      let value = this.value;
+      if (data.coerce) value = data.coerce(value);
+      this.value = value;
+      
+      const currentCallbackData = { event, value };
+      
+      // try to value conversions
+      if (data.convertValue) {
+        currentCallbackData.converted = data.convertValue(value);
+      }
+      
+      // callback
+      if (data.callback) data.callback(currentCallbackData);
+    });
+    
+    return {
+      element: element,
+      id: id,
+    };
+  },
+  
+  /**
    * create a piece input
    * @param {Object} inputData - the input data
    */
@@ -516,7 +590,6 @@ const puzzleMenus = {
     
     const puzzleCanvas = document.createElement("canvas");
     puzzleCanvas.className = "puzzleCanvas";
-    const puzzleCtx = puzzleCanvas.getContext("2d");
     
     const puzzleRenderer = new GameRenderer({
       time: 0,
@@ -736,6 +809,17 @@ const puzzleMenus = {
               }
             }),
           },
+          boardState: {
+            label: "Board State",
+            input: this.uiFunctions.createTextAreaInput({
+              placeholder: "Enter Board State",
+              value: this.puzzleModifier.board.matrix,
+              type: "board",
+              callback: (data) => {
+                this.puzzleModifier.board.matrix = data.converted;
+              }
+            }),
+          },
           nextQueue: {
             label: "Next Queue",
             input: this.uiFunctions.createPieceQueueInput({
@@ -923,7 +1007,7 @@ const puzzleMenus = {
           // as the name suggests, this is temporary
           javascript: {
             label: "JavaScript",
-            input: this.uiFunctions.createStandardInput({
+            input: this.uiFunctions.createTextAreaInput({
               placeholder: "Enter JavaScript Code",
               value: javascriptCondition.parameters.javascript,
               type: "text",
@@ -1045,6 +1129,7 @@ const puzzleMenus = {
         position: offset,
         tileSize: tileSize,
       });
+      
       window.requestAnimationFrame(updateCanvas);
     }
     updateCanvas();

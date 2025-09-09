@@ -525,6 +525,7 @@ data = {
 ```
 
 ### `PuzzleModifier` Constructor
+
 ```js
 data = {
   board: // {object} in the format `board`
