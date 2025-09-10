@@ -49,6 +49,12 @@ import {
 import { RenderGameState } from "../../gameRenderV1/converter.js";
 import { GameRenderer } from "../../gameRenderV1/renderer.js";
 
+// for board conversion 
+import {
+  convertBoardToText,
+  convertTextToBoard
+} from "./boardConverter.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -412,7 +418,6 @@ const puzzleUiFunctions = {
       type: "text",
       callback: null,
       coerce: null,
-      convertValue: null,
     };
     copyObjByTraversal(data, inputData);
     const id = generateRandomId();
@@ -426,31 +431,62 @@ const puzzleUiFunctions = {
       case "text":
         element.value = data.value;
         break;
-      case "board":
-        // parse current board
-        element.value = (
-          data.value.map(row => (
-            row.map(cell =>
-              cell === null ? "-" : cell
-            ).join("")
-          )).join("\n")
-        );
-        
-        // implement convertValue
-        data.convertValue = (value) => {
-          const matrix = (
-            value.split("\n").map(row => (
-              row.split("").map(cell => (
-                cell === "-" ? null : cell
-              ))
-            ))
-          );
-          return matrix;
-        }
-        break;
       default:
         break;
     }
+    
+    // coersion
+    element.addEventListener("change", function (event) {
+      let value = this.value;
+      if (data.coerce) value = data.coerce(value);
+      this.value = value;
+      
+      // callback
+      if (data.callback) data.callback({ event, value });
+    });
+    
+    return {
+      element: element,
+      id: id,
+    };
+  },
+  
+  /**
+   * create board input
+   * @param {Object} data - the input data
+   */
+  createBoardInput: function (inputData) {
+    const data = {
+      placeholder: "",
+      value: null,
+      callback: null,
+      coerce: null,
+      convertValue: null,
+    };
+    copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
+    
+    const element = document.createElement("textarea");
+    element.className = "puzzleTextAreaInput";
+    element.placeholder = data.placeholder;
+    element.id = id;
+    
+    // parse current board
+    element.value = convertBoardToText(data.value.matrix);
+    
+    // implement convertValue
+    data.convertValue = (value) => {
+      return convertTextToBoard(
+        value,
+        data.value.width,
+        data.value.height
+      );
+    };
+    
+    // implement coersion
+    data.coerce = (value) => {
+      return convertBoardToText(data.convertValue(value));
+    };
     
     // coersion
     element.addEventListener("change", function (event) {
@@ -469,9 +505,16 @@ const puzzleUiFunctions = {
       if (data.callback) data.callback(currentCallbackData);
     });
     
+    // update board
+    const updateBoard = (newBoard) => {
+      data.value = newBoard;
+      element.value = convertBoardToText(data.value.matrix);
+    };
+    
     return {
       element: element,
       id: id,
+      updateBoard: updateBoard,
     };
   },
   
@@ -780,6 +823,8 @@ const puzzleMenus = {
         const inputs = document.createElement("div");
         inputs.className = "puzzleInputsContainer";
         
+        let updateBoard; // will be set in future
+        
         const elements = {
           boardWidth: {
             label: "Board Width",
@@ -792,6 +837,7 @@ const puzzleMenus = {
               step: 1,
               callback: (data) => {
                 this.puzzleModifier.board.width = data.value;
+                updateBoard();
               }
             }),
           },
@@ -806,17 +852,18 @@ const puzzleMenus = {
               step: 1,
               callback: (data) => {
                 this.puzzleModifier.board.height = data.value;
+                updateBoard();
               }
             }),
           },
           boardState: {
             label: "Board State",
-            input: this.uiFunctions.createTextAreaInput({
+            input: this.uiFunctions.createBoardInput({
               placeholder: "Enter Board State",
-              value: this.puzzleModifier.board.matrix,
-              type: "board",
+              value: this.puzzleModifier.board,
               callback: (data) => {
                 this.puzzleModifier.board.matrix = data.converted;
+                // updateBoard(); // implied in createBoardInput
               }
             }),
           },
@@ -860,6 +907,12 @@ const puzzleMenus = {
           ).element;
           inputs.appendChild(element);
         }
+        
+        // update board state upon change of board
+        updateBoard = () => {
+          // todo: resize board matrix
+          elements.boardState.input.updateBoard(this.puzzleModifier.board);
+        };
         
         rightContainer.appendChild(inputs);
       },
