@@ -284,6 +284,22 @@ const spentrisMenus = {
       this.showMenu("puzzles");
     });
     
+    // test functionality
+    buttons.listing.addEventListener("click", () => {
+      // trigger play puzzle event
+      this.showMenu("inGame");
+      this.event.emit("gameStart", {
+        time: Date.now(),
+        mode: "puzzle",
+        settings: {
+          handling: this.values.handling,
+          keybinds: this.values.keybinds,
+          language: this.values.language,
+          puzzle: debugPuzzles[0],
+        },
+      });
+    });
+    
     this.uiDisplay.appendChild(backButton);
     this.uiDisplay.appendChild(menuSelection.outer);
   },

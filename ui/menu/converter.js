@@ -45,7 +45,7 @@ const convertGameStartEvent = function (e) {
   const excludeKeys = {
     keybinds: true, // exclude keybinds because they are not used in Stacker
     puzzle: true, // puzzle is an entirely separate mode
-  }
+  };
   
   // copy the settings from the event to the standard settings
   copyObjByTraversal(settings, e.settings, excludeKeys);

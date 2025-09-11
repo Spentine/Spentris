@@ -260,9 +260,8 @@ puzzle = new Puzzle({
   parameters: // {object} becomes `this.parameters`
   values: // {object} stacker initialization values
   
-  winConditions: // {puzzleFunction[]}
-  lossConditions: // {puzzleFunction[]}
-  // prioritizeWinCondition: true, // {boolean}
+  puzzleFunctions: // {puzzleFunction[]}
+  
   initFunction: // {puzzleFunction}
 });
 ```
@@ -276,15 +275,8 @@ puzzle = {
     // the parameters as specified by *Stacker Parameters*
   },
   
-  // if any of the conditions are true the game will end on a win
-  winConditions: // {puzzleFunction[]}
-  
-  // if any of the conditions are false the game will end on a loss
-  lossConditions: // {puzzleFunction[]}
-  
-  // if both end functions activate at the same time
-  // will the player win?
-  // prioritizeWinCondition: true, // {boolean}
+  // the puzzle functions to fun in the game, may trigger win / loss
+  puzzleFunctions: // {puzzleFunction[]}
   
   // init function to run before the game starts
   initFunction: // {puzzleFunction}
@@ -543,8 +535,7 @@ data = {
     rotationSystem: // {"SRS+"}
   },
   
-  puzzleWinConditions: // {puzzleFunction[]}
-  puzzleLossConditions: // {puzzleFunction[]}
+  puzzleFunctions: // {puzzleFunction[]}
   puzzleMetadata: {
     name: // {string} name of the puzzle
     author: // {string} the creator of the puzzle
@@ -927,6 +918,8 @@ puzzleSet = {
     });
 - `gameStart`
   - *emitted when the menu requests for a game to start*
+  - If the mode is set to `puzzle`, then it will accept the `settings.puzzle {Puzzle}` as input.
+    - Code to handle it is located in `ui/menu/converter.js`
   - ```js
     this.event.emit("gameStart", {
       time: Date.now(), // {number} the timestamp of occurrence
@@ -934,6 +927,7 @@ puzzleSet = {
       settings: { // {object} the settings for the game
         handling: // {handling}
         keybinds: // keybinds
+        language: // language
         puzzle: // puzzle
       }
     });

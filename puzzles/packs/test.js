@@ -1,6 +1,7 @@
 import { PuzzleFunction, Puzzle } from "../engine/puzzle.js";
 import { standardFunctionLocations } from "../../engine/modes/standardModes.js";
 import { Board } from "../../engine/stackerObjects.js";
+import { puzzleFunctions } from "../engine/puzzleFunctions.js";
 
 const jsonDebugPuzzles = {
   0: {
@@ -11,7 +12,15 @@ const jsonDebugPuzzles = {
           paramType: "standardJsonParams",
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              // das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
               gravity: Infinity, lockDelay: Infinity, maxLockDelay: Infinity,
               startingLevel: 1, levelling: false, masterLevels: false,
             },
@@ -32,7 +41,7 @@ const jsonDebugPuzzles = {
         },
       },
     },
-    winConditions: [
+    puzzleFunctions: [
       {
         version: 1,
         type: "linesFinish",
@@ -41,7 +50,6 @@ const jsonDebugPuzzles = {
         },
       },
     ],
-    lossConditions: [],
     initFunction: {
       version: 1,
       type: "none",
@@ -58,7 +66,15 @@ const debugPuzzles = {
           paramType: "standardInitializeParams",
           parameters: {
             state: {
-              das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              // das: 133.33, arr: 16.67, sdf: 30, msg: 1000,
+              arr: null,
+              das: null,
+              sdf: null,
+              dcd: null,
+              msg: null,
+              are: null,
+              lca: null,
+              
               gravity: Infinity, lockDelay: Infinity, maxLockDelay: Infinity,
               startingLevel: 1, levelling: false, masterLevels: false,
             },
@@ -78,7 +94,7 @@ const debugPuzzles = {
         },
       },
     },
-    winConditions: [
+    puzzleFunctions: [
       new PuzzleFunction({
         version: 1,
         type: "linesFinish",
@@ -87,7 +103,6 @@ const debugPuzzles = {
         },
       }),
     ],
-    lossConditions: [],
     initFunction: new PuzzleFunction({
       version: 1,
       type: "none",

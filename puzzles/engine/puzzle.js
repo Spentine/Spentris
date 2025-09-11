@@ -42,9 +42,8 @@ class Puzzle {
       initFunction: function (game) {},
     };
     
-    // both {puzzleFunction[]}
-    this.winConditions = data.winConditions ?? [];
-    this.lossConditions = data.lossConditions ?? [];
+    // {puzzleFunction[]}
+    this.puzzleFunctions = data.puzzleFunctions ?? [];
     
     // this.prioritizeWinCondition = data.prioritizeWinCondition ?? false;
     
@@ -60,10 +59,7 @@ class Puzzle {
   makeAllFunctions() {
     const functions = [
       this.parameters.initFunction,
-      // win and loss conditions basically act the same
-      // but it's still good to have them separated
-      ...this.winConditions.map((e) => e.func),
-      ...this.lossConditions.map((e) => e.func),
+      ...this.puzzleFunctions.map((e) => e.func),
       this.initFunction.func,
     ];
     
@@ -84,9 +80,7 @@ class Puzzle {
         values: this.parameters.values,
         // initFunction ignored because it is a function
       },
-      winConditions: this.winConditions.map((e) => e.exportJSON()),
-      lossConditions: this.lossConditions.map((e) => e.exportJSON()),
-      // prioritizeWinCondition: this.prioritizeWinCondition,
+      puzzleFunctions: this.puzzleFunctions.map((e) => e.exportJSON()),
       initFunction: this.initFunction.exportJSON(),
     };
     
@@ -102,8 +96,7 @@ class Puzzle {
     json = structuredClone(json);
     
     // replace functions with PuzzleFunction objects
-    json.winConditions = json.winConditions.map((e) => new PuzzleFunction(e));
-    json.lossConditions = json.lossConditions.map((e) => new PuzzleFunction(e));
+    json.puzzleFunctions = json.puzzleFunctions.map((e) => new PuzzleFunction(e));
     json.initFunction = new PuzzleFunction(json.initFunction);
     
     return new Puzzle(json);

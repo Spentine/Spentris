@@ -45,8 +45,7 @@ class PuzzleModifier {
     this.currentPiece = data.currentPiece;
     
     this.gameplaySettings = data.gameplaySettings;
-    this.puzzleWinConditions = data.puzzleWinConditions;
-    this.puzzleLossConditions = data.puzzleLossConditions;
+    this.puzzleFunctions = data.puzzleFunctions;
     this.puzzleMetadata = data.puzzleMetadata;
   }
   
@@ -70,8 +69,7 @@ class PuzzleModifier {
         rotationSystem: "SRS+",
       },
       
-      puzzleWinConditions: [],
-      puzzleLossConditions: [],
+      puzzleFunctions: [],
       puzzleMetadata: {
         name: "New Puzzle",
         author: "",
@@ -114,8 +112,7 @@ class PuzzleModifier {
           },
         },
       },
-      winConditions: [],
-      lossConditions: [],
+      puzzleFunctions: [],
     };
     
     const params = data.parameters.values.initialization.parameters;
@@ -131,13 +128,10 @@ class PuzzleModifier {
     
     // set the hold piece
     params.holdPiece = this.holdPiece;
-    
-    // add win and loss conditions
-    for (const winCondition of this.puzzleWinConditions) {
-      data.winConditions.push(new PuzzleFunction(winCondition));
-    }
-    for (const lossCondition of this.puzzleLossConditions) {
-      data.lossConditions.push(new PuzzleFunction(lossCondition));
+
+    // add puzzle functions
+    for (const puzzleFunction of this.puzzleFunctions) {
+      data.puzzleFunctions.push(new PuzzleFunction(puzzleFunction));
     }
     
     const puzzle = new Puzzle(data);
