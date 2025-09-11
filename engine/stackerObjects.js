@@ -107,6 +107,7 @@ class Board {
    */
   static fromSimpleArray(data) {
     data ??= {};
+    data = structuredClone(data); // do not modify original array
     
     const arr = data.matrix;
     const width = data.width ?? arr[0].length;

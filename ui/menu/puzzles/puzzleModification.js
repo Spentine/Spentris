@@ -115,7 +115,7 @@ class PuzzleModifier {
       puzzleFunctions: [],
     };
     
-    const params = data.parameters.values.initialization.parameters;
+    const params = data.parameters.values.settings.initialization.parameters;
     
     // set the board
     params.board = Board.fromSimpleArray(this.board);

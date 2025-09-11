@@ -56,6 +56,9 @@ import {
   resizeBoard,
 } from "./boardConverter.js";
 
+// for game handling
+import { gameStart } from "../../../unified/gameHandler.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -630,11 +633,12 @@ const puzzleMenus = {
     this.uiDisplay.className = "window-fill";
     
     // puzzle game rendering
-    const puzzleRenderState = new RenderGameState();
+    const puzzleRenderState = new RenderGameState({
+      language: this.values.language
+    });
     
     const puzzleCanvas = document.createElement("canvas");
     puzzleCanvas.className = "puzzleCanvas";
-    
     const puzzleCanvasCtx = puzzleCanvas.getContext("2d");
     
     const puzzleRenderer = new GameRenderer({
@@ -643,6 +647,10 @@ const puzzleMenus = {
       // nextPieces: 5,
       canvas: puzzleCanvas,
     });
+    
+    // current board mode
+    let currentBoardMode = "edit";
+    let currentGameInstance = null; // current game instance for playtesting
     
     const puzzleEditorContainer = document.createElement("div");
     puzzleEditorContainer.className = "window-fill puzzleFlex";
@@ -798,7 +806,7 @@ const puzzleMenus = {
           "Edit Puzzle Metadata", true, rightSideBarMenus.editPuzzleMetadata
         ),
         playtestPuzzle: this.uiFunctions.createButton(
-          "Playtest Puzzle", true,
+          "Playtest Puzzle", true, rightSideBarMenus.playtestPuzzle
         ),
       };
       
@@ -1148,6 +1156,81 @@ const puzzleMenus = {
         
         rightContainer.appendChild(inputs);
       },
+      playtestPuzzle: () => {
+        this.uiFunctions.clearContainer(rightContainer);
+        
+        // text
+        const infoDiv = document.createElement("div");
+        infoDiv.innerHTML = `
+          <h2 class="centeredText">Playtest Puzzle</h2>
+          <hr style="margin: 16px 0px;">
+          <p>This is the puzzle playtesting area. Start a new instance of the puzzle here.</p>
+        `;
+        rightContainer.appendChild(infoDiv);
+        
+        // inputs
+        const inputs = document.createElement("div");
+        inputs.className = "puzzleInputsContainer";
+        
+        let playtestPuzzle = () => {
+          // check currentBoardMode
+          if (currentBoardMode === "playtest") {
+            currentBoardMode = "edit";
+            
+            // change text to "Start Playtest"
+            elements.puzzleName.input.element.textContent = "Start Playtest";
+            
+            // stop playtest
+            currentGameInstance.forceEnd();
+            currentGameInstance = null;
+          } else {
+            currentBoardMode = "playtest";
+            
+            // change text to "Stop Playtest"
+            elements.puzzleName.input.element.textContent = "Stop Playtest";
+            
+            currentGameInstance = gameStart({
+              time: Date.now(),
+              mode: "puzzle",
+              settings: {
+                handling: this.values.handling,
+                keybinds: this.values.keybinds,
+                language: this.values.language,
+                puzzle: this.puzzleModifier.toPuzzle(),
+              },
+            }, {
+              canvas: puzzleCanvas,
+              updateCanvasDimension: false,
+            });
+          };
+        };
+        
+        const elements = {
+          puzzleName: {
+            label: "Playtest Puzzle",
+            input: this.uiFunctions.createButton(
+              (
+                currentBoardMode === "playtest"
+                  ? "Stop Playtest"
+                  : "Start Playtest"
+              ),
+              false,
+              playtestPuzzle
+            ),
+          },
+        };
+        
+        const keys = Object.keys(elements);
+        for (const key of keys) {
+          const element = this.uiFunctions.createLabelInputPair(
+            elements[key].label,
+            elements[key].input
+          ).element;
+          inputs.appendChild(element);
+        }
+        
+        rightContainer.appendChild(inputs);
+      }
     };
     
     // update canvas
@@ -1161,39 +1244,45 @@ const puzzleMenus = {
         puzzleCanvas.height = middleContainer.clientHeight;
       }
       
-      // update puzzle renderer
-      const visualGameState = RenderGameState.puzzleMenu.update(
-        this.puzzleModifier, puzzleRenderState, "en"
-      );
-      
-      // get tile size
-      const tileSize = puzzleRenderer.getContainingScale(
-        visualGameState,
-        puzzleCanvas.width,
-        puzzleCanvas.height
-      );
-      
-      // center game
-      const offset = puzzleRenderer.getCenterOffset(
-        visualGameState,
-        puzzleCanvas.width,
-        puzzleCanvas.height,
-        tileSize
-      );
-      
-      // clear canvas
-      puzzleCanvasCtx.clearRect(
-        0,
-        0,
-        puzzleCanvas.width,
-        puzzleCanvas.height
-      );
-      
-      // render game
-      puzzleRenderer.render(visualGameState, {
-        position: offset,
-        tileSize: tileSize,
-      });
+      /*
+      - in playtest mode, another renderer will be handling it
+      - in edit mode, render the puzzle as normal
+      */
+      if (currentBoardMode !== "playtest") {
+        // update puzzle renderer
+        const visualGameState = RenderGameState.puzzleMenu.update(
+          this.puzzleModifier, puzzleRenderState, "en"
+        );
+        
+        // get tile size
+        const tileSize = puzzleRenderer.getContainingScale(
+          visualGameState,
+          puzzleCanvas.width,
+          puzzleCanvas.height
+        );
+        
+        // center game
+        const offset = puzzleRenderer.getCenterOffset(
+          visualGameState,
+          puzzleCanvas.width,
+          puzzleCanvas.height,
+          tileSize
+        );
+        
+        // clear canvas
+        puzzleCanvasCtx.clearRect(
+          0,
+          0,
+          puzzleCanvas.width,
+          puzzleCanvas.height
+        );
+        
+        // render game
+        puzzleRenderer.render(visualGameState, {
+          position: offset,
+          tileSize: tileSize,
+        });
+      }
       
       window.requestAnimationFrame(updateCanvas);
     }

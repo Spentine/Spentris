@@ -38,10 +38,13 @@ function main() {
   
   menus.showMenu("home");
   
+  let game; // current game instance
+  
   // start game
   menus.event.on("gameStart", (startEvent) => {
-    gameStart(startEvent, {
+    game = gameStart(startEvent, {
       canvas: document.getElementById("renderCanvas"),
+      updateCanvasDimensions: true,
     });
   });
 }

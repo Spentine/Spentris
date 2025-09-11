@@ -857,6 +857,8 @@ const spentrisMenus = {
       menus: puzzleMenus,
       uiDisplay: uiDisplay, // i think this is a great idea
       values: {
+        handling: this.values.handling,
+        keybinds: this.values.keybinds,
         language: this.values.language,
       },
     });

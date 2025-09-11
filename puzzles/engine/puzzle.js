@@ -37,9 +37,6 @@ class Puzzle {
     
     this.parameters = data.parameters ?? {
       values: data.values ?? {},
-      
-      // might be vestigial, consider removing
-      initFunction: function (game) {},
     };
     
     // {puzzleFunction[]}
@@ -58,7 +55,6 @@ class Puzzle {
    */
   makeAllFunctions() {
     const functions = [
-      this.parameters.initFunction,
       ...this.puzzleFunctions.map((e) => e.func),
       this.initFunction.func,
     ];

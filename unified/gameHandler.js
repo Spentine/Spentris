@@ -22,10 +22,12 @@ const gameStart = (
 ) => {
   const data = {
     canvas: document.getElementById("renderCanvas"),
+    updateCanvasDimensions: false,
   };
   copyObjByTraversal(data, inputData);
   
   data.ctx = data.canvas.getContext("2d");
+  data.running = true;
   
   console.log("Game Start Event", startEvent);
   
@@ -96,7 +98,7 @@ const gameStart = (
   
   function render() {
     // update canvas dimensions
-    updateCanvasDimensions();
+    if (data.updateCanvasDimensions) updateCanvasDimensions();
     
     if (gamePlaying) game.update();
     data.ctx.clearRect(0, 0, data.canvas.width, data.canvas.height);
@@ -124,10 +126,24 @@ const gameStart = (
       tileSize: tileSize,
     });
     
-    window.requestAnimationFrame(render);
+    if (data.running) window.requestAnimationFrame(render);
   }
   
   window.requestAnimationFrame(render);
+  
+  const functions = {
+    forceEnd: () => {
+      // stop game
+      gamePlaying = false;
+      data.running = false;
+      
+      // remove keyboard input
+      playKeyboardListener.removeListeners();
+      metaKeyboardListener.removeListeners();
+    },
+  };
+  
+  return functions;
 }
 
 export { gameStart };

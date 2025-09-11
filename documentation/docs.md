@@ -293,7 +293,7 @@ puzzleFunction = {
 ```
 When the puzzle is saved as a JSON file, the `func` functions cannot be represented. The `type` and `parameters` should hopefully be enough to reconstruct the `func` function.
 
-Both `initFunction` and `(win/loss)Conditions[i]` should use the exact same format, including for the list of valid types. Although it may not make sense, it's all just functions in the end, just ran at different points in time.
+Both `initFunction` and `stackerFunctions` should use the exact same format, including for the list of valid types.
 
 `prioritizeWinCondition` is not really possible to enforce, so consider removing its existence from all the comments.
 
@@ -375,6 +375,21 @@ digestiblePiece = {
   type: // {string} the piece type
 }
 ```
+
+### `gameStart` Data Format
+
+```js
+gameStart(startEvent, {
+  // {<canvas>} the canvas to render to
+  canvas: document.getElementById("renderCanvas"),
+  
+  // {bool} whether to update the canvas dimensions to the screen
+  updateCanvasDimension: false
+});
+```
+
+> **Reference Directory**
+> - [Object `startEvent`](#standard-stacker)
 
 ### Game Render `RenderGameState` Data Format
 
@@ -535,7 +550,7 @@ data = {
     rotationSystem: // {"SRS+"}
   },
   
-  puzzleFunctions: // {puzzleFunction[]}
+  puzzleFunctions: // {object[]} with format puzzleFunction[]
   puzzleMetadata: {
     name: // {string} name of the puzzle
     author: // {string} the creator of the puzzle
@@ -1146,6 +1161,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Ability to create a custom mode
   - [x] Add all-spin+ with T-piece immobility
   - [x] Remove `mode` parameter from `generateNext`
+  - [ ] Add `functions.start` function to `gameStart`
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
   - [ ] Create designated puzzle creator
