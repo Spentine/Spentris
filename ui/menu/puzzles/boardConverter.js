@@ -90,7 +90,15 @@ function convertTextToBoard(text, width, height) {
       "S": "S",
       "I": "I",
       "J": "J",
-      "T": "T"
+      "T": "T",
+      
+      "z": "Z",
+      "l": "L",
+      "o": "O",
+      "s": "S",
+      "i": "I",
+      "j": "J",
+      "t": "T"
     };
     
     const convertChar = (char) => (
@@ -145,4 +153,23 @@ function convertTextToBoard(text, width, height) {
   return board;
 }
 
-export { convertBoardToText, convertTextToBoard };
+/**
+ * modifies matrix of board to fit new width and height
+ */
+function resizeBoard(board) {
+  const matrix = board.matrix;
+  
+  // add rows
+  while (matrix.length < board.height) matrix.push([]);
+  
+  // remove rows
+  while (matrix.length > board.height) matrix.pop();
+  
+  // resize each row
+  matrix.forEach(row => {
+    while (row.length < board.width) row.push(null);
+    while (row.length > board.width) row.pop();
+  });
+}
+
+export { convertBoardToText, convertTextToBoard, resizeBoard };

@@ -52,7 +52,8 @@ import { GameRenderer } from "../../gameRenderV1/renderer.js";
 // for board conversion 
 import {
   convertBoardToText,
-  convertTextToBoard
+  convertTextToBoard,
+  resizeBoard,
 } from "./boardConverter.js";
 
 const puzzleUiFunctions = {
@@ -634,6 +635,8 @@ const puzzleMenus = {
     const puzzleCanvas = document.createElement("canvas");
     puzzleCanvas.className = "puzzleCanvas";
     
+    const puzzleCanvasCtx = puzzleCanvas.getContext("2d");
+    
     const puzzleRenderer = new GameRenderer({
       time: 0,
       // skin: tetrioSkin,
@@ -910,7 +913,7 @@ const puzzleMenus = {
         
         // update board state upon change of board
         updateBoard = () => {
-          // todo: resize board matrix
+          resizeBoard(this.puzzleModifier.board);
           elements.boardState.input.updateBoard(this.puzzleModifier.board);
         };
         
@@ -1178,6 +1181,15 @@ const puzzleMenus = {
         tileSize
       );
       
+      // clear canvas
+      puzzleCanvasCtx.clearRect(
+        0,
+        0,
+        puzzleCanvas.width,
+        puzzleCanvas.height
+      );
+      
+      // render game
       puzzleRenderer.render(visualGameState, {
         position: offset,
         tileSize: tileSize,

@@ -1125,11 +1125,13 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Remove `resetDisplay` and instead replace with `clearContainer`
   - [ ] Puzzles
     - [ ] Replace placeholder piece input with actual piece input
+  - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
   - [ ] Save data to a file
     - [ ] Export data
     - [ ] Import data
+  - [ ] Add setting presets
 - [ ] Game
   - [x] Create more modes
     - [x] 40L
@@ -1153,6 +1155,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Remove logic from input handler functions in engine
   - [x] Move value change conversion from menu scripts to engine
   - [ ] Test `clearsFinish` puzzle function
+  - [ ] Detach adapters from classes; should be independent
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters
   - [ ] Dynamically update URL with current menu
