@@ -743,10 +743,16 @@ puzzleSet = {
     - *in the future, if this is replaced, use V3 at the end of class names (or not depending on how much i change)*
     - `puzzles`
       - *contains a UI designated specifically for the puzzle feature of the game (`PuzzleMenuHandler`)*
+      - `boardConverter.js`
+        - *converts stringified board state to and from an actual matrix-based board state*
+      - `puzzle.css`
+        - css file used for the puzzle editor
       - `puzzleMenu.js`
         - *contains the functions used to render the menus for `PuzzleMenuHandler`*
       - `puzzleMenuHandler.js`
         - *contains the core definition of `PuzzleMenuHandler` as an extension of `MenuHandler`*
+      - `puzzleModification.js`
+        - *contains class that can be directly modified and then converted to a puzzle*
     - `converter.js`
       - *converts formats between the `MenuHandler` and the game engine, particularly `Stacker`.*
     - `defaultValues.js`
@@ -779,6 +785,12 @@ puzzleSet = {
     - *performs various unit tests on the function `copyObjByTraversal` in `util.js`. it is a bit redundant now, but it is good to keep!
 - `eventEmitter.js`
   - *contains a class to emit events much like `addEventListener` but for objects*
+- `unified`
+  - *contains scripts that pertains to the entire game*
+  - *may be modified frequently*
+  - `gameHandler.js`
+    - *handles running a game*
+      - *attaches game, canvas, input handlers, etc.*
 - `index.html`
   - *the web page with the actual game on it*
 - `mainV2.html`

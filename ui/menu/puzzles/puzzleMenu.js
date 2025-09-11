@@ -1041,10 +1041,10 @@ const puzzleMenus = {
         inputs.className = "puzzleInputsContainer";
         
         // for javascript securityVulnerability
-        const winConditions = this.puzzleModifier.puzzleWinConditions;
+        const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
         // add javascript to it if it doesnt exist
-        if (!winConditions.find(c => c.type === "securityVulnerability")) {
-          winConditions.push({
+        if (!puzzleFunctions.find(c => c.type === "securityVulnerability")) {
+          puzzleFunctions.push({
             version: 1,
             type: "securityVulnerability",
             parameters: {
@@ -1054,7 +1054,7 @@ const puzzleMenus = {
         }
         
         // get the javascript condition
-        const javascriptCondition = winConditions.find(
+        const javascriptCondition = puzzleFunctions.find(
           c => c.type === "securityVulnerability"
         );
         

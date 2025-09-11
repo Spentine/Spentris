@@ -18,8 +18,11 @@ function copyObjByTraversal(head, copy, disallowed) {
     
     if (
       typeof value === "object" &&
-      !Array.isArray(value) &&
-      value !== null // why the fuck is null an object
+      value !== null && // why the fuck is null an object
+      Object.getPrototypeOf(value) === Object.prototype && // [object Object]
+      
+      // consider removal, as their prototype may be different
+      !Array.isArray(value)
     ) {
       head[key] ??= {};
       copyObjByTraversal(head[key], value, disallowed[key]);
