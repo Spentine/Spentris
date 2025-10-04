@@ -43,6 +43,7 @@ class PuzzleModifier {
     this.nextQueue = data.nextQueue;
     this.holdPiece = data.holdPiece;
     this.currentPiece = data.currentPiece;
+    this.refillQueue = data.refillQueue;
     
     this.gameplaySettings = data.gameplaySettings;
     this.puzzleFunctions = data.puzzleFunctions;
@@ -58,6 +59,7 @@ class PuzzleModifier {
       nextQueue: [],
       holdPiece: null,
       currentPiece: null,
+      refillQueue: true,
       
       gameplaySettings: {
         gravity: 1000,
@@ -128,6 +130,9 @@ class PuzzleModifier {
     
     // set the hold piece
     params.holdPiece = this.holdPiece;
+    
+    // set the refill queue
+    params.refillQueue = this.refillQueue;
 
     // add puzzle functions
     for (const puzzleFunction of this.puzzleFunctions) {

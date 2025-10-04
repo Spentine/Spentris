@@ -908,6 +908,15 @@ const puzzleMenus = {
               }
             }),
           },
+          refillQueue: {
+            label: "Refill Queue",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.refillQueue,
+              callback: (data) => {
+                this.puzzleModifier.refillQueue = data.value;
+              }
+            })
+          },
         };
         
         const keys = Object.keys(elements);

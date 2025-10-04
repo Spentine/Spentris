@@ -26,3 +26,24 @@ The Board Editor will contain several *editing modes*, each of which makes a par
 - Miscellaneous Operations
   - Mirror Selection
   - Greyscale Selection
+
+# Implementation
+
+There will be three objects to handle board editing. The `ElementBoardCreation` object will create the UI elements and basic button functions. The UI data from this object will then be transmitted to the `InteractBoardCreation` object, which will handle the logic behind UI interactions. Its main purpose is to translate the user's intentions to the `BoardCreation` object, which directly modifies the board.
+
+## `ElementBoardCreation` Object
+
+This object will create UI elements and basic button functions. This class will also contain a static method that will attach an `InteractBoardCreation` object.
+
+## `InteractBoardCreation` Object
+
+This object will handle the interactions with the `ElementBoardCreation` object. This class will also contain a static method that will attach a `BoardCreation` object.
+
+## `BoardCreation` Object
+
+This object will directly modify a board state. It will have a lot of higher-level functions to interact with the board.
+
+- `.setMino(row, col, value)`
+- `.setRow(row, value)`
+- `.setGarbageRow(row, col, value)`
+  - `.setRow(row, value)`; `.setMino(row, col, null)`

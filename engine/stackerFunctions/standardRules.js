@@ -346,13 +346,18 @@ const initialize = function(params) {
   this.nextQueue = structuredClone(params.nextQueue) ?? [];
   
   // the minimum number of pieces in the queue at once
-  this.refillQueue = params.refillQueue ?? 5;
+  if (typeof params.refillQueue === "boolean") {
+    // the default value it will be set to
+    this.refillQueue = params.refillQueue ? 5 : 0;
+  } else {
+    this.refillQueue = params.refillQueue ?? 5;
+  }
   
   // create the random number generator
   this.rng = this.lehmerRNG(params.seed ?? 0);
   
-  // generate the first 7 pieces
-  this.generateNext();
+  // generate the pieces to fill the next queue
+  this.refillNextQueue();
   
   // spawn the first piece
   this.currentPiece = params.currentPiece ?? null;
@@ -603,7 +608,6 @@ const lehmerRNG = function(seed) {
 
 /**
  * 7-bag randomizer
- * @param {string} mode
  */
 const generateNext = function() {
   // consider removing the mode parameter outright
@@ -732,6 +736,10 @@ const rotationSystem = function(data) {
  */
 const spawnPiece = function(piece, data) {
   data = data ?? {};
+  
+  if (!piece) return false; // no piece to spawn
+  
+  // create the new piece object with the parameters
   const newPiece = new Piece({
     type: piece,
     position: data.position ?? (
@@ -740,6 +748,7 @@ const spawnPiece = function(piece, data) {
     rotation: data.rotation ?? 0,
   });
   
+  // check if the piece can be spawned
   if (!this.validPiecePosition(newPiece, this.board)) {
     return false;
   }
@@ -756,7 +765,7 @@ const spawnPiece = function(piece, data) {
  * will refill the next queue when appropriate
  */
 const refillNextQueue = function() {
-  if (this.nextQueue.length < this.refillQueue) {
+  while (this.nextQueue.length < this.refillQueue) {
     this.generateNext();
   }
 };

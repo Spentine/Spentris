@@ -114,7 +114,7 @@ initializationData = {
         },
         
         nextQueue: [], // {string[]} where each string represents a piece
-        refillQueue: 5, // {number} mininum number of pieces in the queue at any given time
+        refillQueue: 5, // {number | boolean} mininum number of pieces in the queue at any given time; if it is true, it will default to some value; if it is false, it will default to 0
         currentPiece: // {Piece} where it is the current piece
         
         holdPiece: // {(string | null) the current hold piece represented by a string
