@@ -1057,38 +1057,36 @@ const puzzleMenus = {
         const inputs = document.createElement("div");
         inputs.className = "puzzleInputsContainer";
         
-        // for javascript securityVulnerability
         const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
-        // add javascript to it if it doesnt exist
-        if (!puzzleFunctions.find(c => c.type === "securityVulnerability")) {
+        
+        // add lua to it if it doesnt exist
+        if (!puzzleFunctions.find(c => c.type === "luaExecution")) {
           puzzleFunctions.push({
             version: 1,
-            type: "securityVulnerability",
+            type: "luaExecution",
             parameters: {
-              javascript: "",
+              lua: "",
             }
           });
         }
         
-        // get the javascript condition
-        const javascriptCondition = puzzleFunctions.find(
-          c => c.type === "securityVulnerability"
+        // get the lua condition
+        const luaCondition = puzzleFunctions.find(
+          c => c.type === "luaExecution"
         );
         
         const elements = {
-          // use the securityVulnerability function to set the solution
-          // as the name suggests, this is temporary
-          javascript: {
-            label: "JavaScript",
+          lua: {
+            label: "Lua",
             input: this.uiFunctions.createTextAreaInput({
-              placeholder: "Enter JavaScript Code",
-              value: javascriptCondition.parameters.javascript,
+              placeholder: "Enter Lua Code",
+              value: luaCondition.parameters.lua,
               type: "text",
               callback: (data) => {
-                javascriptCondition.parameters.javascript = data.value;
+                luaCondition.parameters.lua = data.value;
               }
             }),
-          },
+          }
         };
         
         const keys = Object.keys(elements);
@@ -1181,7 +1179,7 @@ const puzzleMenus = {
         const inputs = document.createElement("div");
         inputs.className = "puzzleInputsContainer";
         
-        let playtestPuzzle = () => {
+        let playtestPuzzle = async () => {
           // check currentBoardMode
           if (currentBoardMode === "playtest") {
             currentBoardMode = "edit";
@@ -1198,7 +1196,7 @@ const puzzleMenus = {
             // change text to "Stop Playtest"
             elements.puzzleName.input.element.textContent = "Stop Playtest";
             
-            currentGameInstance = gameStart({
+            currentGameInstance = await gameStart({
               time: Date.now(),
               mode: "puzzle",
               settings: {

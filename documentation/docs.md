@@ -723,6 +723,20 @@ puzzleSet = {
   - `Spentris Puzzle Editor.penpot`
     - *planning the UI of the puzzle editor*
     - *has to be viewed with penpot, a design tool*
+- `puzzles`
+  - `engine`
+    - *contains scripts that handle running the puzzles using the engine*
+    - `puzzle.js`
+      - *contains puzzle objects*
+    - `puzzleFunctions.js`
+      - *contains all the puzzle functions*
+  - `ui` (empty)
+    - *contains scripts that present puzzles to the user*
+- `scriptEngine`
+  - *contains script engines for custom logic*
+  - `wasmoon`
+    - *lua in web assembly*
+    - `handler.js`
 - `ui`
   - `debug` (deprecated)
     - `debugRenderField.js` (deprecated)
@@ -785,15 +799,6 @@ puzzleSet = {
     - `TETRIOconnected` (unused)
       - `ghost.png`
       - `minos.png`
-- `puzzles`
-  - `engine`
-    - *contains scripts that handle running the puzzles using the engine*
-    - `puzzle.js`
-      - *contains puzzle objects*
-    - `puzzleFunctions.js`
-      - *contains all the puzzle functions*
-  - `ui` (empty)
-    - *contains scripts that present puzzles to the user*
 - `unitTests`
   - *contains scripts to perform unit tests.*
   - `copyObjByTraversal.js`

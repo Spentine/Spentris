@@ -59,8 +59,11 @@ class Puzzle {
       this.initFunction.func,
     ];
     
-    this.allFunctions = function (game) {
-      functions.forEach((func) => func(game));
+    // runs all functions in order
+    this.allFunctions = async function (game) {
+      for (const func of functions) {
+        await func(game);
+      }
     };
     
     return this;

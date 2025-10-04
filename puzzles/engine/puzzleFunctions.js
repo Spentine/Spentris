@@ -1,3 +1,6 @@
+// lua
+import { createLuaState } from "../../scriptEngine/wasmoon/handler.js";
+
 /**
  * contains functions
  */
@@ -132,17 +135,18 @@ const puzzleFunctions = {
   
   /**
    * @param {PuzzleFunction} puzzleFunction
-   * @param {string} puzzleFunction.javascript - javascript code to run
+   * @param {string} puzzleFunction.lua - lua code to run
    */
-  securityVulnerability: function (puzzleFunction) {
-    const javascript = puzzleFunction.parameters.javascript ?? "";
-    return function (game) {
-      // evaluate the javascript code with this context
-      eval(javascript);
+  luaExecution: function (puzzleFunction) {
+    const lua = puzzleFunction.parameters.lua ?? "";
+    return async function (game) {
+      const luaState = await createLuaState();
+      luaState.global.set("game", game);
+      luaState.global.set("puzzleFunction", puzzleFunction);
       
-      // if you see this please let me know so i can remove it
+      await luaState.doString(lua);
     };
-  },
+  }
 };
 
 export { puzzleFunctions };

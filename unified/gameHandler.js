@@ -17,7 +17,7 @@ import { Stacker } from "../engine/stacker.js";
 // convert game start event
 import { convertGameStartEvent } from "../ui/menu/converter.js";
 
-const gameStart = (
+const gameStart = async (
   startEvent, inputData
 ) => {
   const data = {
@@ -42,7 +42,7 @@ const gameStart = (
   
   // create game
   const game = new Stacker(initData);
-  initFunction(game);
+  await initFunction(game);
   let gamePlaying = true;
   
   const rState = new RenderGameState({ // converter
