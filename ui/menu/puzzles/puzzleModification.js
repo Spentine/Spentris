@@ -43,7 +43,10 @@ class PuzzleModifier {
     this.nextQueue = data.nextQueue;
     this.holdPiece = data.holdPiece;
     this.currentPiece = data.currentPiece;
+    
     this.refillQueue = data.refillQueue;
+    this.seedRandom = data.seedRandom;
+    this.seed = data.seed;
     
     this.gameplaySettings = data.gameplaySettings;
     this.puzzleFunctions = data.puzzleFunctions;
@@ -59,7 +62,15 @@ class PuzzleModifier {
       nextQueue: [],
       holdPiece: null,
       currentPiece: null,
+      
       refillQueue: true,
+      
+      /**
+       * i decided to split this variable into two
+       * the puzzle editor ui would handle separate types better
+       */
+      seedRandom: true, // {boolean} whether to use a random seed
+      seed: 0, // {number} only
       
       gameplaySettings: {
         gravity: 1000,
@@ -133,7 +144,13 @@ class PuzzleModifier {
     
     // set the refill queue
     params.refillQueue = this.refillQueue;
-
+    
+    // set the seedrandom and seed
+    params.seed = (this.seedRandom
+      ? "random"
+      : this.seed
+    );
+    
     // add puzzle functions
     for (const puzzleFunction of this.puzzleFunctions) {
       data.puzzleFunctions.push(new PuzzleFunction(puzzleFunction));

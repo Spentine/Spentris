@@ -1153,6 +1153,9 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [ ] Replace placeholder piece input with actual piece input
     - [ ] Add GUI Board Editor
     - [ ] Add gradients at the top and bottom of scrollable elements
+    - [ ] Add file saving / loading
+    - [ ] Add puzzle solution editor
+      - [ ] Ensure there are no security vulnerabilities with Lua
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
@@ -1171,19 +1174,17 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Add `functions.start` function to `gameStart`
 - [ ] Puzzles
   - [ ] Create puzzle selection interface
-  - [ ] Create designated puzzle creator
-    - [ ] Support the creation of puzzles with a particular clear as the win requirement
-    - [ ] Support the creation of puzzles with particular piece placements as the win requirement
+  - [x] Create designated puzzle creator
   - [ ] Automatically generate puzzles
   - [x] Make puzzle format JSON-compliant
+  - [ ] Test `clearsFinish` puzzle function
 - [ ] Lessons
   - *too far ahead, give it a year at this pace*
 - [ ] Code
   - [ ] Centralize all values
-  - [x] Enforce D.R.Y. principle
+  - [ ] Enforce D.R.Y. principle
   - [ ] Remove logic from input handler functions in engine
   - [x] Move value change conversion from menu scripts to engine
-  - [ ] Test `clearsFinish` puzzle function
   - [ ] Detach adapters from classes; should be independent
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters

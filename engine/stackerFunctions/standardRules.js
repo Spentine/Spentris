@@ -573,7 +573,7 @@ const lehmerRNG = function(seed) {
   // https://github.com/Poyo-SSB/tetrio-bot-docs/blob/master/Piece_RNG.md
   
   let t;
-  if (seed === "random") {
+  if (seed === "random") { // consider moving this to initialize function
     t = Math.floor(Math.random() * 2147483645) + 1;
   } else {
     t = seed % 2147483647;

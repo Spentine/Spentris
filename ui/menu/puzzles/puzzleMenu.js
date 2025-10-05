@@ -924,15 +924,6 @@ const puzzleMenus = {
               }
             }),
           },
-          refillQueue: {
-            label: "Refill Queue",
-            input: this.uiFunctions.createBooleanInput({
-              checked: this.puzzleModifier.refillQueue,
-              callback: (data) => {
-                this.puzzleModifier.refillQueue = data.value;
-              }
-            })
-          },
         };
         
         const keys = Object.keys(elements);
@@ -1045,6 +1036,39 @@ const puzzleMenus = {
               }
             })
           },
+          refillQueue: {
+            label: "Refill Queue",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.refillQueue,
+              callback: (data) => {
+                this.puzzleModifier.refillQueue = data.value;
+              }
+            })
+          },
+          seedRandom: {
+            label: "Random Seed",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.seedRandom,
+              callback: (data) => {
+                this.puzzleModifier.seedRandom = data.value;
+              }
+            })
+          },
+          seed: {
+            label: "Seed",
+            input: this.uiFunctions.createStandardInput({
+              placeholder: "Enter Seed",
+              value: this.puzzleModifier.seed,
+              type: "number",
+              min: 0,
+              max: 2**31 - 2,
+              step: 1,
+              callback: (data) => {
+                this.puzzleModifier.seed = data.value;
+              }
+            })
+          },
+          
           /* make rotation system afterwards */
         };
         
