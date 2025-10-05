@@ -117,12 +117,16 @@
 
 .puzzleFullContainer {
   flex: 1; /* take up all the space below the header */
+  flex-shrink: 1;
   
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  
+  min-height: 0;
+  overflow: hidden;
 }
 
 .puzzleSideContainer {
@@ -132,6 +136,13 @@
   box-shadow: 0 0 4px #00000080;
   
   padding: 16px;
+}
+
+.puzzleSideContainerInner {
+  max-height: 100%;
+  overflow: auto;
+  
+  scrollbar-width: none;
 }
 
 .puzzleMiddleContainer {
@@ -205,8 +216,7 @@
   
   resize: vertical;
   
-  min-height: 60px;
-  max-height: 50vh;
+  min-height: 120px;
 }
 
 /* checkbox */

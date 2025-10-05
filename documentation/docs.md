@@ -1151,6 +1151,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Remove `resetDisplay` and instead replace with `clearContainer`
   - [ ] Puzzles
     - [ ] Replace placeholder piece input with actual piece input
+    - [ ] Add GUI Board Editor
+    - [ ] Add gradients at the top and bottom of scrollable elements
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`

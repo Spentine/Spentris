@@ -212,7 +212,8 @@ const puzzleUiFunctions = {
   },
   
   /**
-   * create two side bars
+   * create two side bars and a middle container
+   * also creates inner containers for the side bars
    * @returns {Object}
    */
   createDoubleSideBar: function () {
@@ -222,11 +223,20 @@ const puzzleUiFunctions = {
     const leftContainer = document.createElement("div");
     leftContainer.className = "puzzleSideContainer";
     
+    const leftContainerInner = document.createElement("div");
+    leftContainerInner.className = "puzzleSideContainerInner";
+    
     const middleContainer = document.createElement("div");
     middleContainer.className = "puzzleMiddleContainer";
     
     const rightContainer = document.createElement("div");
     rightContainer.className = "puzzleSideContainer";
+    
+    const rightContainerInner = document.createElement("div");
+    rightContainerInner.className = "puzzleSideContainerInner";
+    
+    leftContainer.appendChild(leftContainerInner);
+    rightContainer.appendChild(rightContainerInner);
     
     fullContainer.appendChild(leftContainer);
     fullContainer.appendChild(middleContainer);
@@ -237,6 +247,8 @@ const puzzleUiFunctions = {
       leftContainer: leftContainer,
       middleContainer: middleContainer,
       rightContainer: rightContainer,
+      leftContainerInner: leftContainerInner,
+      rightContainerInner: rightContainerInner,
     };
   },
   
@@ -763,34 +775,36 @@ const puzzleMenus = {
       leftContainer,
       middleContainer,
       rightContainer,
+      leftContainerInner,
+      rightContainerInner,
     ] = Object.values(containers);
     
     // add to left side bar
     // placeholder function name
     const addToLeftSideBar = () => {
+      const container = leftContainerInner;
+      
       // remove everything in left side bar
-      while (leftContainer.firstChild) {
-        leftContainer.removeChild(leftContainer.firstChild);
-      }
+      this.uiFunctions.clearContainer(container);
       
       // text
       const header = document.createElement("h2");
       header.className = "centeredText";
       header.textContent = "Puzzle Editor";
-      leftContainer.appendChild(header);
+      container.appendChild(header);
       
       const hr = document.createElement("hr");
       hr.style.margin = "16px 0px";
-      leftContainer.appendChild(hr);
+      container.appendChild(hr);
       
       const infoText = document.createElement("p");
       infoText.textContent = "This is the Spentris Puzzle Editor. Please give feedback on the functionality and usability of this editor by contacting me directly on Discord.";
-      leftContainer.appendChild(infoText);
+      container.appendChild(infoText);
       
       // inputs
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "puzzleInputsContainer";
-      leftContainer.appendChild(buttonContainer);
+      container.appendChild(buttonContainer);
       
       const buttons = {
         editGameState: this.uiFunctions.createButton(
@@ -819,7 +833,9 @@ const puzzleMenus = {
     // right side bar menus
     const rightSideBarMenus = {
       editGameState: () => {
-        this.uiFunctions.clearContainer(rightContainer);
+        const container = rightContainerInner;
+        
+        this.uiFunctions.clearContainer(container);
         
         // text
         const infoDiv = document.createElement("div");
@@ -828,7 +844,7 @@ const puzzleMenus = {
           <hr style="margin: 16px 0px;">
           <p>Edit the current game state, such as the board configuration, next pieces, and held pieces.</p>
         `;
-        rightContainer.appendChild(infoDiv);
+        container.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -934,10 +950,12 @@ const puzzleMenus = {
           elements.boardState.input.updateBoard(this.puzzleModifier.board);
         };
         
-        rightContainer.appendChild(inputs);
+        container.appendChild(inputs);
       },
       editGameplaySettings: () => {
-        this.uiFunctions.clearContainer(rightContainer);
+        const container = rightContainerInner;
+        
+        this.uiFunctions.clearContainer(container);
         
         // text
         const infoDiv = document.createElement("div");
@@ -946,7 +964,7 @@ const puzzleMenus = {
           <hr style="margin: 16px 0px;">
           <p>This is the gameplay settings editor. Change the difficulty and rules of the game here.</p>
         `;
-        rightContainer.appendChild(infoDiv);
+        container.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -1039,10 +1057,12 @@ const puzzleMenus = {
           inputs.appendChild(element);
         }
         
-        rightContainer.appendChild(inputs);
+        container.appendChild(inputs);
       },
       editPuzzleSolution: () => {
-        this.uiFunctions.clearContainer(rightContainer);
+        const container = rightContainerInner;
+        
+        this.uiFunctions.clearContainer(container);
         
         // text
         const infoDiv = document.createElement("div");
@@ -1051,7 +1071,7 @@ const puzzleMenus = {
           <hr style="margin: 16px 0px;">
           <p>This is the puzzle solution editor. Change the puzzle solution here.</p>
         `;
-        rightContainer.appendChild(infoDiv);
+        container.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -1098,10 +1118,12 @@ const puzzleMenus = {
           inputs.appendChild(element);
         }
         
-        rightContainer.appendChild(inputs);
+        container.appendChild(inputs);
       },
       editPuzzleMetadata: () => {
-        this.uiFunctions.clearContainer(rightContainer);
+        const container = rightContainerInner;
+        
+        this.uiFunctions.clearContainer(container);
         
         // text
         const infoDiv = document.createElement("div");
@@ -1110,7 +1132,7 @@ const puzzleMenus = {
           <hr style="margin: 16px 0px;">
           <p>This is the puzzle metadata editor. Change the puzzle metadata here.</p>
         `;
-        rightContainer.appendChild(infoDiv);
+        container.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -1161,10 +1183,12 @@ const puzzleMenus = {
           inputs.appendChild(element);
         }
         
-        rightContainer.appendChild(inputs);
+        container.appendChild(inputs);
       },
       playtestPuzzle: () => {
-        this.uiFunctions.clearContainer(rightContainer);
+        const container = rightContainerInner;
+          
+        this.uiFunctions.clearContainer(container);
         
         // text
         const infoDiv = document.createElement("div");
@@ -1173,7 +1197,7 @@ const puzzleMenus = {
           <hr style="margin: 16px 0px;">
           <p>This is the puzzle playtesting area. Start a new instance of the puzzle here.</p>
         `;
-        rightContainer.appendChild(infoDiv);
+        container.appendChild(infoDiv);
         
         // inputs
         const inputs = document.createElement("div");
@@ -1236,7 +1260,7 @@ const puzzleMenus = {
           inputs.appendChild(element);
         }
         
-        rightContainer.appendChild(inputs);
+        container.appendChild(inputs);
       }
     };
     
