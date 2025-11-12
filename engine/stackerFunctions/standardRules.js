@@ -716,8 +716,6 @@ const rotationSystem = function(data) {
     if (
       // correct spin directions
       (data.piece.type === "T") &&
-      (spin.previousRotation === 0 || spin.previousRotation === 2) &&
-      (spin.newRotation === 1 || spin.newRotation === 3) &&
       (spin.kick === 4) // kick index 4 is the spin
     ) {
       spin.spin = "full";
