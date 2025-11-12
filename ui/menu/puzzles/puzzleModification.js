@@ -35,6 +35,8 @@ class PuzzleModifier {
    * @param {object} data - the puzzle modifier data
    */
   constructor(data) {
+    this.version = 1;
+    
     /**
      * {width: number, height: number, matrix: (string|null)[][]}
      */
@@ -158,6 +160,22 @@ class PuzzleModifier {
     
     const puzzle = new Puzzle(data);
     return puzzle;
+  }
+  
+  toJSON() {
+    return {
+      version: this.version,
+      board: this.board,
+      nextQueue: this.nextQueue,
+      holdPiece: this.holdPiece,
+      currentPiece: this.currentPiece,
+      refillQueue: this.refillQueue,
+      seedRandom: this.seedRandom,
+      seed: this.seed,
+      gameplaySettings: this.gameplaySettings,
+      puzzleFunctions: this.puzzleFunctions,
+      puzzleMetadata: this.puzzleMetadata,
+    };
   }
 }
 

@@ -180,11 +180,11 @@ class RenderGameState {
         // i will keep these ones for future debugging
         /*
         spin: {
-          title: translations[gameState.language].translations.gameSpinTitle,
+          title: translations[gameState.language].translations.game.spinTitle,
           value: game.spin,
           
           side: "right",
-          height: 0,
+          height: -1,
         },
         */
         /*

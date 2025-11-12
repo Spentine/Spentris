@@ -8,6 +8,7 @@ const translations = {
         timeTitle: "time",
         spinTitle: "spin",
         ppsTitle: "pps", // pieces per second
+        spinTitle: "spin",
         
         clearConvert: (clear) => {
           const lineClears = {

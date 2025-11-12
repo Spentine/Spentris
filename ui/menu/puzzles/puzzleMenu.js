@@ -637,6 +637,17 @@ const puzzleUiFunctions = {
       element: element,
       id: id,
     };
+  },
+  
+  /**
+   * create an overlay for the given element
+   * @param {HTMLElement} element - the element to overlay
+   */
+  createOverlay: function (element) {
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
+    element.appendChild(overlay);
+    return overlay;
   }
 };
 
