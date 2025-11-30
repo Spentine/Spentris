@@ -288,7 +288,7 @@ const initialize = function(params) {
   params = params ?? {};
   
   // set beginning game state data (constant)
-  this.state = params.state ?? {
+  this.state = structuredClone(params.state) ?? {
     // delayed auto shift
     das: 83.33, // ms
     

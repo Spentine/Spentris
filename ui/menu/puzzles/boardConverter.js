@@ -21,12 +21,25 @@ function convertBoardToText(board) {
     else break;
   }
   
+  // cell letter map
+  const cellMap = {
+    "Z": "Z",
+    "L": "L",
+    "O": "O",
+    "S": "S",
+    "I": "I",
+    "J": "J",
+    "T": "T",
+    
+    "garbage": "#", // garbage is more than 1 letter long
+  };
+  
   // convert board cells to characters in place
   board.forEach(row => row.forEach((cell, colIndex) => {
     row[colIndex] = (
       cell === null
         ? "-"
-        : cell
+        : cellMap[cell]
     );
   }));
 
@@ -98,7 +111,9 @@ function convertTextToBoard(text, width, height) {
       "s": "S",
       "i": "I",
       "j": "J",
-      "t": "T"
+      "t": "T",
+      
+      "#": "garbage",
     };
     
     const convertChar = (char) => (
