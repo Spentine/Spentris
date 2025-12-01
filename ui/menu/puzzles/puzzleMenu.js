@@ -59,6 +59,9 @@ import {
 // for game handling
 import { gameStart } from "../../../unified/gameHandler.js";
 
+// for puzzle function ui
+import { PuzzleFunctionUI } from "./puzzleFunctionUI.js";
+
 const puzzleUiFunctions = {
   /**
    * delete all elements in uiDisplay
@@ -285,6 +288,7 @@ const puzzleUiFunctions = {
    * create a label-input pair
    * @param {string} labelText - the text for the label
    * @param {Object} inputElement - the input element to use
+   * @returns {element: HTMLElement} - the label-input pair element
    */
   createLabelInputPair: function (labelText, inputElement) {
     const container = document.createElement("div");
@@ -1109,10 +1113,20 @@ const puzzleMenus = {
         container.appendChild(infoDiv);
         
         // inputs
-        const inputs = document.createElement("div");
-        inputs.className = "puzzleInputsContainer";
+        // const inputs = document.createElement("div");
+        // inputs.className = "puzzleInputsContainer";
         
         const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
+        
+        const puzzleUI = new PuzzleFunctionUI(puzzleFunctions);
+        
+        const element = puzzleUI.createUI();
+        
+        // inputs.appendChild(element);
+        
+        container.appendChild(element);
+        
+        /*
         
         // add lua to it if it doesnt exist
         if (!puzzleFunctions.find(c => c.type === "luaExecution")) {
@@ -1154,6 +1168,8 @@ const puzzleMenus = {
         }
         
         container.appendChild(inputs);
+        
+        */
       },
       editPuzzleMetadata: () => {
         const container = rightContainerInner;

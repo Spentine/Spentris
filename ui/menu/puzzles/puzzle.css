@@ -262,3 +262,68 @@
 .puzzleCanvas {
   position: absolute;
 }
+
+/* === puzzle function ui === */
+
+.puzzleFunctionUIContainer {
+  margin-top: 8px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.puzzleFunctionAddButton {
+  background-color: #446644;
+  border: 2px solid;
+  border-color: #557755;
+  border-radius: 4px;
+  
+  padding: 8px 12px;
+  
+  text-align: center;
+}
+
+.puzzleFunctionAddButton:hover {
+  background-color: #557755;
+  border-color: #668866;
+}
+
+.puzzleFunctionElement {
+  background-color: #333333;
+  border: 2px solid;
+  border-color: #555555;
+  border-radius: 4px;
+  padding: 8px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.puzzleFunctionTypeSelector {
+  background-color: #444444;
+  border: 2px solid;
+  border-color: #555555;
+  border-radius: 4px;
+  
+  color: #ffffff;
+  font-size: 16px;
+  font-family: inherit;
+  
+  padding: 8px 12px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.puzzleFunctionTypeSelectorOption {
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+}

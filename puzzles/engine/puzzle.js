@@ -17,7 +17,7 @@ class PuzzleFunction {
   }
   
   makeFunction() {
-    this.func = puzzleFunctions[this.type](this);
+    this.func = puzzleFunctions[this.type].func(this);
   }
   
   exportJSON() {

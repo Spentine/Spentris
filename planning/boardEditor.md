@@ -47,3 +47,4 @@ This object will directly modify a board state. It will have a lot of higher-lev
 - `.setRow(row, value)`
 - `.setGarbageRow(row, col, value)`
   - `.setRow(row, value)`; `.setMino(row, col, null)`
+  - 
