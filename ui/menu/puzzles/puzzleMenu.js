@@ -1112,64 +1112,13 @@ const puzzleMenus = {
         `;
         container.appendChild(infoDiv);
         
-        // inputs
-        // const inputs = document.createElement("div");
-        // inputs.className = "puzzleInputsContainer";
-        
         const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
         
         const puzzleUI = new PuzzleFunctionUI(puzzleFunctions);
         
         const element = puzzleUI.createUI();
         
-        // inputs.appendChild(element);
-        
         container.appendChild(element);
-        
-        /*
-        
-        // add lua to it if it doesnt exist
-        if (!puzzleFunctions.find(c => c.type === "luaExecution")) {
-          puzzleFunctions.push({
-            version: 1,
-            type: "luaExecution",
-            parameters: {
-              lua: "",
-            }
-          });
-        }
-        
-        // get the lua condition
-        const luaCondition = puzzleFunctions.find(
-          c => c.type === "luaExecution"
-        );
-        
-        const elements = {
-          lua: {
-            label: "Lua",
-            input: this.uiFunctions.createTextAreaInput({
-              placeholder: "Enter Lua Code",
-              value: luaCondition.parameters.lua,
-              type: "text",
-              callback: (data) => {
-                luaCondition.parameters.lua = data.value;
-              }
-            }),
-          }
-        };
-        
-        const keys = Object.keys(elements);
-        for (const key of keys) {
-          const element = this.uiFunctions.createLabelInputPair(
-            elements[key].label,
-            elements[key].input
-          ).element;
-          inputs.appendChild(element);
-        }
-        
-        container.appendChild(inputs);
-        
-        */
       },
       editPuzzleMetadata: () => {
         const container = rightContainerInner;

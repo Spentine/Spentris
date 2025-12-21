@@ -531,6 +531,8 @@ data = {
 }
 ```
 
+The coersion function will receive the raw value inputted by the user and must return the coerced value.
+
 ### `PuzzleModifier` Constructor
 
 ```js
@@ -1156,6 +1158,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [ ] Add file saving / loading
     - [ ] Add puzzle solution editor
       - [ ] Ensure there are no security vulnerabilities with Lua
+      - [ ] Remove Lua memory leak with `lua.global.close()`
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`

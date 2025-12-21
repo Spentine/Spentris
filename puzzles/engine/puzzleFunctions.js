@@ -228,8 +228,27 @@ const puzzleFunctions = {
       key: "luaExecution",
       parameters: {
         lua: {
-          type: "string",
-          default: "",
+          type: "multilineString",
+          default: `
+-- linesFinish recreation
+
+local lines = 4
+local endType = "linesFinish"
+
+-- game object API provided
+game.event:on("clear", function(e)
+  
+  console.log(e) -- console.log available
+  
+  if game.lines >= lines then
+    game.event:emit("end", {
+      time = game.time,
+      type = endType,
+      success = true,
+    })
+  end
+end)
+          `.trim(),
         },
       }
     },
