@@ -265,13 +265,17 @@
 
 /* === puzzle function ui === */
 
+/*
+  note: the drag functionality might fuck up if the layout is changed
+*/
+
 .puzzleFunctionUIContainer {
   margin-top: 8px;
   
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 4px;
+  gap: 12px;
   margin: 8px 0;
 }
 
@@ -291,7 +295,7 @@
   border-color: #668866;
 }
 
-.puzzleFunctionElement {
+.puzzleFunctionElementInner {
   background-color: #333333;
   border: 2px solid;
   border-color: #555555;
@@ -302,7 +306,6 @@
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
-  margin: 8px 0;
 }
 
 .puzzleFunctionTypeSelector {

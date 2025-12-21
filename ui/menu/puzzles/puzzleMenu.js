@@ -828,8 +828,8 @@ const puzzleMenus = {
         editGameplaySettings: this.uiFunctions.createButton(
           "Edit Gameplay Settings", true, rightSideBarMenus.editGameplaySettings
         ),
-        editPuzzleSolution: this.uiFunctions.createButton(
-          "Edit Puzzle Solution", true, rightSideBarMenus.editPuzzleSolution
+        editPuzzleFunctions: this.uiFunctions.createButton(
+          "Edit Puzzle Functions", true, rightSideBarMenus.editPuzzleFunctions
         ),
         editPuzzleMetadata: this.uiFunctions.createButton(
           "Edit Puzzle Metadata", true, rightSideBarMenus.editPuzzleMetadata
@@ -1098,7 +1098,7 @@ const puzzleMenus = {
         
         container.appendChild(inputs);
       },
-      editPuzzleSolution: () => {
+      editPuzzleFunctions: () => {
         const container = rightContainerInner;
         
         this.uiFunctions.clearContainer(container);
@@ -1106,9 +1106,9 @@ const puzzleMenus = {
         // text
         const infoDiv = document.createElement("div");
         infoDiv.innerHTML = `
-          <h2 class="centeredText">Puzzle Solution</h2>
+          <h2 class="centeredText">Puzzle Functions</h2>
           <hr style="margin: 16px 0px;">
-          <p>This is the puzzle solution editor. Change the puzzle solution here.</p>
+          <p>Change the puzzle functions here. To swap the order of puzzle functions, use <i>right-click and drag to swap the order</i>. To delete a puzzle function, use <i>right-click and drag to the left</i>.</p>
         `;
         container.appendChild(infoDiv);
         
