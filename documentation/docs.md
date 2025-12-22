@@ -562,6 +562,15 @@ data = {
 }
 ```
 
+### Puzzle Command Pattern
+
+To make undos and redos easier to program, The code will be refactored to support the *Command Pattern*. The objective of the command patter is to provide a single, unified, and reversable API interface for each action the player may take on the board.
+
+- 
+  ```js
+
+  ```
+
 > **Reference Directory**
 > - [Object `Board`](#object-board)
 
