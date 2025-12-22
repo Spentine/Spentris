@@ -95,6 +95,17 @@ class PuzzleModifier {
     return pM;
   }
   
+  /**
+   * creates a puzzle modifier from json data
+   * note: currently it is the same as the constructor, but this is for future compatibility
+   * @param {object} json - the json data
+   * @return {PuzzleModifier} the puzzle modifier
+   */
+  static fromJSON(json) {
+    const pM = new PuzzleModifier(json);
+    return pM;
+  }
+  
   toPuzzle() {
     const data = {
       parameters: {

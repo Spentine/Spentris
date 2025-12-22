@@ -696,7 +696,16 @@ const puzzleMenus = {
                 {
                   text: "Export as JSON",
                   type: "button",
-                  interact: null, // placeholder
+                  interact: () => {
+                    // copy json puzzle to clipboard
+                    const jsonData = this.puzzleModifier.toJSON();
+                    const jsonString = JSON.stringify(jsonData);
+                    navigator.clipboard.writeText(jsonString).then(() => {
+                      alert("Puzzle JSON copied to clipboard!");
+                    }).catch(err => {
+                      alert("Failed to copy puzzle JSON to clipboard.");
+                    });
+                  }, // placeholder
                 },
               ],
             },
@@ -707,7 +716,22 @@ const puzzleMenus = {
                 {
                   text: "Import from JSON",
                   type: "button",
-                  interact: null, // placeholder
+                  interact: () => {
+                    // prompt user for json puzzle
+                    const jsonString = prompt("Paste the puzzle JSON here:");
+                    if (!jsonString) return;
+                    try {
+                      const jsonData = JSON.parse(jsonString);
+                      this.puzzleModifier = new PuzzleModifier(jsonData);
+                      
+                      // refresh the editor
+                      rightSideBarMenus.editGameState();
+                      
+                      alert("Puzzle imported successfully!");
+                    } catch (err) {
+                      alert("Failed to import puzzle from JSON.");
+                    }
+                  }, // placeholder
                 },
               ],
             },

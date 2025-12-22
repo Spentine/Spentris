@@ -1157,9 +1157,11 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [ ] Add gradients at the top and bottom of scrollable elements
     - [ ] Add file saving / loading
     - [ ] Add puzzle solution editor
-      - [ ] Ensure there are no security vulnerabilities with Lua
-      - [ ] Remove Lua memory leak with `lua.global.close()`
-      - [ ] Lua syntax highlighting
+      - [ ] Lua
+        - [ ] Ensure there are no security vulnerabilities with Lua
+        - [ ] Remove Lua memory leak with `lua.global.close()`
+        - [ ] Lua syntax highlighting
+        - [ ] Create API for Lua to interact with game
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
@@ -1190,6 +1192,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [ ] Remove logic from input handler functions in engine
   - [x] Move value change conversion from menu scripts to engine
   - [ ] Detach adapters from classes; should be independent
+  - [ ] Add error handling
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters
   - [ ] Dynamically update URL with current menu
