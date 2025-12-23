@@ -75,7 +75,7 @@ class Board {
   
   /**
    * converts a regular object to a Board object
-   * @param {object} data
+   * @param {Object} data
    */
   static fromArray(data) {
     data ??= {};
@@ -99,8 +99,8 @@ class Board {
   /**
    * converts a JSON compatible array to a Board object
    * called "simple" only because it can only handle standard minos and functionality
-   * @param {object} data
-   * @param {object} data.matrix the matrix of the board
+   * @param {Object} data
+   * @param {Object} data.matrix the matrix of the board
    * @param {number} data.width the width of the board
    * @param {number} data.height the height of the board
    * @return {Board}
@@ -133,7 +133,7 @@ class Board {
   
   /**
    * converts the board to a JSON compatible array
-   * @returns {object} - the JSON compatible array
+   * @returns {Object} - the JSON compatible array
    */
   toSimpleArray() {
     const arr = [];

@@ -17,8 +17,8 @@ class GameRenderer {
   
   /**
    * return the game metrics (with offset)
-   * @param {object} state - the game state
-   * @param {object} data - additional data
+   * @param {Object} state - the game state
+   * @param {Object} data - additional data
    */
   gameMetrics(state, data) {
     data = data ?? {};
@@ -57,8 +57,8 @@ class GameRenderer {
   
   /**
    * renders the board on the canvas
-   * @param {object} state - the game state
-   * @param {object} data - additional data
+   * @param {Object} state - the game state
+   * @param {Object} data - additional data
    */
   renderBoard(state, data) {
     data = data ?? {
@@ -97,8 +97,8 @@ class GameRenderer {
   
   /**
    * renders a piece on the board
-   * @param {object} state - the game state
-   * @param {object} data - additional data
+   * @param {Object} state - the game state
+   * @param {Object} data - additional data
    */
   renderPiece(state, data) {
     data = data ?? {
@@ -143,8 +143,8 @@ class GameRenderer {
   
   /**
    * renders a piece on the ui
-   * @param {object} state - the game state
-   * @param {object} data - additional data
+   * @param {Object} state - the game state
+   * @param {Object} data - additional data
    */
   renderPieceUI(state, data) {
     data = data ?? {
@@ -214,7 +214,7 @@ class GameRenderer {
    * return the screen position (without offset) given a row and a column
    * @param {number} row - the row
    * @param {number} column - the column
-   * @param {object} data - the data
+   * @param {Object} data - the data
    */
   getPosition(row, column, data) {
     data = data ?? {
@@ -230,8 +230,8 @@ class GameRenderer {
   
   /**
    * render the game state
-   * @param {object} state - the game state
-   * @param {object} data - additional data
+   * @param {Object} state - the game state
+   * @param {Object} data - additional data
    */
   render(state, data) {
     data = data ?? {};
@@ -438,7 +438,7 @@ class GameRenderer {
   
   /**
    * will use the specified width and height to calculate the containing tilesize
-   * @param {object} state - the game state
+   * @param {Object} state - the game state
    * @param {number} width - the width of the screen
    * @param {number} height - the height of the screen
    * @returns {number} - the tileSize / scale of the game
@@ -475,10 +475,10 @@ class GameRenderer {
   
   /**
    * will use the specified width and height to calculate the center offset
-   * @param {object} state - the game state
+   * @param {Object} state - the game state
    * @param {number} width - the width of the screen
    * @param {number} height - the height of the screen
-   * @returns {object} - the offset to center the game
+   * @returns {Object} - the offset to center the game
    */
   getCenterOffset(state, width, height, tileSize) {
     const gameBounds = this.gameMetrics(state, {

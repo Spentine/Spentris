@@ -42,7 +42,7 @@ class PuzzleCommandFactory {
       /**
        * modifies a value in the object
        * assumes immutable value
-       * @param {object} obj - the object to change
+       * @param {Object} obj - the object to change
        * @param {string} key - the key of the value to set
        * @param {any} newValue - the new value to set
        * @return {PuzzleCommand} the command to set the value

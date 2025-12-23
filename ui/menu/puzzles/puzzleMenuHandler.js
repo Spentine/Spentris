@@ -19,7 +19,7 @@ class PuzzleMenuHandler extends MenuHandler {
   
   /**
    * constructor
-   * @param {object} data - the menu handler data
+   * @param {Object} data - the menu handler data
    */
   constructor(data) {
     super(data);

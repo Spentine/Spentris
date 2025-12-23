@@ -165,8 +165,8 @@ const SRSData = transformMatrices({
 /**
  * Transforms matrices to be more digestible by the game
  * will replace 0s with nulls and replace the number with the piece key
- * @param {object} data - the data
- * @returns {object} - the transformed data
+ * @param {Object} data - the data
+ * @returns {Object} - the transformed data
  */
 function transformMatrices(data) {
   const transformedData = {

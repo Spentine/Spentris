@@ -49,8 +49,8 @@ const metaKeybinds = {
 
 class KeyboardInput {
   /**
-    @param {object} inputForward // contains mappings from actions to functions
-    @param {object} keybinds // contains mappings from actions to keys
+    @param {Object} inputForward // contains mappings from actions to functions
+    @param {Object} keybinds // contains mappings from actions to keys
   */
   constructor(inputForward, keybinds) {
     this.internalKey = "keyCode";
@@ -111,8 +111,8 @@ class KeyboardInput {
 */
 
 /**
- * @param {object} game
- * @returns {object}
+ * @param {Object} game
+ * @returns {Object}
  */
 function bindInputFunctions(game) {
   const inputForward = {

@@ -71,7 +71,7 @@ class Puzzle {
   
   /**
    * exports the puzzle to a JSON object
-   * @returns {object} JSON object of the puzzle
+   * @returns {Object} JSON object of the puzzle
    */
   exportJSON() {
     const data = {
@@ -88,7 +88,7 @@ class Puzzle {
   
   /**
    * creates a Puzzle object from a JSON object
-   * @param {object} json - JSON object to create the Puzzle from
+   * @param {Object} json - JSON object to create the Puzzle from
    * @return {Puzzle} Puzzle object created from the JSON
    */
   static fromJSON(json) {
@@ -103,7 +103,7 @@ class Puzzle {
   
   /**
    * gets the stacker parameters for the puzzle
-   * @returns {object} stacker parameters for the puzzle
+   * @returns {Object} stacker parameters for the puzzle
    */
   getStandard() {
     const standard = {

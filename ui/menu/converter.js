@@ -10,8 +10,8 @@ import { copyObjByTraversal } from "../../util.js";
 
 /**
  * converts `gameStart` event data format to `Stacker.generateSettings` data format
- * @param {object} e - the event data
- * @returns {object} - the converted data
+ * @param {Object} e - the event data
+ * @returns {Object} - the converted data
  */
 const convertGameStartEvent = function (e) {
   

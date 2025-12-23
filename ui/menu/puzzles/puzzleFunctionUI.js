@@ -1,6 +1,6 @@
 /*
 
-Handle the Puzzle Function UI component for the Puzzle Menu.
+Handles the Puzzle Function UI component for the Puzzle Menu.
 
 */
 
@@ -10,7 +10,7 @@ import { generateRandomId } from "../../util.js";
 
 class PuzzleFunctionElement {
   /**
-   * @param {object} gamePuzzleFunction
+   * @param {Object} gamePuzzleFunction
    * @param {PuzzleFunctionUI} parentUI
    * @param {number} gamePuzzleFunctionIndex - index in parentUI's arrays
    */
@@ -25,7 +25,7 @@ class PuzzleFunctionElement {
   
   /**
    * returns a new element for puzzle function interaction and modification
-   * @param {object} gamePuzzleFunction
+   * @param {Object} gamePuzzleFunction
    * @returns {HTMLElement} element
    */
   createElement() {
@@ -97,7 +97,7 @@ class PuzzleFunctionElement {
   /**
    * initializes default parameters for a type
    * @param {string} type
-   * @returns {object} default parameters
+   * @returns {Object} default parameters
    */
   static defaultParameters(type) {
     const specifications = puzzleFunctions[type].specifications;

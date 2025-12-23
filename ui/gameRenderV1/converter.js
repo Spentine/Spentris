@@ -39,8 +39,8 @@ class RenderGameState {
   static inGame = {
     /**
      * adds event listeners to the game to update the game state
-     * @param {object} game - current game object
-     * @param {object} gameState - current game state object
+     * @param {Object} game - current game object
+     * @param {Object} gameState - current game state object
      */
     addListeners: function(game, gameState) {
       // add clear event listeners
@@ -61,9 +61,9 @@ class RenderGameState {
     
     /**
      * converts a clear object into a renderer-digestible format
-     * @param {object} clear - clear object
-     * @param {object} gameState - current game state
-     * @returns {object} - digestible clear object
+     * @param {Object} clear - clear object
+     * @param {Object} gameState - current game state
+     * @returns {Object} - digestible clear object
      */
     convertClear: function (clear, gameState) {
       return {
@@ -75,8 +75,8 @@ class RenderGameState {
     
     /**
      * converts a piece object into a renderer-digestible format
-     * @param {object} piece - piece object
-     * @returns {object} - digestible piece object
+     * @param {Object} piece - piece object
+     * @returns {Object} - digestible piece object
      **/
     convertPiece: function (piece) { // can be static
       const matrix = [];
@@ -106,9 +106,9 @@ class RenderGameState {
     
     /**
      * updates the game state to match the current game
-     * @param {object} game - current game object
-     * @param {object} gameState - current game state object
-     * @returns {object} - updated game state object
+     * @param {Object} game - current game object
+     * @param {Object} gameState - current game state object
+     * @returns {Object} - updated game state object
      */
     update: function (game, gameState) {
       const matrix = [];

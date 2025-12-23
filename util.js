@@ -1,8 +1,9 @@
 /**
  * copy object by traversal
- * @param {object} head - object to copy to
- * @param {object} copy - object to copy from
- * @param {object} disallowed - object with keys to ignore
+ * @param {Object} head - object to copy to
+ * @param {Object} copy - object to copy from
+ * @param {Object} disallowed - object with keys to ignore
+ * @return {Object} the copied object
  */
 function copyObjByTraversal(head, copy, disallowed) {
   disallowed ??= {};

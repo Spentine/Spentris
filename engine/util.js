@@ -1,6 +1,6 @@
 /**
  * create a map from string to function using their name
- * @param {object} functions
+ * @param {Object} functions
  */
 function functionMap(functions) {
   const standardFunctions = {};
@@ -12,9 +12,9 @@ function functionMap(functions) {
 
 /**
  * create an object with functions
- * @param {object} locations - object with function locations
- * @param {object} files - object with files containing functions
- * @returns {object} - object with functions
+ * @param {Object} locations - object with function locations
+ * @param {Object} files - object with files containing functions
+ * @returns {Object} - object with functions
  */
 function functionLocationAccessor(locations, files) {
   const functions = {};

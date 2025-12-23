@@ -7,13 +7,13 @@ import { functionMap } from "../util.js";
 /**
  * updates the game state from (a, b] where a is the previous time and b is the current time
  * @param {number} tDelta // number of time to elapse
- * @param {object} iter // the number of iterations
+ * @param {Object} iter // the number of iterations
  */
 const update = function(tDelta, iter=0) {
   // TODO: make sure the lock delay works because i'm not completely sure if i did it properly
   
   // if tDelta is null then calculate it with Date.now();
-  tDelta = tDelta ?? Date.now() - this.startTime - this.time;
+  tDelta ??= Date.now() - this.startTime - this.time;
   
   // update time
   const endTime = this.time + tDelta;
@@ -273,15 +273,7 @@ const update = function(tDelta, iter=0) {
 };
 
 /**
- * @param {number} tDelta // number of time to elapse
- * @param {object} inputs // the inputs for the game
- */
-const tick = function(tDelta, inputs) {
-  
-};
-
-/**
- * @param {object} params
+ * @param {Object} params
  */
 const initialize = function(params) {
   // get parameters
@@ -404,8 +396,8 @@ const initialize = function(params) {
 
 /**
  * converts json state to initialize parameters
- * @param {object} json
- * @returns {object}
+ * @param {Object} json
+ * @returns {Object}
  */
 const jsonToInitialize = function(json) {
   const params = structuredClone(json);
@@ -431,34 +423,23 @@ const resetGame = function() {
   });
 };
 
-const values = {
-  update: [
-    // variables `update` requires
-  ],
-  tick: [
-    // variables `tick` requires
-  ],
-  initialize: {
-    width: 10,
-    height: 40,
-    // other stuff
-  }
-};
-
 /**
- * referenced from section 7
+ * calculates drop speed based on level in ms / line
  * @param {number} level
  * @returns {number} ms / line
  */
 const calculateDropSpeed = function(level) {
+  // referenced from section 7
   return Math.pow(0.8 - (level - 1) * 0.007, level - 1) * 1000;
 };
 
 /**
+ * calculates lock delay based on level in ms
  * ripped from old code
  * https://github.com/Spentine/Block-Stacker/blob/main/stacker/stacker.js (line 728)
  * https://www.desmos.com/calculator/dwmr2i5ton
  * @param {number} level
+ * @returns {number} ms
  */
 const calculateLockDelay = function(level) {
   /*
@@ -510,8 +491,9 @@ const boardPieceMinoIntersect = function(boardMino, pieceMino) {
 
 /**
  * determines if a position is in bounds
- * @param {object} position
+ * @param {Object} position
  * @param {Board} board
+ * @return {boolean}
  */
 const inBounds = function(position, board) {
   return position.x >= 0 && position.x < board.width && position.y >= 0 && position.y < board.height;
@@ -520,6 +502,7 @@ const inBounds = function(position, board) {
 /**
  * @param {Piece} piece
  * @param {Board} board
+ * @returns {boolean}
  */
 const validPiecePosition = function(piece, board) {
   // loop over piece matrix
@@ -567,7 +550,7 @@ const isTouchingGround = function(piece, board) {
 
 /**
  * @param {number | "random"} seed
- * @returns {object}
+ * @returns {Object}
  */
 const lehmerRNG = function(seed) {
   // https://github.com/Poyo-SSB/tetrio-bot-docs/blob/master/Piece_RNG.md
@@ -608,6 +591,7 @@ const lehmerRNG = function(seed) {
 
 /**
  * 7-bag randomizer
+ * pushes the next 7 pieces into the next queue
  */
 const generateNext = function() {
   // consider removing the mode parameter outright
@@ -700,7 +684,8 @@ const kickSystem = function(piece, board, newRotation) {
 
 /**
  * handle the rotation system and calculate the spin
- * @param {object} data
+ * @param {Object} data
+ * @returns {Object}
  */
 const rotationSystem = function(data) {
   // calculate the spin
@@ -727,13 +712,13 @@ const rotationSystem = function(data) {
 
 /**
  * @param {string} piece
- * @param {object} data
- * @param {object} data.position
+ * @param {Object} data
+ * @param {Object} data.position
  * @param {number} data.rotation
  * @returns {boolean} whether the piece was successfully spawned
  */
 const spawnPiece = function(piece, data) {
-  data = data ?? {};
+  data ??= {};
   
   if (!piece) return false; // no piece to spawn
   
@@ -771,7 +756,7 @@ const refillNextQueue = function() {
 /**
  * modifies piece in place.
  * @param {Piece} piece
- * @param {object} direction
+ * @param {Object} direction
  * @param {Board} board
  * @returns {boolean} whether the piece was successfully moved
  */
@@ -792,6 +777,8 @@ const movePiece = function(piece, direction, board) {
 /**
  * handles actions and values after line clears
  * referenced from section 8 and https://tetris.wiki/Scoring
+ * @param {number} linesCleared
+ * @returns {void}
  */
 const lineClearHandler = function(linesCleared) {
   var scoreIncrease = 0;
@@ -1009,6 +996,7 @@ const moveRight = function() {
 
 /**
  * doesn't do anything at the moment
+ * @deprecated
  */
 const softDrop = function() {
   // temporary
@@ -1171,6 +1159,7 @@ const rotate = function(newRotation) {
 
 /**
  * hold piece
+ * @returns {boolean} whether the hold was successful
  */
 const holdPiece = function() {
   if (!this.hold.allowed) {
@@ -1248,7 +1237,6 @@ const moveRightInputUp = function() {
 
 const softDropInputDown = function() {
   this.update();
-  this.softDrop();
   this.softDropFlag = true; // unsure if this is needed
 };
 
@@ -1320,7 +1308,7 @@ const resetGameInputUp = function() {
  * calculate the ghost piece position
  * @param {Piece} piece
  * @param {Board} board
- * @returns {object} the ghost piece position
+ * @returns {Object} the ghost piece position
  */
 const calculateGhostPiece = function(piece, board) {
   const ghostPiece = piece.copy();
@@ -1336,7 +1324,6 @@ const calculateGhostPiece = function(piece, board) {
 // all the functions to export
 const functions = [
   update,
-  tick,
   initialize,
   jsonToInitialize,
   resetGame,
@@ -1366,7 +1353,6 @@ const functions = [
   
   moveLeft,
   moveRight,
-  softDrop,
   hardDrop,
   isTspin,
   isSpin,

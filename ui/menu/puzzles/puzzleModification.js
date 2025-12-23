@@ -36,13 +36,13 @@ const rotationSystemMap = {
 class PuzzleModifier {
   /**
    * creates a new puzzle modifier for the puzzle editor
-   * @param {object} data - the puzzle modifier data
+   * @param {Object} data - the puzzle modifier data
    */
   constructor(data) {
     this.version = 1;
     
     /**
-     * {width: number, height: number, matrix: (string|null)[][]}
+     * @typedef {{width: number, height: number, matrix: (string | null)[][]}}
      */
     this.board = data.board;
     
@@ -105,7 +105,7 @@ class PuzzleModifier {
   /**
    * creates a puzzle modifier from json data
    * note: currently it is the same as the constructor, but this is for future compatibility
-   * @param {object} json - the json data
+   * @param {Object} json - the json data
    * @return {PuzzleModifier} the puzzle modifier
    */
   static fromJSON(json) {

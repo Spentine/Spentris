@@ -257,8 +257,8 @@ board = {
 
 ```js
 puzzle = new Puzzle({
-  parameters: // {object} becomes `this.parameters`
-  values: // {object} stacker initialization values
+  parameters: // {Object} becomes `this.parameters`
+  values: // {Object} stacker initialization values
   
   puzzleFunctions: // {puzzleFunction[]}
   
@@ -287,7 +287,7 @@ puzzle = {
 puzzleFunction = {
   version: 1, // version of puzzle function
   type: // {string} the type of end condition or function
-  parameters: // {object} the data for end condition or function
+  parameters: // {Object} the data for end condition or function
   func: // {function} function generated or provided
 }
 ```
@@ -454,15 +454,15 @@ data = {
 
 ```js
 translations = {  // {key: string} each string is 2-letter language code
-  en: { // {object} contains data for language
-    translations: { // {object} contains translation data
+  en: { // {Object} contains data for language
+    translations: { // {Object} contains translation data
       game: {
         scoreTitle, linesTitle, levelTitle,
         timeTitle, spinTitle, ppsTitle
         
         clearConvert: (clear) => {} // {function} converts clear to string
       }
-      ui: { // {object} where each key is an id for a particular UI element
+      ui: { // {Object} where each key is an id for a particular UI element
         // {string} key: {string} translation
         // may also contain functions in the future but they will be indicated
       }
@@ -537,7 +537,7 @@ The coersion function will receive the raw value inputted by the user and must r
 
 ```js
 data = {
-  board: // {object} in the format `board`
+  board: // {Object} in the format `board`
   nextQueue: // {string[]} contains next pieces
   holdPiece: // {null | string}
   currentPiece: // {null | string}
@@ -591,10 +591,31 @@ new PuzzleCommandFactory(
 
 The `PuzzleModifier` exposes the commands it can produce through the `commands` attribute.
 
-- `setBoard`
+- `setValue`
   - ```js
-    PuzzleCommandFactory.commands.setBoard(this,
-      newBoard // the new resultant board state
+    PuzzleCommandFactory.commands.setValue(
+      obj: // {Object} the object to change
+      key: // {string} the key of the value to set
+      newValue: // {any} the new value to set
+    );
+    ```
+- `addPuzzleFunction`
+  - ```js
+    PuzzleCommandFactory.commands.addPuzzleFunction(
+      puzzleFunction: // the puzzle function to add
+    );
+    ```
+- `swapPuzzleFunctions`
+  - ```js
+    PuzzleCommandFactory.commands.swapPuzzleFunctions(
+      indexA: // the index to move from
+      indexB: // the index to move to
+    );
+    ```
+- `removePuzzleFunction`
+  - ```js
+    PuzzleCommandFactory.commands.removePuzzleFunction(
+      index: // the index to remove
     );
     ```
 
@@ -991,7 +1012,7 @@ puzzleSet = {
     this.event.emit("gameStart", {
       time: Date.now(), // {number} the timestamp of occurrence
       mode: // {string} the mode that is being played
-      settings: { // {object} the settings for the game
+      settings: { // {Object} the settings for the game
         handling: // {handling}
         keybinds: // keybinds
         language: // language
@@ -1188,8 +1209,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
     - [ ] Replace placeholder piece input with actual piece input
     - [ ] Add GUI Board Editor
     - [ ] Add gradients at the top and bottom of scrollable elements
-    - [ ] Add file saving / loading
-    - [ ] Add puzzle solution editor
+    - [x] Add file saving / loading
+    - [x] Add puzzle solution editor
       - [ ] Lua
         - [ ] Ensure there are no security vulnerabilities with Lua
         - [ ] Remove Lua memory leak with `lua.global.close()`

@@ -7,7 +7,7 @@ import { copyObjByTraversal } from "../util.js";
 
 class Stacker {
   /**
-   * @param {object} data
+   * @param {Object} data
    */
   constructor(data) {
     // check for stacker data version
@@ -42,8 +42,8 @@ class Stacker {
   
   /**
    * generates an object with the settings for the game
-   * @param {object} data
-   * @returns {object}
+   * @param {Object} data
+   * @returns {Object}
    */
   static generateSettings(data) {
     const initData = data.standard; // initialization data

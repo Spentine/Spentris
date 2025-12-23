@@ -5,7 +5,6 @@ import { BiRSData } from "../../addons/biRS/biRSData.js";
 
 const standardFunctionLocations = {
   update: {file: "standardRules.js", name: "update"},
-  tick: {file: "standardRules.js", name: "tick"},
   initialize: {file: "standardRules.js", name: "initialize"},
   jsonToInitialize: {file: "standardRules.js", name: "jsonToInitialize"},
   resetGame: {file: "standardRules.js", name: "resetGame"},
@@ -36,7 +35,6 @@ const standardFunctionLocations = {
   
   moveLeft: {file: "standardRules.js", name: "moveLeft"},
   moveRight: {file: "standardRules.js", name: "moveRight"},
-  softDrop: {file: "standardRules.js", name: "softDrop"},
   hardDrop: {file: "standardRules.js", name: "hardDrop"},
   isTspin: {file: "standardRules.js", name: "isTspin"},
   immobilityRule: {file: "allSpin.js", name: "immobilityRule"},

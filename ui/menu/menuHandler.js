@@ -10,7 +10,7 @@ import { translations } from "../../localization/language.js";
 class MenuHandler {
   /**
    * constructor
-   * @param {object} data - the menu handler data
+   * @param {Object} data - the menu handler data
    */
   constructor(data) {
     this.currentMenu = data.currentMenu;
