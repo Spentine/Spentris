@@ -385,7 +385,7 @@ const puzzleUiFunctions = {
           data.coerce = function (value) {
             const parsed = parseFloat(value);
             if (!parsed) return "";
-            return String(parsed);
+            return parsed;
           };
         }
         break;
@@ -400,7 +400,7 @@ const puzzleUiFunctions = {
           data.coerce = function (value) {
             const parsed = parseInt(value);
             if (!parsed) return "";
-            return String(parsed);
+            return parsed;
           };
         }
         break;
@@ -413,7 +413,7 @@ const puzzleUiFunctions = {
     element.addEventListener("change", function (event) {
       let value = this.value;
       if (data.coerce) value = data.coerce(value);
-      this.value = value;
+      this.value = String(value);
       
       // callback
       if (data.callback) data.callback({
@@ -477,8 +477,14 @@ const puzzleUiFunctions = {
    */
   createBoardInput: function (inputData) {
     const data = {
+      /*
+        the current board is not modified in-place
+        it is not in-place because of undo/redo functionality
+        instead access the puzzleModifier to get the current board state
+      */
+      puzzleModifier: null,
+      
       placeholder: "",
-      value: null,
       callback: null,
       coerce: null,
       convertValue: null,
@@ -492,14 +498,14 @@ const puzzleUiFunctions = {
     element.id = id;
     
     // parse current board
-    element.value = convertBoardToText(data.value.matrix);
+    element.value = convertBoardToText(data.puzzleModifier.board.matrix);
     
     // implement convertValue
     data.convertValue = (value) => {
       return convertTextToBoard(
         value,
-        data.value.width,
-        data.value.height
+        data.puzzleModifier.board.width,
+        data.puzzleModifier.board.height
       );
     };
     
@@ -679,9 +685,29 @@ const puzzleMenus = {
     let currentBoardMode = "edit";
     let currentGameInstance = null; // current game instance for playtesting
     
+    // current right side bar menu
+    let currentRightSideBarMenu = null;
+    
     const puzzleEditorContainer = document.createElement("div");
     puzzleEditorContainer.className = "window-fill puzzleFlex";
     
+    // commands
+    const commands = this.puzzleModifier.commandManager.commands;
+    
+    // undo / redo
+    const undo = () => {
+      console.log("undo");
+      this.puzzleModifier.commandManager.undo();
+      refreshMenus();
+    };
+    
+    const redo = () => {
+      console.log("redo");
+      this.puzzleModifier.commandManager.redo();
+      refreshMenus();
+    };
+    
+    // header tree
     const header = this.uiFunctions.createHeader({
       type: "menuBar",
       root: [
@@ -749,12 +775,12 @@ const puzzleMenus = {
             {
               text: "Undo",
               type: "button",
-              interact: null, // placeholder
+              interact: undo,
             },
             {
               text: "Redo",
               type: "button",
-              interact: null, // placeholder
+              interact: redo,
             },
             {
               text: "Mirror",
@@ -847,19 +873,24 @@ const puzzleMenus = {
       
       const buttons = {
         editGameState: this.uiFunctions.createButton(
-          "Edit Game State", true, rightSideBarMenus.editGameState
+          "Edit Game State", true,
+          () => switchToRightSideBarMenu("editGameState")
         ),
         editGameplaySettings: this.uiFunctions.createButton(
-          "Edit Gameplay Settings", true, rightSideBarMenus.editGameplaySettings
+          "Edit Gameplay Settings", true,
+          () => switchToRightSideBarMenu("editGameplaySettings")
         ),
         editPuzzleFunctions: this.uiFunctions.createButton(
-          "Edit Puzzle Functions", true, rightSideBarMenus.editPuzzleFunctions
+          "Edit Puzzle Functions", true,
+          () => switchToRightSideBarMenu("editPuzzleFunctions")
         ),
         editPuzzleMetadata: this.uiFunctions.createButton(
-          "Edit Puzzle Metadata", true, rightSideBarMenus.editPuzzleMetadata
+          "Edit Puzzle Metadata", true,
+          () => switchToRightSideBarMenu("editPuzzleMetadata")
         ),
         playtestPuzzle: this.uiFunctions.createButton(
-          "Playtest Puzzle", true, rightSideBarMenus.playtestPuzzle
+          "Playtest Puzzle", true,
+          () => switchToRightSideBarMenu("playtestPuzzle")
         ),
       };
       
@@ -867,6 +898,13 @@ const puzzleMenus = {
       for (const key of keys) {
         buttonContainer.appendChild(buttons[key].element);
       }
+    };
+    
+    // switch to right side bar menu
+    const switchToRightSideBarMenu = (menuName) => {
+      if (currentRightSideBarMenu === menuName) return;
+      currentRightSideBarMenu = menuName;
+      rightSideBarMenus[menuName]();
     };
     
     // right side bar menus
@@ -902,7 +940,9 @@ const puzzleMenus = {
               max: Infinity,
               step: 1,
               callback: (data) => {
-                this.puzzleModifier.board.width = data.value;
+                const newBoard = structuredClone(this.puzzleModifier.board);
+                newBoard.width = data.value;
+                commands.setBoard(newBoard);
                 updateBoard();
               }
             }),
@@ -917,7 +957,9 @@ const puzzleMenus = {
               max: Infinity,
               step: 1,
               callback: (data) => {
-                this.puzzleModifier.board.height = data.value;
+                const newBoard = structuredClone(this.puzzleModifier.board);
+                newBoard.height = data.value;
+                commands.setBoard(newBoard);
                 updateBoard();
               }
             }),
@@ -926,9 +968,12 @@ const puzzleMenus = {
             label: "Board State",
             input: this.uiFunctions.createBoardInput({
               placeholder: "Enter Board State",
-              value: this.puzzleModifier.board,
+              puzzleModifier: this.puzzleModifier,
               callback: (data) => {
-                this.puzzleModifier.board.matrix = data.converted;
+                const newBoard = structuredClone(this.puzzleModifier.board);
+                newBoard.matrix = data.converted;
+                console.log(data, this);
+                commands.setBoard(newBoard);
                 // updateBoard(); // implied in createBoardInput
               }
             }),
@@ -1340,20 +1385,52 @@ const puzzleMenus = {
       }
       
       window.requestAnimationFrame(updateCanvas);
-    }
+    };
     updateCanvas();
     
     const createMiddleCanvas = () => {
       this.uiFunctions.clearContainer(middleContainer);
       
       middleContainer.appendChild(puzzleCanvas);
-    }
+    };
+    
+    // functions to update menus
+    const refreshRightSideBarMenu = () => {
+      rightSideBarMenus[currentRightSideBarMenu]();
+    };
+    
+    /**
+     * general menu refresh command
+     */
+    const refreshMenus = () => {
+      refreshRightSideBarMenu();
+      // no need to update canvas because it is updated every frame
+    };
+    
+    const createKeybindCommands = () => {
+      // ctrl+z for undo
+      document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "z") {
+          undo();
+          event.preventDefault();
+        }
+      });
+      
+      // ctrl+y for redo
+      document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "y") {
+          redo();
+          event.preventDefault();
+        }
+      });
+    };
     
     addToLeftSideBar();
     createMiddleCanvas();
     puzzleEditorContainer.appendChild(header);
     puzzleEditorContainer.appendChild(fullContainer);
     this.uiDisplay.appendChild(puzzleEditorContainer);
+    createKeybindCommands();
   },
 };
 

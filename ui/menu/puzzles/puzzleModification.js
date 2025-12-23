@@ -25,6 +25,10 @@ import {
   Piece
 } from "../../../engine/stackerObjects.js";
 
+import {
+  PuzzleCommandManager,
+} from "./puzzleCommands.js";
+
 const rotationSystemMap = {
   "SRS+": SRSPlusData,
 };
@@ -53,6 +57,9 @@ class PuzzleModifier {
     this.gameplaySettings = data.gameplaySettings;
     this.puzzleFunctions = data.puzzleFunctions;
     this.puzzleMetadata = data.puzzleMetadata;
+    
+    // command manager for undo/redo
+    this.commandManager = new PuzzleCommandManager(this);
   }
   
   /**
@@ -67,10 +74,10 @@ class PuzzleModifier {
       
       refillQueue: true,
       
-      /**
-       * i decided to split this variable into two
-       * the puzzle editor ui would handle separate types better
-       */
+      /*
+        i decided to split this variable into two
+        the puzzle editor ui would handle separate types better
+      */
       seedRandom: true, // {boolean} whether to use a random seed
       seed: 0, // {number} only
       

@@ -562,17 +562,41 @@ data = {
 }
 ```
 
-### Puzzle Command Pattern
+> **Reference Directory**
+> - [Object `Board`](#object-board)
+
+### `PuzzleCommand` Constructor
+
+```js
+new PuzzleCommand(
+  execute, // {function}
+  undo // {function}
+);
+```
+
+### `PuzzleCommandFactory` Constructor
 
 To make undos and redos easier to program, The code will be refactored to support the *Command Pattern*. The objective of the command patter is to provide a single, unified, and reversable API interface for each action the player may take on the board.
 
-- 
-  ```js
-
-  ```
+```js
+new PuzzleCommandFactory(
+  puzzleModifier // {PuzzleModifier}
+);
+```
 
 > **Reference Directory**
-> - [Object `Board`](#object-board)
+> - [Object `PuzzleModifier`](#puzzlemodifier-constructor)
+
+### `PuzzleCommandFactory` Commands
+
+The `PuzzleModifier` exposes the commands it can produce through the `commands` attribute.
+
+- `setBoard`
+  - ```js
+    PuzzleCommandFactory.commands.setBoard(this,
+      newBoard // the new resultant board state
+    );
+    ```
 
 ## Object Formats (Misc)
 
