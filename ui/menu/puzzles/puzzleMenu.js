@@ -942,7 +942,7 @@ const puzzleMenus = {
               callback: (data) => {
                 const newBoard = structuredClone(this.puzzleModifier.board);
                 newBoard.width = data.value;
-                commands.setBoard(newBoard);
+                commands.setValue(this.puzzleModifier, "board", newBoard);
                 updateBoard();
               }
             }),
@@ -959,7 +959,7 @@ const puzzleMenus = {
               callback: (data) => {
                 const newBoard = structuredClone(this.puzzleModifier.board);
                 newBoard.height = data.value;
-                commands.setBoard(newBoard);
+                commands.setValue(this.puzzleModifier, "board", newBoard);
                 updateBoard();
               }
             }),
@@ -973,7 +973,7 @@ const puzzleMenus = {
                 const newBoard = structuredClone(this.puzzleModifier.board);
                 newBoard.matrix = data.converted;
                 console.log(data, this);
-                commands.setBoard(newBoard);
+                commands.setValue(this.puzzleModifier, "board", newBoard);
                 // updateBoard(); // implied in createBoardInput
               }
             }),
@@ -984,7 +984,7 @@ const puzzleMenus = {
               placeholder: "Enter Next Queue",
               value: this.puzzleModifier.nextQueue.join(""),
               callback: (data) => {
-                this.puzzleModifier.nextQueue = data.value;
+                commands.setValue(this.puzzleModifier, "nextQueue", data.value);
               }
             }),
           },
@@ -994,7 +994,7 @@ const puzzleMenus = {
               placeholder: "Enter Hold Piece",
               value: this.puzzleModifier.holdPiece,
               callback: (data) => {
-                this.puzzleModifier.holdPiece = data.value;
+                commands.setValue(this.puzzleModifier, "holdPiece", data.value);
               }
             }),
           },
@@ -1004,7 +1004,7 @@ const puzzleMenus = {
               placeholder: "Enter Current Piece",
               value: this.puzzleModifier.currentPiece,
               callback: (data) => {
-                this.puzzleModifier.currentPiece = data.value;
+                commands.setValue(this.puzzleModifier, "currentPiece", data.value);
               }
             }),
           },
@@ -1056,7 +1056,7 @@ const puzzleMenus = {
               max: Infinity,
               step: 0,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.gravity = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "gravity", data.value);
               }
             }),
           },
@@ -1070,7 +1070,7 @@ const puzzleMenus = {
               max: Infinity,
               step: 0,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.lockDelay = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "lockDelay", data.value);
               }
             }),
           },
@@ -1084,7 +1084,7 @@ const puzzleMenus = {
               max: Infinity,
               step: 0,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.maxLockDelay = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "maxLockDelay", data.value);
               }
             }),
           },
@@ -1093,7 +1093,7 @@ const puzzleMenus = {
             input: this.uiFunctions.createBooleanInput({
               checked: this.puzzleModifier.gameplaySettings.levelling,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.levelling = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "levelling", data.value);
               }
             })
           },
@@ -1107,7 +1107,7 @@ const puzzleMenus = {
               max: Infinity,
               step: 1,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.startingLevel = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "startingLevel", data.value);
               }
             })
           },
@@ -1116,7 +1116,7 @@ const puzzleMenus = {
             input: this.uiFunctions.createBooleanInput({
               checked: this.puzzleModifier.gameplaySettings.masterLevels,
               callback: (data) => {
-                this.puzzleModifier.gameplaySettings.masterLevels = data.value;
+                commands.setValue(this.puzzleModifier.gameplaySettings, "masterLevels", data.value);
               }
             })
           },
@@ -1125,7 +1125,7 @@ const puzzleMenus = {
             input: this.uiFunctions.createBooleanInput({
               checked: this.puzzleModifier.refillQueue,
               callback: (data) => {
-                this.puzzleModifier.refillQueue = data.value;
+                commands.setValue(this.puzzleModifier, "refillQueue", data.value);
               }
             })
           },
@@ -1134,7 +1134,7 @@ const puzzleMenus = {
             input: this.uiFunctions.createBooleanInput({
               checked: this.puzzleModifier.seedRandom,
               callback: (data) => {
-                this.puzzleModifier.seedRandom = data.value;
+                commands.setValue(this.puzzleModifier, "seedRandom", data.value);
               }
             })
           },
@@ -1148,7 +1148,7 @@ const puzzleMenus = {
               max: 2**31 - 2,
               step: 1,
               callback: (data) => {
-                this.puzzleModifier.seed = data.value;
+                commands.setValue(this.puzzleModifier, "seed", data.value);
               }
             })
           },
@@ -1183,7 +1183,10 @@ const puzzleMenus = {
         
         const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
         
-        const puzzleUI = new PuzzleFunctionUI(puzzleFunctions);
+        const puzzleUI = new PuzzleFunctionUI(
+          puzzleFunctions,
+          commands
+        );
         
         const element = puzzleUI.createUI();
         
@@ -1215,7 +1218,7 @@ const puzzleMenus = {
               value: this.puzzleModifier.puzzleMetadata.name,
               type: "text",
               callback: (data) => {
-                this.puzzleModifier.puzzleMetadata.name = data.value;
+                commands.setValue(this.puzzleModifier.puzzleMetadata, "name", data.value);
               }
             })
           },
@@ -1226,7 +1229,7 @@ const puzzleMenus = {
               value: this.puzzleModifier.puzzleMetadata.author,
               type: "text",
               callback: (data) => {
-                this.puzzleModifier.puzzleMetadata.author = data.value;
+                commands.setValue(this.puzzleModifier.puzzleMetadata, "author", data.value);
               }
             })
           },
@@ -1237,7 +1240,7 @@ const puzzleMenus = {
               value: this.puzzleModifier.puzzleMetadata.description,
               type: "text",
               callback: (data) => {
-                this.puzzleModifier.puzzleMetadata.description = data.value;
+                commands.setValue(this.puzzleModifier.puzzleMetadata, "description", data.value);
               }
             })
           }

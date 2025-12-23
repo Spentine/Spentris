@@ -18,6 +18,9 @@ class PuzzleFunctionElement {
     this.gamePuzzleFunction = gamePuzzleFunction;
     this.parentUI = parentUI;
     this.index = gamePuzzleFunctionIndex;
+    
+    // command manager
+    this.commands = parentUI.commands;
   }
   
   /**
@@ -63,9 +66,17 @@ class PuzzleFunctionElement {
     type.addEventListener("change", (e) => {
       const newType = e.target.value;
       
-      // modify in-place
-      this.gamePuzzleFunction.type = newType;
-      this.gamePuzzleFunction.parameters = {};
+      // in-place
+      this.commands.setValue(
+        this.gamePuzzleFunction,
+        "type",
+        newType
+      );
+      this.commands.setValue(
+        this.gamePuzzleFunction,
+        "parameters",
+        PuzzleFunctionElement.defaultParameters(newType)
+      );
       
       this.createParametersUI();
     });
@@ -84,8 +95,25 @@ class PuzzleFunctionElement {
   }
   
   /**
+   * initializes default parameters for a type
+   * @param {string} type
+   * @returns {object} default parameters
+   */
+  static defaultParameters(type) {
+    const specifications = puzzleFunctions[type].specifications;
+    const specParameters = specifications.parameters;
+    
+    const parameters = {};
+    for (const key in specParameters) {
+      const paramSpec = specParameters[key];
+      parameters[key] = paramSpec.default ?? null;
+    }
+    
+    return parameters;
+  }
+  
+  /**
    * creates the puzzle function parameters UI
-   * if a parameter doesn't exist, it is created with the default value
    */
   createParametersUI() {
     const type = this.gamePuzzleFunction.type;
@@ -93,7 +121,6 @@ class PuzzleFunctionElement {
     const specifications = puzzleFunctions[type].specifications;
     const specParameters = specifications.parameters;
     
-    // newType means clear parameters
     const parameters = this.gamePuzzleFunction.parameters;
     
     // clear parameters container
@@ -113,12 +140,9 @@ class PuzzleFunctionElement {
         "multilineString": "text",
       };
       
-      // ensure existence of parameters[key]
-      parameters[key] ??= paramSpec.default ?? "";
-      
       // callback
       data.callback = (data) => {
-        parameters[key] = data.value;
+        this.commands.setValue(parameters, key, data.value);
       };
       
       data.type = typeMap[paramSpec.type] || "text";
@@ -366,14 +390,17 @@ class PuzzleFunctionElement {
 }
 
 class PuzzleFunctionUI {
-  constructor(gamePuzzleFunctions) {
+  constructor(gamePuzzleFunctions, commands) {
     // try to keep indices synced
     this.gamePuzzleFunctions = gamePuzzleFunctions;
     this.puzzleFunctionElements = [];
+    
+    // command manager
+    this.commands = commands;
   }
   
   createPuzzleFunction() {
-    this.gamePuzzleFunctions.push({
+    this.commands.addPuzzleFunction({
       version: 1,
       type: "none",
       parameters: {},
@@ -459,15 +486,14 @@ class PuzzleFunctionUI {
       this.container.insertBefore(element, beforeElement);
     }
     
+    // game puzzle function array
+    this.commands.swapPuzzleFunctions(indexA, indexB);
+    
     if (indexB > indexA) indexB--; // account for removal shift
     
     // puzzle function element array
     const elementData = this.puzzleFunctionElements.splice(indexA, 1)[0];
     this.puzzleFunctionElements.splice(indexB, 0, elementData);
-    
-    // game puzzle function array
-    const gamePuzzleFunction = this.gamePuzzleFunctions.splice(indexA, 1)[0];
-    this.gamePuzzleFunctions.splice(indexB, 0, gamePuzzleFunction);
     
     this.updateIndices();
   }
@@ -485,7 +511,7 @@ class PuzzleFunctionUI {
     this.puzzleFunctionElements.splice(index, 1);
     
     // remove from game puzzle functions
-    this.gamePuzzleFunctions.splice(index, 1);
+    this.commands.removePuzzleFunction(index);
     
     this.updateIndices();
   }

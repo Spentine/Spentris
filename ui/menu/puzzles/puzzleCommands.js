@@ -35,22 +35,84 @@ class PuzzleCommandFactory {
   
   /**
    * generates the available commands
-   * @return {object} the generated commands
+   * @return {Object.<string, function>} the generated commands
    */
   buildCommands() {
     return this.commands = {
       /**
-       * sets the new board state
-       * assumes immutable board state
-       * @param {Array} newBoard - the new board state
-       * @return {PuzzleCommand} the command to set the board
+       * modifies a value in the object
+       * assumes immutable value
+       * @param {object} obj - the object to change
+       * @param {string} key - the key of the value to set
+       * @param {any} newValue - the new value to set
+       * @return {PuzzleCommand} the command to set the value
        */
-      setBoard: (newBoard) => {
-        const oldBoard = this.puzzleModifier.board;
+      setValue: (obj, key, newValue) => {
+        const oldValue = obj[key];
         return new PuzzleCommand(
-          "setBoard",
-          () => { this.puzzleModifier.board = newBoard; },
-          () => { this.puzzleModifier.board = oldBoard; }
+          "setValue",
+          () => { obj[key] = newValue; },
+          () => { obj[key] = oldValue; }
+        );
+      },
+      
+      /**
+       * adds a puzzle function to the puzzle modifier
+       * @param {PuzzleFunction} puzzleFunction - the puzzle function to add
+       * @return {PuzzleCommand} the command to add the puzzle function
+       */
+      addPuzzleFunction: (puzzleFunction) => {
+        const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
+        return new PuzzleCommand(
+          "addPuzzleFunction",
+          () => {
+            puzzleFunctions.push(puzzleFunction);
+          },
+          () => {
+            puzzleFunctions.pop();
+          }
+        );
+      },
+      
+      /**
+       * moves puzzle function at indexA to indexB in the puzzle modifier
+       * @param {number} indexA - from
+       * @param {number} indexB - to
+       * @return {PuzzleCommand} the command to swap the puzzle functions
+       */
+      swapPuzzleFunctions: (indexA, indexB) => {
+        const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
+        
+        const swapFunc = () => {
+          if (indexB > indexA) indexB--; // account for removal shift
+          
+          const func = puzzleFunctions.splice(indexA, 1)[0];
+          puzzleFunctions.splice(indexB, 0, func);
+        };
+        
+        return new PuzzleCommand(
+          "swapPuzzleFunctions",
+          swapFunc,
+          swapFunc
+        );
+      },
+      
+      /**
+       * removes a puzzle function at index
+       * @param {number} index - the index to remove
+       * @return {PuzzleCommand} the command to remove the puzzle function
+       */
+      removePuzzleFunction: (index) => {
+        const puzzleFunctions = this.puzzleModifier.puzzleFunctions;
+        const removedFunction = puzzleFunctions[index];
+        return new PuzzleCommand(
+          "removePuzzleFunction",
+          () => {
+            puzzleFunctions.splice(index, 1);
+          },
+          () => {
+            puzzleFunctions.splice(index, 0, removedFunction);
+          }
         );
       },
     };

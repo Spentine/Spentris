@@ -360,8 +360,8 @@ const initialize = function(params) {
   this.refillNextQueue();
   
   // spawn the first piece
-  this.currentPiece = params.currentPiece ?? null;
-  this.spawnPiece(this.nextQueue.shift());
+  this.currentPiece = params.currentPiece ?? this.nextQueue.shift() ?? null;
+  this.spawnPiece(this.currentPiece);
   
   // persistent gaEventHandler values
   this.gaEventHandler = new gaEventHandler(0, 0, 0, 0, 0);
