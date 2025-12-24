@@ -696,13 +696,11 @@ const puzzleMenus = {
     
     // undo / redo
     const undo = () => {
-      console.log("undo");
       this.puzzleModifier.commandManager.undo();
       refreshMenus();
     };
     
     const redo = () => {
-      console.log("redo");
       this.puzzleModifier.commandManager.redo();
       refreshMenus();
     };

@@ -831,7 +831,12 @@ puzzleSet = {
       - `boardConverter.js`
         - *converts stringified board state to and from an actual matrix-based board state*
       - `puzzle.css`
-        - css file used for the puzzle editor
+        - *css file used for the puzzle editor*
+      - `puzzleCommands.js`
+        - *handles commands for the puzzle editor*
+        - *in effect, allows undos and redos*
+      - `puzzleFunctionUI.js`
+        - *creates the ui for puzzle functions*
       - `puzzleMenu.js`
         - *contains the functions used to render the menus for `PuzzleMenuHandler`*
       - `puzzleMenuHandler.js`

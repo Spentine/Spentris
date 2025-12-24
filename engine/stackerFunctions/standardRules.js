@@ -757,8 +757,14 @@ const spawnPiece = function(piece, data) {
     this does not use successfulPlacement because if there's not piece to spawn then there's no piece to access (which it will otherwise access and will give an error)
   */
   if (!piece) { // no piece to spawn
-    this.currentPiece = null;
-    return false;
+    // first try to hold
+    if (this.hold.piece) {
+      this.spawnPiece(this.hold.piece, {rotation: 0});
+      this.hold.piece = null;
+    } else {
+      this.currentPiece = null;
+      return false;
+    }
   }
   
   // create the new piece object with the parameters
@@ -1200,7 +1206,13 @@ const rotate = function(newRotation) {
  * @returns {boolean} whether the hold was successful
  */
 const holdPiece = function() {
-  if (!this.hold.allowed) {
+  if (
+    !this.hold.allowed
+    || (
+      // no piece to swap with
+      !this.hold.piece && this.nextQueue.length === 0
+    )
+  ) {
     
     this.event.emit("hold", {
       time: this.time,
