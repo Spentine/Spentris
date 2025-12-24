@@ -371,7 +371,7 @@ digestiblePiece = {
     x: // {number} the x position
     y: // {number} the y position
   },
-  rotation: // {0 | 1 | 2 | 3} the rotation of the piece
+  rotation: // { 0 | 1 | 2 | 3 } the rotation of the piece
   type: // {string} the piece type
 }
 ```

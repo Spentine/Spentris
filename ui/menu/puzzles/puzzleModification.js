@@ -58,6 +58,9 @@ class PuzzleModifier {
     this.puzzleFunctions = data.puzzleFunctions;
     this.puzzleMetadata = data.puzzleMetadata;
     
+    this.holdAllowed = data.holdAllowed;
+    this.noPieceEnd = data.noPieceEnd;
+    
     // command manager for undo/redo
     this.commandManager = new PuzzleCommandManager(this);
   }
@@ -98,6 +101,9 @@ class PuzzleModifier {
         description: "",
         dateCreated: new Date().toISOString(),
       },
+      
+      holdAllowed: true,
+      noPieceEnd: true,
     });
     return pM;
   }
@@ -170,6 +176,15 @@ class PuzzleModifier {
       ? "random"
       : this.seed
     );
+    
+    // enable hold
+    params.holdAllowed = this.holdAllowed;
+    
+    /**
+     * end when the current piece is null
+     * @type {boolean}
+     */
+    params.noPieceEnd = this.noPieceEnd;
     
     // add puzzle functions
     for (const puzzleFunction of this.puzzleFunctions) {

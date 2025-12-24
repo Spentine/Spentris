@@ -288,7 +288,7 @@ const puzzleUiFunctions = {
    * create a label-input pair
    * @param {string} labelText - the text for the label
    * @param {Object} inputElement - the input element to use
-   * @returns {element: HTMLElement} - the label-input pair element
+   * @returns {{element: HTMLElement}} - the label-input pair element
    */
   createLabelInputPair: function (labelText, inputElement) {
     const container = document.createElement("div");
@@ -693,7 +693,17 @@ const puzzleMenus = {
     puzzleEditorContainer.className = "window-fill puzzleFlex";
     
     // commands
-    const commands = this.puzzleModifier.commandManager.commands;
+    let commands;
+    
+    /**
+     * to reinitialize variables dependent on outdated objects
+     * e.g. loading a new puzzlemodifier
+     */
+    const initializeVariables = () => {
+      commands = this.puzzleModifier.commandManager.commands;
+    };
+    
+    initializeVariables();
     
     // undo / redo
     const undo = () => {
@@ -748,9 +758,10 @@ const puzzleMenus = {
                     try {
                       const jsonData = JSON.parse(jsonString);
                       this.puzzleModifier = new PuzzleModifier(jsonData);
+                      initializeVariables();
                       
                       // refresh the editor
-                      rightSideBarMenus.editGameState();
+                      refreshMenus();
                       
                       alert("Puzzle imported successfully!");
                     } catch (err) {
@@ -1148,6 +1159,24 @@ const puzzleMenus = {
               step: 1,
               callback: (data) => {
                 commands.setValue(this.puzzleModifier, "seed", data.value);
+              }
+            })
+          },
+          holdAllowed: {
+            label: "Hold Allowed",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.holdAllowed,
+              callback: (data) => {
+                commands.setValue(this.puzzleModifier, "holdAllowed", data.value);
+              }
+            })
+          },
+          noPieceEnd: {
+            label: "No Piece End",
+            input: this.uiFunctions.createBooleanInput({
+              checked: this.puzzleModifier.noPieceEnd,
+              callback: (data) => {
+                commands.setValue(this.puzzleModifier, "noPieceEnd", data.value);
               }
             })
           },

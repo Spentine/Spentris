@@ -400,6 +400,12 @@ const initialize = function(params) {
   // b2b
   this.b2b = 0;
   
+  // hold allowed
+  this.holdAllowed = params.holdAllowed ?? true;
+  
+  // whether to end the game when there is no piece
+  this.noPieceEnd = params.noPieceEnd ?? true;
+  
   // debug
   // window.game = this;
 };
@@ -762,6 +768,14 @@ const spawnPiece = function(piece, data) {
       this.spawnPiece(this.hold.piece, {rotation: 0});
       this.hold.piece = null;
     } else {
+      if (this.noPieceEnd) { // end the game if no piece to spawn
+        this.event.emit("end", {
+          time: this.time,
+          type: "noPiece",
+          success: true,
+        });
+      }
+      
       this.currentPiece = null;
       return false;
     }
@@ -1207,7 +1221,8 @@ const rotate = function(newRotation) {
  */
 const holdPiece = function() {
   if (
-    !this.hold.allowed
+    !this.hold.allowed // no double holding
+    || !this.holdAllowed // holding disabled outright
     || (
       // no piece to swap with
       !this.hold.piece && this.nextQueue.length === 0
