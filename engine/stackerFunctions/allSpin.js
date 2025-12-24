@@ -7,6 +7,8 @@ import { functionMap } from "../util.js";
  * @returns {boolean} whether it is a spin
  */
 const immobilityRule = function(piece, board) {
+  if (!piece) return false;
+  
   // check if the piece can't move (up), down, left, or right
   
   const directionChecks = [
@@ -40,6 +42,8 @@ const immobilityRule = function(piece, board) {
  * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isMiniSpin = function(piece, board) {
+  if (!piece) return null;
+  
   if (piece.type === "T") {
     return this.isTspin(piece, board);
   } else {
@@ -55,6 +59,8 @@ const isMiniSpin = function(piece, board) {
  * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isMiniSpinPlus = function(piece, board) {
+  if (!piece) return null;
+  
   if (piece.type === "T") {
     const tSpin = this.isTspin(piece, board);
     if (tSpin !== null) {
@@ -72,6 +78,8 @@ const isMiniSpinPlus = function(piece, board) {
  * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isAllSpin = function(piece, board) {
+  if (!piece) return null;
+  
   if (piece.type === "T") {
     return this.isTspin(piece, board);
   } else {
@@ -86,6 +94,8 @@ const isAllSpin = function(piece, board) {
  * @returns {string | null} the type of spin or null if it isn't a spin
  */
 const isAllSpinPlus = function(piece, board) {
+  if (!piece) return null;
+  
   if (piece.type === "T") {
     const tSpin = this.isTspin(piece, board);
     if (tSpin !== null) {

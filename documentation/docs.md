@@ -697,13 +697,13 @@ puzzleSet = {
   // keys will map to puzzles
   // it is not an array because it's easier to organize keys
   puzzles: {
-    // {key: Puzzle}
+    // {key: string} puzzle ids
   },
   
   // randomization distribution
   // the key refers to the puzzle and the default weighing is 1
   // change to a higher number for a better chance at being chosen
-  distribution: // {key: Number}
+  distribution: // {key: number}
 }
 ```
 

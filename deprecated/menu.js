@@ -164,7 +164,7 @@ const spentrisMenus = {
 /**
  * redirects the user to a different menu
  * origin.length may be greater than 2 if there is more nesting
- * @typedef {Object} RedirectionId
+ * @type {Object} RedirectionId
  * @property {string[]} origin
  * @property {string} redirect
  */

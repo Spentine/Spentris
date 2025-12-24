@@ -115,6 +115,29 @@ class PuzzleCommandFactory {
           }
         );
       },
+      
+      /**
+       * sets puzzle function type
+       * @param {PuzzleFunction} puzzleFunction
+       * @param {string} newType - the new type to set
+       * @param {Object} newParameters - the new parameters to set
+       * @return {PuzzleCommand} the command to set the puzzle function type
+       */
+      setPuzzleFunctionType: (puzzleFunction, newType, newParameters) => {
+        const oldType = puzzleFunction.type;
+        const oldParameters = puzzleFunction.parameters;
+        return new PuzzleCommand(
+          "setPuzzleFunctionType",
+          () => {
+            puzzleFunction.type = newType;
+            puzzleFunction.parameters = newParameters;
+          },
+          () => {
+            puzzleFunction.type = oldType;
+            puzzleFunction.parameters = oldParameters;
+          }
+        );
+      }
     };
   }
 }

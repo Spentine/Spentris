@@ -79,6 +79,13 @@ class RenderGameState {
      * @returns {Object} - digestible piece object
      **/
     convertPiece: function (piece) { // can be static
+      if (!piece) return {
+        matrix: [],
+        position: {x: 0, y: 0},
+        rotation: 0,
+        type: null,
+      };
+      
       const matrix = [];
       
       // convert piece matrix to string matrix

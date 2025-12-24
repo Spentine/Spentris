@@ -67,14 +67,9 @@ class PuzzleFunctionElement {
       const newType = e.target.value;
       
       // in-place
-      this.commands.setValue(
+      this.commands.setPuzzleFunctionType(
         this.gamePuzzleFunction,
-        "type",
-        newType
-      );
-      this.commands.setValue(
-        this.gamePuzzleFunction,
-        "parameters",
+        newType,
         PuzzleFunctionElement.defaultParameters(newType)
       );
       

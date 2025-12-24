@@ -42,7 +42,7 @@ class PuzzleModifier {
     this.version = 1;
     
     /**
-     * @typedef {{width: number, height: number, matrix: (string | null)[][]}}
+     * @type {{width: number, height: number, matrix: (string | null)[][]}}
      */
     this.board = data.board;
     

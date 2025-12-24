@@ -23,6 +23,7 @@ const update = function(tDelta, iter=0) {
     time: beginningTime,
   };
   
+  // calculate arr direction
   var arrDirection = null;
   if (!this.leftInput && !this.rightInput) {
     // if the left and right key isn't pressed don't regard arr
@@ -279,6 +280,18 @@ const initialize = function(params) {
   // get parameters
   params = params ?? {};
   
+  /*
+    note: the event emitter must be first
+    because it is possible to call it during instantiation
+    (e.g. noPiece game ending on spawn)
+  */
+ 
+  /**
+   * the game's event emitter
+   * @type {EventEmitter}
+   */
+  this.event = params.eventEmitter ?? new EventEmitter();
+  
   // set beginning game state data (constant)
   this.state = structuredClone(params.state) ?? {
     // delayed auto shift
@@ -386,9 +399,6 @@ const initialize = function(params) {
   
   // b2b
   this.b2b = 0;
-  
-  // event emitter
-  this.event = params.eventEmitter ?? new EventEmitter();
   
   // debug
   // window.game = this;
@@ -505,6 +515,12 @@ const inBounds = function(position, board) {
  * @returns {boolean}
  */
 const validPiecePosition = function(piece, board) {
+  /*
+    assume valid if no piece
+    a valid position with no piece must still be valid regardless
+  */
+  if (!piece) return true;
+  
   // loop over piece matrix
   for (let i=0; i<piece.matrix.length; i++) {
     const row = piece.matrix[i];
@@ -537,6 +553,8 @@ const validPiecePosition = function(piece, board) {
  * @returns {boolean}
  */
 const isTouchingGround = function(piece, board) {
+  if (!piece) return false;
+  
   let touching = false;
   // test position
   if (!this.movePiece(piece, {x: 0, y: -1}, board)) {
@@ -639,6 +657,12 @@ const clearLines = function(board) {
  * @returns {boolean} whether the piece was successfully rotated
  */
 const kickSystem = function(piece, board, newRotation) {
+  if (!piece) return {
+    success: false,
+    previousRotation: null,
+    newRotation: null,
+  };
+  
   const previousRotation = piece.rotation;
   
   // copy the piece with new rotation
@@ -688,6 +712,8 @@ const kickSystem = function(piece, board, newRotation) {
  * @returns {Object}
  */
 const rotationSystem = function(data) {
+  if (!data.piece) return null;
+  
   // calculate the spin
   const spin = this.kickSystem(
     data.piece,
@@ -720,7 +746,20 @@ const rotationSystem = function(data) {
 const spawnPiece = function(piece, data) {
   data ??= {};
   
-  if (!piece) return false; // no piece to spawn
+  // this will occur regardless of successful placement
+  this.currentPieceLockdown = 0;
+  this.maxCurrentPieceLockdown = 0;
+  this.spin = null;
+  
+  let successfulPlacement = true;
+  
+  /*
+    this does not use successfulPlacement because if there's not piece to spawn then there's no piece to access (which it will otherwise access and will give an error)
+  */
+  if (!piece) { // no piece to spawn
+    this.currentPiece = null;
+    return false;
+  }
   
   // create the new piece object with the parameters
   const newPiece = new Piece({
@@ -733,15 +772,17 @@ const spawnPiece = function(piece, data) {
   
   // check if the piece can be spawned
   if (!this.validPiecePosition(newPiece, this.board)) {
-    return false;
+    this.event.emit("end", {
+      time: this.time,
+      type: "blockOut", // 10.1.7
+      success: true,
+    });
+    successfulPlacement = false;
   }
   
   this.currentPiece = newPiece;
-  this.currentPieceLockdown = 0;
-  this.maxCurrentPieceLockdown = 0;
-  this.spin = null;
   
-  return true;
+  return successfulPlacement;
 };
 
 /**
@@ -761,6 +802,8 @@ const refillNextQueue = function() {
  * @returns {boolean} whether the piece was successfully moved
  */
 const movePiece = function(piece, direction, board) {
+  if (!piece) return false;
+  
   piece.position.x += direction.x;
   piece.position.y += direction.y;
   
@@ -863,8 +906,11 @@ const lineClearHandler = function(linesCleared) {
  * changes the board matrix to reflect the piece placement
  * @param {Piece} piece
  * @param {Board} board
+ * @returns {boolean} whether the piece was successfully transferred
  */
 const transferPieceToBoard = function(piece, board) {
+  if (!piece) return false;
+  
   for (let i=0; i<piece.matrix.length; i++) {
     const row = piece.matrix[i];
     for (let j=0; j<row.length; j++) {
@@ -881,6 +927,8 @@ const transferPieceToBoard = function(piece, board) {
       }
     }
   }
+  
+  return true;
 }
 
 /**
@@ -889,6 +937,8 @@ const transferPieceToBoard = function(piece, board) {
  * @returns {boolean} whether the next piece was successfully spawned
  */
 const placePiece = function(piece, board) {
+  if (!piece) return false;
+  
   // change the board matrix to reflect the piece placement
   this.transferPieceToBoard(piece, board);
   
@@ -914,14 +964,6 @@ const placePiece = function(piece, board) {
   
   // make hold piece available
   this.hold.allowed = true;
-  
-  if (!spawn) {
-    this.event.emit("end", {
-      time: this.time,
-      type: "blockOut", // 10.1.7
-      success: true,
-    });
-  }
   
   this.piecesPlaced++;
   
@@ -995,37 +1037,33 @@ const moveRight = function() {
 };
 
 /**
- * doesn't do anything at the moment
- * @deprecated
- */
-const softDrop = function() {
-  // temporary
-  /*
-  let movement = true;
-  while (movement) {
-    movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
-  }
-  */
-};
-
-/**
  * hard drops the piece
  */
 const hardDrop = function() {
-  let movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
-  var movements = 0;
-  if (movement) {
-    this.spin = null;
-    while (movement) {
-      movements++;
-      movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+  /*
+    assume that no piece can also be hard dropped
+    it will just spawn the next piece
+  */
+  
+  if (this.currentPiece) {
+    let movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+    var movements = 0;
+    if (movement) {
+      this.spin = null;
+      while (movement) {
+        movements++;
+        movement = this.movePiece(this.currentPiece, {x: 0, y: -1}, this.board);
+      }
     }
+    
+    // add to the score
+    this.score += movements * 2;
+    
+    this.placePiece(this.currentPiece, this.board);
+  } else {
+    this.spawnPiece(this.nextQueue.shift());
+    this.refillNextQueue();
   }
-  
-  // add to the score
-  this.score += movements * 2;
-  
-  this.placePiece(this.currentPiece, this.board);
   
   this.event.emit("place", {
     time: this.time,
@@ -1173,15 +1211,19 @@ const holdPiece = function() {
     return false;
   };
   
+  const newHeld = (this.currentPiece
+    ? this.currentPiece.type
+    : null
+  );
+  
   if (!this.hold.piece) {
-    this.hold.piece = this.currentPiece.type;
+    this.hold.piece = newHeld;
     this.spawnPiece(this.nextQueue.shift());
     this.refillNextQueue();
   } else {
     // swap hold and current piece
-    const temp = this.currentPiece.type;
     this.spawnPiece(this.hold.piece, {rotation: 0});
-    this.hold.piece = temp;
+    this.hold.piece = newHeld;
   }
   
   this.hold.allowed = false;
@@ -1256,6 +1298,8 @@ const hardDropInputUp = function() {
 };
 
 const rotateCWInputDown = function() {
+  if (!this.currentPiece) return;
+  
   this.update();
   const newRotation = (this.currentPiece.rotation + 1) % 4;
   this.rotate(newRotation);
@@ -1276,6 +1320,8 @@ const rotateCCWInputUp = function() {
 };
 
 const rotate180InputDown = function() {
+  if (!this.currentPiece) return;
+  
   this.update();
   const newRotation = (this.currentPiece.rotation + 2) % 4;
   this.rotate(newRotation);
@@ -1311,6 +1357,8 @@ const resetGameInputUp = function() {
  * @returns {Object} the ghost piece position
  */
 const calculateGhostPiece = function(piece, board) {
+  if (!piece) return null;
+  
   const ghostPiece = piece.copy();
   
   let movement = true;
