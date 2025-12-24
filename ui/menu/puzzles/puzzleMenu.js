@@ -384,7 +384,7 @@ const puzzleUiFunctions = {
         if (!data.coerce) {
           data.coerce = function (value) {
             const parsed = parseFloat(value);
-            if (!parsed) return "";
+            if (isNaN(parsed)) return "";
             return parsed;
           };
         }
@@ -399,7 +399,7 @@ const puzzleUiFunctions = {
         if (!data.coerce) {
           data.coerce = function (value) {
             const parsed = parseInt(value);
-            if (!parsed) return "";
+            if (isNaN(parsed)) return "";
             return parsed;
           };
         }
