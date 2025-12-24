@@ -23,6 +23,7 @@ const gameStart = async (
   const data = {
     canvas: document.getElementById("renderCanvas"),
     updateCanvasDimensions: false,
+    listenerElement: document,
   };
   copyObjByTraversal(data, inputData);
   
@@ -68,10 +69,10 @@ const gameStart = async (
   // create keyboard input system
   const inputForward = bindInputFunctions(game);
   const playKeyboardListener = new KeyboardInput(
-    inputForward, keybinds.play
+    inputForward, keybinds.play, data.listenerElement
   );
   const metaKeyboardListener = new KeyboardInput(
-    inputForward, keybinds.meta
+    inputForward, keybinds.meta, data.listenerElement
   );
   playKeyboardListener.addListeners();
   metaKeyboardListener.addListeners();

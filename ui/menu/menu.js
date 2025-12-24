@@ -842,6 +842,7 @@ const spentrisMenus = {
     // create a render canvas
     const renderCanvas = document.createElement("canvas");
     renderCanvas.id = "renderCanvas";
+    renderCanvas.tabIndex = 0; // make it focusable
     
     uiDisplay.appendChild(renderCanvas);
   },

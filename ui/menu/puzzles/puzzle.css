@@ -157,6 +157,10 @@
   margin: 4px 0;
 }
 
+.puzzleCanvas:focus {
+  outline: none;
+}
+
 /* === ui elements === */
 
 .puzzleButton {

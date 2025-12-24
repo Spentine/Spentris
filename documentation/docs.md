@@ -380,11 +380,14 @@ digestiblePiece = {
 
 ```js
 gameStart(startEvent, {
-  // {<canvas>} the canvas to render to
+  // {canvas} the canvas to render to
   canvas: document.getElementById("renderCanvas"),
   
   // {bool} whether to update the canvas dimensions to the screen
-  updateCanvasDimension: false
+  updateCanvasDimension: false,
+  
+  // {element} the element to listen to for key presses
+  listenerElement: document
 });
 ```
 

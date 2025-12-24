@@ -672,6 +672,7 @@ const puzzleMenus = {
     
     const puzzleCanvas = document.createElement("canvas");
     puzzleCanvas.className = "puzzleCanvas";
+    puzzleCanvas.tabIndex = 0; // make it focusable
     const puzzleCanvasCtx = puzzleCanvas.getContext("2d");
     
     const puzzleRenderer = new GameRenderer({
@@ -1302,6 +1303,7 @@ const puzzleMenus = {
             }, {
               canvas: puzzleCanvas,
               updateCanvasDimension: false,
+              listenerElement: puzzleCanvas,
             });
           };
         };

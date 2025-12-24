@@ -272,6 +272,10 @@ label.large {
   height: 100vh;
 }
 
+#renderCanvas:focus {
+  outline: none;
+}
+
 #uiDisplay {
   display: block;
   position: absolute;

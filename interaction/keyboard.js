@@ -51,11 +51,13 @@ class KeyboardInput {
   /**
     @param {Object} inputForward // contains mappings from actions to functions
     @param {Object} keybinds // contains mappings from actions to keys
+    @param {HTMLElement} listenerElement // the element to attach the listeners to
   */
-  constructor(inputForward, keybinds) {
+  constructor(inputForward, keybinds, listenerElement=document) {
     this.internalKey = "keyCode";
     this.keybindMap = {};
     this.listenersAttached = false;
+    this.element = listenerElement;
     
     // create a map of keybinds to actions
     for (let action in inputForward) {
@@ -89,14 +91,14 @@ class KeyboardInput {
   }
   
   addListeners() {
-    document.addEventListener("keydown", this.keyDown);
-    document.addEventListener("keyup", this.keyUp);
+    this.element.addEventListener("keydown", this.keyDown);
+    this.element.addEventListener("keyup", this.keyUp);
     this.listenersAttached = true;
   }
   
   removeListeners() {
-    document.removeEventListener("keydown", this.keyDown);
-    document.removeEventListener("keyup", this.keyUp);
+    this.element.removeEventListener("keydown", this.keyDown);
+    this.element.removeEventListener("keyup", this.keyUp);
     this.listenersAttached = false;
   }
 }
