@@ -1257,6 +1257,8 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
   - [x] Move value change conversion from menu scripts to engine
   - [ ] Detach adapters from classes; should be independent
   - [ ] Add error handling
+  - [ ] Prevent memory leaks in code
+    - [ ] Dispose objects by removing circular references
 - [ ] URL
   - [ ] Redirect users with URL-specified parameters
   - [ ] Dynamically update URL with current menu

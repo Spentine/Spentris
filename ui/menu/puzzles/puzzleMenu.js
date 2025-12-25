@@ -888,7 +888,12 @@ const puzzleMenus = {
         {
           text: "Exit",
           type: "button",
-          interact: null, // placeholder
+          interact: () => {
+            const confirmExit = confirm("Are you sure you want to exit the Puzzle Editor? Unsaved changes will be lost.");
+            if (confirmExit) {
+              this.event.emit("exitPuzzleMenu");
+            }
+          }, // placeholder
         },
       ],
     });

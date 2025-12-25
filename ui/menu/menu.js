@@ -864,7 +864,10 @@ const spentrisMenus = {
       },
     });
     puzzleMH.showMenu(puzzleMH.currentMenu);
-    // how to dispose of this menu object after the menu changes? i dont want to cause a memory leak
+    
+    puzzleMH.event.on("exitPuzzleMenu", () => {
+      this.showMenu("home");
+    });
   },
   
   template: function () {
