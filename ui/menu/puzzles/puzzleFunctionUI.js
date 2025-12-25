@@ -42,15 +42,15 @@ class PuzzleFunctionElement {
     
     // type selector
     const typeLabel = document.createElement("label"); // label
-    typeLabel.className = "puzzleFunctionTypeLabel";
+    typeLabel.className = "Label";
     typeLabel.textContent = "Function Type: ";
     this.elementInner.appendChild(typeLabel);
     
     const type = document.createElement("select"); // selection
-    type.className = "puzzleFunctionTypeSelector";
+    type.className = "puzzleSelectionInput";
     for (const key in puzzleFunctions) {
       const option = document.createElement("option");
-      option.className = "puzzleFunctionTypeSelectorOption";
+      option.className = "puzzleSelectionInputOption";
       option.value = key;
       option.textContent = key;
       type.appendChild(option);
@@ -128,27 +128,71 @@ class PuzzleFunctionElement {
       // try to get gamePuzzleFunction
       
       // create input element
-      const data = {};
+      let inputElement;
+      
       const typeMap = {
         "number": "number",
         "string": "text",
         "multilineString": "text",
       };
       
-      // callback
-      data.callback = (data) => {
-        this.commands.setValue(parameters, key, data.value);
-      };
-      
-      data.type = typeMap[paramSpec.type] || "text";
-      data.value = parameters[key];
-      data.step = paramSpec.step;
-      data.max = paramSpec.max;
-      data.min = paramSpec.min;
-      const inputElement = (paramSpec.type === "multilineString"
-        ? puzzleUiFunctions.createTextAreaInput(data)
-        : puzzleUiFunctions.createStandardInput(data)
-      );
+      if (paramSpec.type in typeMap) {
+        const data = {};
+        
+        // callback
+        data.callback = (data) => {
+          this.commands.setValue(parameters, key, data.value);
+        };
+        
+        data.type = typeMap[paramSpec.type] || "text";
+        data.value = parameters[key];
+        data.step = paramSpec.step;
+        data.max = paramSpec.max;
+        data.min = paramSpec.min;
+        inputElement = (paramSpec.type === "multilineString"
+          ? puzzleUiFunctions.createTextAreaInput(data)
+          : puzzleUiFunctions.createStandardInput(data)
+        );
+      } else if (paramSpec.type === "clearTypesArray") {
+        // placeholder input for now
+        const data = {};
+        
+        data.callback = (data) => {
+          console.log(data.value);
+          this.commands.setValue(parameters, key, data.value);
+        }
+        
+        data.coerce = (value) => {
+          try {
+            value = JSON.parse(value);
+          } catch (e) {
+            value = [];
+          }
+          
+          return value;
+        }
+        
+        data.stringify = (data) => {
+          return JSON.stringify(data, null, 2);
+        }
+        
+        data.type = "text";
+        data.value = parameters[key];
+        
+        inputElement = puzzleUiFunctions.createTextAreaInput(data);
+      } else if (paramSpec.type === "selection") {
+        const data = {};
+        
+        data.value = parameters[key];
+        data.options = paramSpec.options.map(
+          (option) => ({value: option, text: option})
+        );
+        data.callback = (data) => {
+          this.commands.setValue(parameters, key, data.value);
+        }
+        
+        inputElement = puzzleUiFunctions.createSelectionInput(data);
+      }
       
       const labelInputPair = puzzleUiFunctions.createLabelInputPair(
         key,

@@ -223,6 +223,31 @@
   min-height: 120px;
 }
 
+/* selector */
+
+.puzzleSelectionInput {
+  background-color: #444444;
+  border: 2px solid;
+  border-color: #555555;
+  border-radius: 4px;
+  
+  color: #ffffff;
+  font-size: 16px;
+  font-family: inherit;
+  
+  padding: 8px 12px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.puzzleSelectionInputOption {
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+}
+
 /* checkbox */
 
 .puzzleCheckboxContainer {
@@ -310,27 +335,4 @@
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
-}
-
-.puzzleFunctionTypeSelector {
-  background-color: #444444;
-  border: 2px solid;
-  border-color: #555555;
-  border-radius: 4px;
-  
-  color: #ffffff;
-  font-size: 16px;
-  font-family: inherit;
-  
-  padding: 8px 12px;
-  
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.puzzleFunctionTypeSelectorOption {
-  color: #ffffff;
-  font-family: inherit;
-  font-size: inherit;
 }

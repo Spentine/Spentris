@@ -361,6 +361,7 @@ const puzzleUiFunctions = {
       step: 1,
       callback: null,
       coerce: null,
+      stringify: null,
     };
     copyObjByTraversal(data, inputData);
     const id = generateRandomId();
@@ -369,6 +370,9 @@ const puzzleUiFunctions = {
     element.className = "puzzleStandardInput";
     element.placeholder = data.placeholder;
     element.id = id;
+    
+    if (!data.stringify)
+      data.stringify = (value) => String(value);
     
     switch (data.type) {
       case "text":
@@ -413,7 +417,7 @@ const puzzleUiFunctions = {
     element.addEventListener("change", function (event) {
       let value = this.value;
       if (data.coerce) value = data.coerce(value);
-      this.value = String(value);
+      this.value = data.stringify(value);
       
       // callback
       if (data.callback) data.callback({
@@ -438,6 +442,7 @@ const puzzleUiFunctions = {
       type: "text",
       callback: null,
       coerce: null,
+      stringify: null,
     };
     copyObjByTraversal(data, inputData);
     const id = generateRandomId();
@@ -447,9 +452,12 @@ const puzzleUiFunctions = {
     element.placeholder = data.placeholder;
     element.id = id;
     
+    if (!data.stringify)
+      data.stringify = (value) => String(value);
+    
     switch (data.type) {
       case "text":
-        element.value = data.value;
+        element.value = data.stringify(data.value);
         break;
       default:
         break;
@@ -459,7 +467,50 @@ const puzzleUiFunctions = {
     element.addEventListener("change", function (event) {
       let value = this.value;
       if (data.coerce) value = data.coerce(value);
-      this.value = value;
+      
+      this.value = data.stringify(value);
+      
+      // callback
+      if (data.callback) data.callback({ event, value });
+    });
+    
+    return {
+      element: element,
+      id: id,
+    };
+  },
+  
+  /**
+   * create selection input
+   * @param {Object} data - the input data
+   */
+  createSelectionInput: function (inputData) {
+    const data = {
+      value: "",
+      callback: null,
+      options: [],
+    };
+    
+    copyObjByTraversal(data, inputData);
+    const id = generateRandomId();
+    
+    const element = document.createElement("select");
+    element.className = "puzzleSelectionInput";
+    element.id = id;
+    
+    // populate options
+    for (const option of data.options) {
+      const optionElement = document.createElement("option");
+      optionElement.className = "puzzleSelectionInputOption";
+      optionElement.value = option.value;
+      optionElement.textContent = option.text;
+      element.appendChild(optionElement);
+    }
+    
+    element.value = data.value;
+    
+    element.addEventListener("change", function (event) {
+      const value = this.value;
       
       // callback
       if (data.callback) data.callback({ event, value });
@@ -982,7 +1033,6 @@ const puzzleMenus = {
               callback: (data) => {
                 const newBoard = structuredClone(this.puzzleModifier.board);
                 newBoard.matrix = data.converted;
-                console.log(data, this);
                 commands.setValue(this.puzzleModifier, "board", newBoard);
                 // updateBoard(); // implied in createBoardInput
               }

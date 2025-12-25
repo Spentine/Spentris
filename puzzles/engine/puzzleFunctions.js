@@ -114,21 +114,28 @@ const puzzleFunctions = {
         case "all":
           return function (game) {
             const finished = new Array(clears.length).fill(false);
+            let cleared = 0;
             game.event.on("clear", (e) => {
+              // mark clears
               for (let i in clears) {
                 if (!finished[i]) {
-                  if (clearMatches(e.performed, clears[i])) {
+                  if (clearMatches(e, clears[i])) {
                     finished[i] = true;
-                    if (finished.every((v) => v)) {
-                      game.event.emit("end", {
-                        time: game.time,
-                        type: endType,
-                        success: true,
-                      });
-                    }
+                    cleared++;
+                    
+                    // one of a type of clear cannot count for multiple
                     break;
                   }
                 }
+              }
+              
+              // check for completion
+              if (cleared >= clears.length) {
+                game.event.emit("end", {
+                  time: game.time,
+                  type: endType,
+                  success: true,
+                });
               }
             });
           };
@@ -137,7 +144,7 @@ const puzzleFunctions = {
           return function (game) {
             let index = 0;
             game.event.on("clear", (e) => {
-              if (clearMatches(e.performed, clears[index])) {
+              if (clearMatches(e, clears[index])) {
                 index++;
                 if (index >= clears.length) {
                   game.event.emit("end", {
@@ -156,12 +163,22 @@ const puzzleFunctions = {
       key: "clearsFinish",
       parameters: {
         clears: {
-          type: "array",
-          default: [],
+          type: "clearTypesArray",
+          default: [
+            { // t-spin double
+              "lines": 2,
+              "spin": "full",
+              "piece": "T"
+            }
+          ],
         },
         type: {
-          type: "string",
-          default: "all"
+          type: "selection",
+          default: "sequential",
+          options: [
+            "sequential",
+            "all",
+          ],
         },
         endType: {
           type: "string",

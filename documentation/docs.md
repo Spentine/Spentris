@@ -531,6 +531,7 @@ data = {
   
   callback: null, // {function} callback for change
   coerce: null, // {function} how to convert input to valid type
+  stringify: null // {function} how to stringify valid type
 }
 ```
 
@@ -1224,6 +1225,7 @@ Plugging the specified values for $\alpha$ and $\beta$ yields these values: $c =
         - [ ] Remove Lua memory leak with `lua.global.close()`
         - [ ] Lua syntax highlighting
         - [ ] Create API for Lua to interact with game
+      - [ ] Add dedicated elements for `clearTypesArray`
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`
