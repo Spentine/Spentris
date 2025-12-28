@@ -35,4 +35,22 @@ function copyObjByTraversal(head, copy, disallowed) {
   return head;
 }
 
-export { copyObjByTraversal };
+/**
+ * attempts to dynamically import modules in order until one succeeds
+ * @param {...string} modulePaths - url / relative path
+ * @returns {Promise<Object>} - module object
+ * @throws {Error} - all imports fail
+ */
+async function tryImports(...modulePaths) {
+  for (const path of modulePaths) {
+    try {
+      const module = await import(path);
+      return module; // return first successfully imported module
+    } catch (err) {
+      console.warn(`Failed to import ${path}:`, err);
+    }
+  }
+  throw new Error("Failed to import modules:", modulePaths);
+}
+
+export { copyObjByTraversal, tryImports };

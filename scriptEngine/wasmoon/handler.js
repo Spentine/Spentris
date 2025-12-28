@@ -9,7 +9,15 @@ Created on 20251004
 
 */
 
-import { LuaFactory } from 'https://cdn.jsdelivr.net/npm/wasmoon@latest/+esm';
+import { tryImports } from "../../util.js";
+
+/*
+  in case i'm offline and can't download from the cdn
+*/
+const { LuaFactory } = await tryImports(
+  "https://cdn.jsdelivr.net/npm/wasmoon@latest/+esm",
+  new URL("./compiled/wasmoon.js", import.meta.url)
+);
 
 const factory = new LuaFactory();
 
