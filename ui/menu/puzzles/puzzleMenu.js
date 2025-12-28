@@ -1298,10 +1298,10 @@ const puzzleMenus = {
             label: "Puzzle Name",
             input: this.uiFunctions.createStandardInput({
               placeholder: "Enter Puzzle Name",
-              value: this.puzzleModifier.puzzleMetadata.name,
+              value: this.puzzleModifier.metadata.name,
               type: "text",
               callback: (data) => {
-                commands.setValue(this.puzzleModifier.puzzleMetadata, "name", data.value);
+                commands.setValue(this.puzzleModifier.metadata, "name", data.value);
               }
             })
           },
@@ -1309,10 +1309,10 @@ const puzzleMenus = {
             label: "Puzzle Author",
             input: this.uiFunctions.createStandardInput({
               placeholder: "Enter Puzzle Author",
-              value: this.puzzleModifier.puzzleMetadata.author,
+              value: this.puzzleModifier.metadata.author,
               type: "text",
               callback: (data) => {
-                commands.setValue(this.puzzleModifier.puzzleMetadata, "author", data.value);
+                commands.setValue(this.puzzleModifier.metadata, "author", data.value);
               }
             })
           },
@@ -1320,10 +1320,10 @@ const puzzleMenus = {
             label: "Puzzle Description",
             input: this.uiFunctions.createStandardInput({
               placeholder: "Enter Puzzle Description",
-              value: this.puzzleModifier.puzzleMetadata.description,
+              value: this.puzzleModifier.metadata.description,
               type: "text",
               callback: (data) => {
-                commands.setValue(this.puzzleModifier.puzzleMetadata, "description", data.value);
+                commands.setValue(this.puzzleModifier.metadata, "description", data.value);
               }
             })
           }
@@ -1483,6 +1483,8 @@ const puzzleMenus = {
     
     // functions to update menus
     const refreshRightSideBarMenu = () => {
+      if (!currentRightSideBarMenu) return;
+      
       rightSideBarMenus[currentRightSideBarMenu]();
     };
     

@@ -56,7 +56,7 @@ class PuzzleModifier {
     
     this.gameplaySettings = data.gameplaySettings;
     this.puzzleFunctions = data.puzzleFunctions;
-    this.puzzleMetadata = data.puzzleMetadata;
+    this.metadata = data.metadata;
     
     this.holdAllowed = data.holdAllowed;
     this.noPieceEnd = data.noPieceEnd;
@@ -95,7 +95,7 @@ class PuzzleModifier {
       },
       
       puzzleFunctions: [],
-      puzzleMetadata: {
+      metadata: {
         name: "New Puzzle",
         author: "",
         description: "",
@@ -111,6 +111,7 @@ class PuzzleModifier {
   /**
    * creates a puzzle modifier from json data
    * note: currently it is the same as the constructor, but this is for future compatibility
+   * @deprecated
    * @param {Object} json - the json data
    * @return {PuzzleModifier} the puzzle modifier
    */
@@ -122,31 +123,29 @@ class PuzzleModifier {
   toPuzzle() {
     const data = {
       parameters: {
-        values: {
-          version: 1,
-          settings: {
-            functionLocations: standardFunctionLocations,
-            initialization: {
-              parameters: {
-                state: {
-                  // null values for handling settings are replaced by the user preferences
-                  arr: null,
-                  das: null,
-                  sdf: null,
-                  dcd: null,
-                  msg: null,
-                  are: null,
-                  lca: null,
-                  
-                  gravity: this.gameplaySettings.gravity,
-                  lockDelay: this.gameplaySettings.lockDelay,
-                  maxLockDelay: this.gameplaySettings.maxLockDelay,
-                  startingLevel: this.gameplaySettings.startingLevel,
-                  levelling: this.gameplaySettings.levelling,
-                  masterLevels: this.gameplaySettings.masterLevels,
-                },
-                rotationSystem: rotationSystemMap[this.gameplaySettings.rotationSystem] ?? SRSPlusData,
+        version: 1,
+        settings: {
+          functionLocations: standardFunctionLocations,
+          initialization: {
+            parameters: {
+              state: {
+                // null values for handling settings are replaced by the user preferences
+                arr: null,
+                das: null,
+                sdf: null,
+                dcd: null,
+                msg: null,
+                are: null,
+                lca: null,
+                
+                gravity: this.gameplaySettings.gravity,
+                lockDelay: this.gameplaySettings.lockDelay,
+                maxLockDelay: this.gameplaySettings.maxLockDelay,
+                startingLevel: this.gameplaySettings.startingLevel,
+                levelling: this.gameplaySettings.levelling,
+                masterLevels: this.gameplaySettings.masterLevels,
               },
+              rotationSystem: rotationSystemMap[this.gameplaySettings.rotationSystem] ?? SRSPlusData,
             },
           },
         },
@@ -154,19 +153,19 @@ class PuzzleModifier {
       puzzleFunctions: [],
     };
     
-    const params = data.parameters.values.settings.initialization.parameters;
+    const params = data.parameters.settings.initialization.parameters;
     
     // set the board
     params.board = Board.fromSimpleArray(this.board);
     
     // set the next queue
-    params.nextQueue = this.nextQueue;
+    params.state.nextQueue = this.nextQueue;
     
     // set the current piece
-    params.currentPiece = this.currentPiece;
+    params.state.currentPiece = this.currentPiece;
     
     // set the hold piece
-    params.holdPiece = this.holdPiece;
+    params.state.holdPiece = this.holdPiece;
     
     // set the refill queue
     params.refillQueue = this.refillQueue;
@@ -195,6 +194,20 @@ class PuzzleModifier {
     return puzzle;
   }
   
+  /**
+   * converts a Puzzle object into a new PuzzleModifier
+   * @param {Puzzle} puzzle
+   * @returns {PuzzleModifier}
+   */
+  static fromPuzzle(puzzle) {
+    const data = {version: 1};
+  }
+  
+  /**
+   * returns a json representing the object
+   * @deprecated
+   * @returns {Object}
+   */
   toJSON() {
     return {
       version: this.version,
@@ -207,7 +220,7 @@ class PuzzleModifier {
       seed: this.seed,
       gameplaySettings: this.gameplaySettings,
       puzzleFunctions: this.puzzleFunctions,
-      puzzleMetadata: this.puzzleMetadata,
+      metadata: this.metadata,
     };
   }
 }

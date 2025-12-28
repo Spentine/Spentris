@@ -69,8 +69,6 @@ initializationData = {
         // each key is optional and may be omitted
         // if a key is omitted the game will use predefined default values
         
-        seed: 0, // {"random" | number}
-        rotationSystem: // use the format specified by *Rotation System Data*
         state: {
           // keys are optional
           
@@ -91,6 +89,10 @@ initializationData = {
           startingLevel: 1, // {number} starting level for the game
           levelling: false, // {boolean} whether levelling would influence the game
           masterLevels: false, // {boolean} decides whether levels above 20 are master levels
+          
+          nextQueue: [], // {string[]} where each string represents a piece
+          currentPiece: // {Piece} the current piece
+          holdPiece: // {(string | null) the current hold piece represented by a string
         },
         
         // only takes action if params.board is undefined
@@ -113,11 +115,13 @@ initializationData = {
           matrix: // {string[][]} where string is piece name or mino color
         },
         
-        nextQueue: [], // {string[]} where each string represents a piece
-        refillQueue: 5, // {number | boolean} mininum number of pieces in the queue at any given time; if it is true, it will default to some value; if it is false, it will default to 0
-        currentPiece: // {Piece} where it is the current piece
+        seed: 0, // {"random" | number}
+        rotationSystem: // use the format specified by *Rotation System Data*
         
-        holdPiece: // {(string | null) the current hold piece represented by a string
+        refillQueue: 5, // {number | boolean} mininum number of pieces in the queue at any given time; if it is true, it will default to some value; if it is false, it will default to 0
+        
+        holdAllowed: true // {boolean} whether holding is allowed
+        noPieceEnd: true // {boolean} whether to end the game when there's no piece
         
         eventEmitter: new EventEmitter(); // {EventEmitter}
       }
@@ -258,11 +262,10 @@ board = {
 ```js
 puzzle = new Puzzle({
   parameters: // {Object} becomes `this.parameters`
-  values: // {Object} stacker initialization values
   
   puzzleFunctions: // {puzzleFunction[]}
   
-  initFunction: // {puzzleFunction}
+  metadata: // {PuzzleMetadata}
 });
 ```
 
@@ -272,14 +275,13 @@ puzzle = {
   // not to be confused with parameter versions, those are separate
   
   parameters: {
-    // the parameters as specified by *Stacker Parameters*
+    settings: // the parameters as specified by *Stacker Parameters* but only the settings
   },
   
   // the puzzle functions to fun in the game, may trigger win / loss
   puzzleFunctions: // {puzzleFunction[]}
   
-  // init function to run before the game starts
-  initFunction: // {puzzleFunction}
+  metadata: // {PuzzleMetadata}
 }
 ```
 
@@ -291,14 +293,14 @@ puzzleFunction = {
   func: // {function} function generated or provided
 }
 ```
+
 When the puzzle is saved as a JSON file, the `func` functions cannot be represented. The `type` and `parameters` should hopefully be enough to reconstruct the `func` function.
 
-Both `initFunction` and `stackerFunctions` should use the exact same format, including for the list of valid types.
-
-`prioritizeWinCondition` is not really possible to enforce, so consider removing its existence from all the comments.
+Currently, the `parameters` option must only contain one key `settings` which stores the `settings` key of the *Stacker Parameters*. In the future, it may also store other parameters which deal with not how the instantiation function is run, but perhaps could deal with other aspects such as the current rotation system.
 
 > **Reference Directory**
 > - [Stacker Parameters](#stacker-parameters)
+> - [Puzzle Metadata](#puzzle-metadata)
 
 ### `clearsFinish` Puzzle Function Format
 
@@ -557,17 +559,13 @@ data = {
   },
   
   puzzleFunctions: // {object[]} with format puzzleFunction[]
-  puzzleMetadata: {
-    name: // {string} name of the puzzle
-    author: // {string} the creator of the puzzle
-    description: // {string} description of puzzle
-    dateCreated: // {ISOString} the datetime it was created
-  }
+  metadata: // {PuzzleMetadata}
 }
 ```
 
 > **Reference Directory**
 > - [Object `Board`](#object-board)
+> - [Puzzle Metadata](#puzzle-metadata)
 
 ### `PuzzleCommand` Constructor
 
@@ -681,6 +679,19 @@ handling = { // {key: {number}}
 ```
 
 Note that *ARE* isn't an acronym. It is actually a romanization of the Japanese word あれ used to refer to the entry delay.
+
+### Puzzle Metadata
+
+The *Puzzle Metadata Format* only specifies the keys in the metadata rather than the object itself. That is, there can be more keys if necessary depending on the situation which are not specified here.
+
+```js
+metadata = {
+  name: // {string} name of the puzzle
+  author: // {string} the creator of the puzzle
+  description: // {string} description of puzzle
+  dateCreated: // {ISOString} the datetime it was created
+}
+```
 
 ## Puzzles
 

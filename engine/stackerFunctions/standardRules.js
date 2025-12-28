@@ -348,7 +348,7 @@ const initialize = function(params) {
   );
   
   // create the next queue
-  this.nextQueue = structuredClone(params.nextQueue) ?? [];
+  this.nextQueue = structuredClone(params.state.nextQueue) ?? [];
   
   // the minimum number of pieces in the queue at once
   if (typeof params.refillQueue === "boolean") {
@@ -365,7 +365,7 @@ const initialize = function(params) {
   this.refillNextQueue();
   
   // spawn the first piece
-  this.currentPiece = params.currentPiece ?? this.nextQueue.shift() ?? null;
+  this.currentPiece = params.state.currentPiece ?? this.nextQueue.shift() ?? null;
   this.spawnPiece(this.currentPiece);
   
   // persistent gaEventHandler values
@@ -386,7 +386,7 @@ const initialize = function(params) {
   
   // create hold piece
   this.hold = {
-    piece: params.holdPiece ?? null,
+    piece: params.state.holdPiece ?? null,
     allowed: true,
   };
   

@@ -36,7 +36,7 @@ class Puzzle {
     data ??= {};
     
     this.parameters = data.parameters ?? {
-      values: data.values ?? {},
+      settings: data.settings ?? {},
     };
     
     // {puzzleFunction[]}
@@ -44,20 +44,15 @@ class Puzzle {
     
     // this.prioritizeWinCondition = data.prioritizeWinCondition ?? false;
     
-    this.initFunction = data.initFunction ?? new PuzzleFunction();
-    
     this.allFunctions = null;
   }
   
   /**
    * constructs all functions that are used in the puzzle
-   * @returns {Puzzle} this
+   * @returns {void}
    */
   makeAllFunctions() {
-    const functions = [
-      ...this.puzzleFunctions.map((e) => e.func),
-      this.initFunction.func,
-    ];
+    const functions = this.puzzleFunctions.map((e) => e.func);
     
     // runs all functions in order
     this.allFunctions = async function (game) {
@@ -65,8 +60,6 @@ class Puzzle {
         await func(game);
       }
     };
-    
-    return this;
   }
   
   /**
@@ -80,7 +73,6 @@ class Puzzle {
         // initFunction ignored because it is a function
       },
       puzzleFunctions: this.puzzleFunctions.map((e) => e.exportJSON()),
-      initFunction: this.initFunction.exportJSON(),
     };
     
     return data;
@@ -96,7 +88,6 @@ class Puzzle {
     
     // replace functions with PuzzleFunction objects
     json.puzzleFunctions = json.puzzleFunctions.map((e) => new PuzzleFunction(e));
-    json.initFunction = new PuzzleFunction(json.initFunction);
     
     return new Puzzle(json);
   }
@@ -112,7 +103,7 @@ class Puzzle {
         standardFunctionLocations,
         files
       ),
-      settings: structuredClone(this.parameters.values.settings),
+      settings: structuredClone(this.parameters.settings),
     };
     return standard;
   }
