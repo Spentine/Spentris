@@ -4,6 +4,13 @@ import { files } from "../../engine/functionLibrary.js";
 
 import { puzzleFunctions } from "./puzzleFunctions.js";
 
+import { tryImports } from "../../util.js";
+
+/**
+ * for hashing puzzles
+ */
+const { md5 } = await import(new URL("../../imports/md5.js", import.meta.url));
+
 class PuzzleFunction {
   constructor(data) {
     data ??= {};
