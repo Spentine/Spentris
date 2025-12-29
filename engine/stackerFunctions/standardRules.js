@@ -1,7 +1,7 @@
 import { gaEventHandler } from "../nextEvent.js";
 import { Board, Piece, BoardMino, PieceMino } from "../stackerObjects.js";
 import { SRSData } from "../rsData.js";
-import { EventEmitter } from "../../eventEmitter.js";
+import { EventEmitter } from "../../util/eventEmitter.js";
 import { functionMap } from "../util.js";
 
 /**

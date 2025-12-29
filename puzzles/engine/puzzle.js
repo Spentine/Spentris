@@ -4,8 +4,6 @@ import { files } from "../../engine/functionLibrary.js";
 
 import { puzzleFunctions } from "./puzzleFunctions.js";
 
-import { tryImports } from "../../util.js";
-
 /**
  * for hashing puzzles
  */

@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../eventEmitter.js";
+import { EventEmitter } from "../../util/eventEmitter.js";
 
 // handle skin data
 

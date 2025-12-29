@@ -9,7 +9,7 @@ Created on 20251004
 
 */
 
-import { tryImports } from "../../util.js";
+import { tryImports } from "../../util/util.js";
 
 /*
   in case i'm offline and can't download from the cdn

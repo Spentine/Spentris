@@ -2,7 +2,7 @@
 import { values, defaultValues } from "./defaultValues.js";
 
 // event emitter
-import { EventEmitter } from "../../eventEmitter.js";
+import { EventEmitter } from "../../util/eventEmitter.js";
 
 // local storage
 import { ls } from "../../localStorage/localStorage.js";

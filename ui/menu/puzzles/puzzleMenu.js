@@ -9,7 +9,7 @@ Created on 20250607
 */
 
 // event emitter
-import { EventEmitter } from "../../../eventEmitter.js";
+import { EventEmitter } from "../../../util/eventEmitter.js";
 
 // local storage
 import { ls } from "../../../localStorage/localStorage.js";
@@ -38,7 +38,7 @@ import {
 // copy obj by traversal
 import {
   copyObjByTraversal
-} from "../../../util.js";
+} from "../../../util/util.js";
 
 // for random id generation
 import {

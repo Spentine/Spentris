@@ -1,7 +1,7 @@
 // handle running game
 
 // copy object by traversal
-import { copyObjByTraversal } from "../util.js";
+import { copyObjByTraversal } from "../util/util.js";
 
 // render
 import { RenderGameState } from "../ui/gameRenderV1/converter.js";

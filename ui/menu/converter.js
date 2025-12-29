@@ -6,7 +6,7 @@ import { files } from "../../engine/functionLibrary.js";
 
 import { functionLocationAccessor } from "../../engine/util.js";
 
-import { copyObjByTraversal } from "../../util.js";
+import { copyObjByTraversal } from "../../util/util.js";
 
 /**
  * converts `gameStart` event data format to `Stacker.generateSettings` data format
