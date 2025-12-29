@@ -5,7 +5,7 @@ import { puzzleFunctions } from "../engine/puzzleFunctions.js";
 
 const jsonDebugPuzzles = {
   0: {
-    values: {
+    parameters: {
       settings: {
         functionLocations: standardFunctionLocations,
         initialization: {
@@ -54,12 +54,19 @@ const jsonDebugPuzzles = {
       version: 1,
       type: "none",
     },
+    metadata: {
+      name: "Debug Puzzle 0",
+      author: "Spentine",
+      description: "A puzzle for debugging purposes.",
+      dateCreated: new Date().toISOString(),
+      dateModified: new Date().toISOString(),
+    },
   },
 };
 
 const debugPuzzles = {
   0: new Puzzle({
-    values: {
+    parameters: {
       settings: {
         functionLocations: standardFunctionLocations,
         initialization: {
@@ -107,6 +114,13 @@ const debugPuzzles = {
       version: 1,
       type: "none",
     }),
+    metadata: {
+      name: "Debug Puzzle 0",
+      author: "Spentine",
+      description: "A puzzle for debugging purposes.",
+      dateCreated: new Date().toISOString(),
+      dateModified: new Date().toISOString(),
+    },
   }).makeAllFunctions(),
   1: Puzzle.fromJSON(jsonDebugPuzzles[0]).makeAllFunctions(),
 };

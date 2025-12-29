@@ -4,6 +4,8 @@ import { files } from "../../engine/functionLibrary.js";
 
 import { puzzleFunctions } from "./puzzleFunctions.js";
 
+import { Board } from "../../engine/stackerObjects.js";
+
 /**
  * for hashing puzzles
  */
@@ -17,12 +19,10 @@ class PuzzleFunction {
     this.type = data.type ?? "none";
     this.parameters = data.parameters ?? {};
     this.func = null;
-    
-    this.makeFunction();
   }
   
   makeFunction() {
-    this.func = puzzleFunctions[this.type].func(this);
+    return this.func = puzzleFunctions[this.type].func(this);
   }
   
   exportJSON() {
@@ -47,6 +47,14 @@ class Puzzle {
     // {puzzleFunction[]}
     this.puzzleFunctions = data.puzzleFunctions ?? [];
     
+    this.metadata = data.metadata ?? {
+      name: null,
+      author: null,
+      description: null,
+      dateCreated: new Date().toISOString(),
+      dateModified: new Date().toISOString(),
+    };
+    
     // this.prioritizeWinCondition = data.prioritizeWinCondition ?? false;
     
     this.allFunctions = null;
@@ -57,7 +65,7 @@ class Puzzle {
    * @returns {void}
    */
   makeAllFunctions() {
-    const functions = this.puzzleFunctions.map((e) => e.func);
+    const functions = this.puzzleFunctions.map((e) => e.makeFunction());
     
     // runs all functions in order
     this.allFunctions = async function (game) {
@@ -73,12 +81,25 @@ class Puzzle {
    */
   exportJSON() {
     const data = {
+      version: 1,
       parameters: {
-        values: this.parameters.values,
+        settings: structuredClone(this.parameters.settings),
         // initFunction ignored because it is a function
       },
+      
       puzzleFunctions: this.puzzleFunctions.map((e) => e.exportJSON()),
+      metadata: this.metadata,
     };
+    
+    const initParams = data.parameters.settings.initialization.parameters;
+    
+    // convert board to simple array
+    if (initParams.board) {
+      /**
+       * by the way, the fucking structuredClone function does not clone prototypes so we actually have to go about this in a roundabout way
+       */
+      initParams.board = Board.prototype.toSimpleArray.call(initParams.board);
+    }
     
     return data;
   }
@@ -90,6 +111,12 @@ class Puzzle {
    */
   static fromJSON(json) {
     json = structuredClone(json);
+    
+    // convert board from simple array to Board object
+    const initParams = json.parameters.settings.initialization.parameters;
+    if (initParams.board) {
+      initParams.board = Board.fromSimpleArray(initParams.board);
+    }
     
     // replace functions with PuzzleFunction objects
     json.puzzleFunctions = json.puzzleFunctions.map((e) => new PuzzleFunction(e));

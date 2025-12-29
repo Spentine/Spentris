@@ -5,7 +5,12 @@ Handles the Puzzle Function UI component for the Puzzle Menu.
 */
 
 import { puzzleUiFunctions } from "./puzzleMenu.js";
+
+/**
+ * as per the specifications, i'm not actually using the class to store data. instead i'm just using it to retrieve the specifications for the puzzle function
+ */
 import { puzzleFunctions } from "../../../puzzles/engine/puzzleFunctions.js";
+
 import { generateRandomId } from "../../util.js";
 
 class PuzzleFunctionElement {

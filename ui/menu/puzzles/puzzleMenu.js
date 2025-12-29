@@ -784,12 +784,15 @@ const puzzleMenus = {
                   type: "button",
                   interact: () => {
                     // copy json puzzle to clipboard
-                    const jsonData = this.puzzleModifier.toJSON();
+                    const puzzle = this.puzzleModifier.toPuzzle();
+                    const jsonData = puzzle.exportJSON();
+                    
                     const jsonString = JSON.stringify(jsonData);
                     navigator.clipboard.writeText(jsonString).then(() => {
                       alert("Puzzle JSON copied to clipboard!");
                     }).catch(err => {
                       alert("Failed to copy puzzle JSON to clipboard.");
+                      console.error(err);
                     });
                   }, // placeholder
                 },
@@ -808,7 +811,8 @@ const puzzleMenus = {
                     if (!jsonString) return;
                     try {
                       const jsonData = JSON.parse(jsonString);
-                      this.puzzleModifier = new PuzzleModifier(jsonData);
+                      const puzzle = Puzzle.fromJSON(jsonData);
+                      this.puzzleModifier = PuzzleModifier.fromPuzzle(puzzle);
                       initializeVariables();
                       
                       // refresh the editor
@@ -817,6 +821,7 @@ const puzzleMenus = {
                       alert("Puzzle imported successfully!");
                     } catch (err) {
                       alert("Failed to import puzzle from JSON.");
+                      console.error(err);
                     }
                   }, // placeholder
                 },

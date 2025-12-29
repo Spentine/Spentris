@@ -245,7 +245,8 @@ rotationSystemData = {
 // constructor
 // width: board width
 // height: board height
-board = new Board(width, height);
+// matrix: board data
+board = new Board(width, height, matrix);
 ```
 
 ```js
@@ -690,6 +691,7 @@ metadata = {
   author: // {string} the creator of the puzzle
   description: // {string} description of puzzle
   dateCreated: // {ISOString} the datetime it was created
+  dateModified: // {ISOString} the datetime it was modified
 }
 ```
 

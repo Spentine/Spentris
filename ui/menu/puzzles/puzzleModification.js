@@ -100,6 +100,7 @@ class PuzzleModifier {
         author: "",
         description: "",
         dateCreated: new Date().toISOString(),
+        dateModified: new Date().toISOString(),
       },
       
       holdAllowed: true,
@@ -153,42 +154,45 @@ class PuzzleModifier {
       puzzleFunctions: [],
     };
     
-    const params = data.parameters.settings.initialization.parameters;
+    const initParams = data.parameters.settings.initialization.parameters;
     
     // set the board
-    params.board = Board.fromSimpleArray(this.board);
+    initParams.board = Board.fromSimpleArray(this.board);
     
     // set the next queue
-    params.state.nextQueue = this.nextQueue;
+    initParams.state.nextQueue = this.nextQueue;
     
     // set the current piece
-    params.state.currentPiece = this.currentPiece;
+    initParams.state.currentPiece = this.currentPiece;
     
     // set the hold piece
-    params.state.holdPiece = this.holdPiece;
+    initParams.state.holdPiece = this.holdPiece;
     
     // set the refill queue
-    params.refillQueue = this.refillQueue;
+    initParams.refillQueue = this.refillQueue;
     
     // set the seedrandom and seed
-    params.seed = (this.seedRandom
+    initParams.seed = (this.seedRandom
       ? "random"
       : this.seed
     );
     
-    // enable hold
-    params.holdAllowed = this.holdAllowed;
+    // hold enabled
+    initParams.holdAllowed = this.holdAllowed;
     
     /**
      * end when the current piece is null
      * @type {boolean}
      */
-    params.noPieceEnd = this.noPieceEnd;
+    initParams.noPieceEnd = this.noPieceEnd;
     
     // add puzzle functions
     for (const puzzleFunction of this.puzzleFunctions) {
       data.puzzleFunctions.push(new PuzzleFunction(puzzleFunction));
     }
+    
+    // add metadata
+    data.metadata = this.metadata;
     
     const puzzle = new Puzzle(data);
     return puzzle;
@@ -200,8 +204,67 @@ class PuzzleModifier {
    * @returns {PuzzleModifier}
    */
   static fromPuzzle(puzzle) {
+    // avoid destroying original puzzle
+    puzzle = structuredClone(puzzle);
+    
     const data = {version: 1};
     
+    // metadata
+    data.metadata = puzzle.metadata;
+    
+    // puzzle functions
+    data.puzzleFunctions = puzzle.puzzleFunctions.map(
+      /**
+       * of course the structuredClone does not preserve prototypes
+       * this is so stupid
+       */
+      (e) => PuzzleFunction.prototype.exportJSON.call(e)
+    );
+    
+    // parameters
+    
+    const initParams = puzzle.parameters.settings.initialization.parameters;
+    
+    // state parameters
+    const stateParams = initParams.state;
+    
+    data.gameplaySettings = {
+      gravity: stateParams.gravity,
+      lockDelay: stateParams.lockDelay,
+      maxLockDelay: stateParams.maxLockDelay,
+      startingLevel: stateParams.startingLevel,
+      levelling: stateParams.levelling,
+      masterLevels: stateParams.masterLevels,
+    };
+    
+    // get the board
+    data.board = Board.prototype.toSimpleArray.call(initParams.board);
+    
+    // get the next queue
+    data.nextQueue = initParams.state.nextQueue;
+    
+    // get the current piece
+    data.currentPiece = initParams.state.currentPiece;
+    
+    // get the hold piece
+    data.holdPiece = initParams.state.holdPiece;
+    
+    // get the refill queue
+    data.refillQueue = initParams.refillQueue;
+    
+    // get the seedrandom and seed
+    data.seedRandom = (initParams.seed === "random");
+    data.seed = (data.seedRandom ? 0 : initParams.seed);
+    
+    // hold enabled
+    data.holdAllowed = initParams.holdAllowed;
+    
+    // no piece end
+    data.noPieceEnd = initParams.noPieceEnd;
+    
+    // construct puzzle modifier
+    const pM = new PuzzleModifier(data);
+    return pM;
   }
   
   /**

@@ -27,6 +27,8 @@
         - [ ] Lua syntax highlighting
         - [ ] Create API for Lua to interact with game
       - [ ] Add dedicated elements for `clearTypesArray`
+    - [ ] Export Puzzles as actual JSON `Puzzle` objects
+      - [ ] `Puzzle` to `PuzzleModifier` conversion function
   - [ ] Make skin data pertain to each skin's needs
 - [ ] Persistent Data
   - [x] Save data with `localStorage`

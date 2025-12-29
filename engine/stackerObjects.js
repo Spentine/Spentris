@@ -58,14 +58,19 @@ class Board {
   /**
    * @param {number} width
    * @param {number} height
+   * @param {BoardMino[][] | null} matrix
    */
-  constructor(width, height) {
-    this.matrix = [];
+  constructor(width, height, matrix=null) {
+    this.matrix = matrix;
     
-    for (let i = 0; i < height; i++) {
-      this.matrix.push([]);
-      for (let j = 0; j < width; j++) {
-        this.matrix[i].push(new BoardMino());
+    if (!this.matrix) {
+      this.matrix = [];
+      
+      for (let i = 0; i < height; i++) {
+        this.matrix.push([]);
+        for (let j = 0; j < width; j++) {
+          this.matrix[i].push(new BoardMino());
+        }
       }
     }
     
@@ -84,14 +89,7 @@ class Board {
     const width = data.width;
     const height = data.height;
     
-    const board = new Board(width, height);
-    
-    for (let i=0; i<height; i++) {
-      if (!arr[i]) break;
-      for (let j=0; j<width; j++) {
-        board.matrix[i][j] = arr[i][j];
-      }
-    };
+    const board = new Board(width, height, arr);
     
     return board;
   }
