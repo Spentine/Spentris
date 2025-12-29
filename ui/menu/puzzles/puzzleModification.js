@@ -201,6 +201,7 @@ class PuzzleModifier {
    */
   static fromPuzzle(puzzle) {
     const data = {version: 1};
+    
   }
   
   /**

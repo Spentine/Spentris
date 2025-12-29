@@ -1,0 +1,65 @@
+# Spentris To-Do List
+
+- [ ] UI
+  - [x] Create `MenuHandler` Class
+  - [x] Create menu interface that allows for users to play
+  - [x] Create settings interface that allows for users to change handling and keybinds
+    - [x] Handling
+    - [x] Keybinds
+      - [ ] Fix keybinds for different keyboard layouts
+  - [x] Update localization support for the UI
+  - [ ] Create ending screen for games 
+  - [x] Prevent SDF from going below 1
+  - [x] V2
+    - [x] Create `MenuHandlerV2` Class
+    - [x] Implement all current features of `MenuHandler` Class
+    - [x] Deprecate V1 and try to remove traces of it
+  - [ ] Remove `resetDisplay` and instead replace with `clearContainer`
+  - [ ] Puzzles
+    - [ ] Replace placeholder piece input with actual piece input
+    - [ ] Add GUI Board Editor
+    - [ ] Add gradients at the top and bottom of scrollable elements
+    - [x] Add file saving / loading
+    - [x] Add puzzle solution editor
+      - [ ] Lua
+        - [ ] Ensure there are no security vulnerabilities with Lua
+        - [ ] Remove Lua memory leak with `lua.global.close()`
+        - [ ] Lua syntax highlighting
+        - [ ] Create API for Lua to interact with game
+      - [ ] Add dedicated elements for `clearTypesArray`
+  - [ ] Make skin data pertain to each skin's needs
+- [ ] Persistent Data
+  - [x] Save data with `localStorage`
+  - [ ] Save data to a file
+    - [ ] Export data
+    - [ ] Import data
+  - [ ] Add setting presets
+- [ ] Game
+  - [x] Create more modes
+    - [x] 40L
+      - [ ] make time start when you move first piece
+    - [x] Blitz / Ultra
+  - [ ] Ability to create a custom mode
+  - [x] Add all-spin+ with T-piece immobility
+  - [x] Remove `mode` parameter from `generateNext`
+  - [ ] Add `functions.start` function to `gameStart`
+- [ ] Puzzles
+  - [ ] Create puzzle selection interface
+  - [x] Create designated puzzle creator
+  - [ ] Automatically generate puzzles
+  - [x] Make puzzle format JSON-compliant
+  - [x] Test `clearsFinish` puzzle function
+- [ ] Lessons
+  - *too far ahead, give it a year at this pace*
+- [ ] Code
+  - [ ] Centralize all values
+  - [ ] Enforce D.R.Y. principle
+  - [ ] Remove logic from input handler functions in engine
+  - [x] Move value change conversion from menu scripts to engine
+  - [ ] Detach adapters from classes; should be independent
+  - [ ] Add error handling
+  - [ ] Prevent memory leaks in code
+    - [ ] Dispose objects by removing circular references
+- [ ] URL
+  - [ ] Redirect users with URL-specified parameters
+  - [ ] Dynamically update URL with current menu

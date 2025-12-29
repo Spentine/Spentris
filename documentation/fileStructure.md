@@ -1,0 +1,204 @@
+# Spentris File Structure
+
+- `.github`
+  - `workflows`
+    - `static.yml`
+      - *deploys Spentris to GitHub Pages*
+- `addons`
+  - `biRS`
+    - *contains scripts to implement the Bi-Directional Rotation System*
+    - `bidirectionalRS.js`
+      - *contains stacker functions*
+    - `birs.md`
+      - *contains information about BiRS*
+    - `biRSData.js`
+      - *contains BiRS data tables*
+- `assets`
+  - *contains miscellaneous assets*
+  - `faviconBoard.txt`
+    - *contains the board states used in conjunction with TetrGraphics used in the icon*
+  - `Spentris.png`
+    - *2048x2048 Spentris icon*
+  - `SpentrisFavicon.png`
+    - *64x64 Spentris icon for use as favicon*
+- `documentation`
+  - `docs.md`
+    - *documentation for the entire game*
+    - *this file*
+- `engine`
+  - `modes`
+    - *contains scripts that contain data to run different game modes*
+    - `standardModes.js`
+      - *contains three simple guideline modes*
+  - `stackerFunctions`
+    - *contains scripts with functions that modify the stacker*
+    - `standardRules.js`
+      - *contains all the functions to power a standard block stacker game*
+      - *basically the heart of everything*
+    - `allSpin.js`
+      - *contains functions important for All-Spin mechanics*
+  - `functionLibrary.js`
+    - *combines all the `Stacker` functions into one object that can be readily accessed*
+  - `nextEvent.js`
+    - *contains a class that powers the time-based system to handle gravity and ARR*
+    - *was difficult to fully comprehend so I put it in a different file*
+  - `rsData.js`
+    - *contains rotation system data for SRS and SRS+*
+  - `stacker.js`
+    - *contains the base `Stacker` class*
+  - `stackerObjects.js`
+    - *contains important `Stacker` objects like `BoardMino`s and `PieceMino`s
+  - `util.js`
+    - *contains utilities (like functions or constants) that are not dependent on any other file*
+- `imports`
+  - *files that are created almost entirely by others, usually minified because there is no need to modify them*
+  - *on the file structure for offline development or some other issue; it's generally just safer honestly*
+  - `wasmoon`
+    - *literally just Lua*
+    - `glue.wasm`
+      - *wasm file containing compiled Lua source code*
+    - `wasmoon.js`
+      - *attachment for js interaction*
+  - `md5.js`
+    - *exports `md5` function for hashing*
+    - *also i removed IE support from it because the project wouldn't even be able to run on it anyways*
+- `interaction`
+  - `gamepad.js` (empty)
+    - *will contain a class to handle inputs provided by the Gamepad API*
+  - `keyboard.js`
+    - *contains a class to handle keyboard inputs*
+- `localization` (needs reworking)
+  - `language.js`
+    - *contains language data for translations*
+    - *is a .js file because there are functions within the language object*
+    - *JP language was just an example to test it with multiple languages but it was primarily translated by GitHub Copilot's autocomplete because I was too lazy to look up the actual terms myself*
+    - *please help contribute <3*
+- `localStorage`
+  - *will contain scripts to manage reading and writing with the `localStorage` property*
+  - *must be backwards compatible so that local settings aren't reset on a refactor*
+  - localStorage.js
+    - *contains a singleton class to manage `localStorage`*
+- `mmOutput` (unused)
+  - *multimedia output*
+  - `audio` (empty)
+    - *will contain files that will handle audio*
+- `planning`
+  - *will contain files that will plan the future of the game*
+  - `Spentris Puzzle Editor.penpot`
+    - *planning the UI of the puzzle editor*
+    - *has to be viewed with penpot, a design tool*
+- `puzzles`
+  - `engine`
+    - *contains scripts that handle running the puzzles using the engine*
+    - `puzzle.js`
+      - *contains puzzle objects*
+    - `puzzleFunctions.js`
+      - *contains all the puzzle functions*
+  - `packs`
+    - *contains a list of puzzle packs that were previously implemented to test the game*
+    - `test.js` (deprecated)
+      - *contains debug puzzles*
+- `scriptEngine`
+  - *contains script engines for custom logic*
+  - `wasmoon`
+    - *lua in web assembly*
+    - `handler.js`
+- `ui`
+  - `debug` (deprecated)
+    - `debugRenderField.js` (deprecated)
+      - *a basic rendering system that was made before the engine purely for debugging and testing purposes*
+  - `fonts`
+    - `Bloxyl.otf`
+      - *a font I made a while ago that fits the style of this game*
+      - *doesn't really adhere to font standards so beware*
+    - `GN-Kin-iro_SansSerif.ttf` (unused)
+      - *a Japanese font*
+    - `Kaisotai-Next-UP-B.otf`
+      - *a Japanese font*
+  - `gameRenderV1`
+    - *the first iteration of the rendering engine*
+    - *uses `CanvasRenderingContext2D` to render, which may not be very performant*
+    - `converter.js`
+      - *contains a `RenderGameState` class to convert a `Stacker` object into a renderer-digestible format*
+      - *exists only for the sake of modularity*
+    - `renderer.js`
+      - *processes a `RenderGameState` object and renders the board state to a canvas*
+    - `rsData.js`
+      - *contains simple rotation system data (really only the matrices) which are necessary for the renderer to function*
+      - *consider removing it in place of using the actual data from the rotation system which would reduce modularity but would be better*
+        - *also consider converting the rotation system data used by the engine into a digestible format to fix the modularity*
+        - *modularity is my pookie <3*
+    - `skin.js`
+      - *contains `TileMap` and `GameSkin` classes which help facilitate the rendering of minos*
+      - *will also render other stuff besides minos but not now*
+  - `menu` (in development)
+    - *contains scripts to process the menu UIs*
+    - *current (and 2nd) version of the menus with more centralization and a function-based approach*
+    - *do not mention v2 any more when referencing it, it is a bit redundant to keep repeating it*
+    - *in the future, if this is replaced, use V3 at the end of class names (or not depending on how much i change)*
+    - `puzzles`
+      - *contains a UI designated specifically for the puzzle feature of the game (`PuzzleMenuHandler`)*
+      - `boardConverter.js`
+        - *converts stringified board state to and from an actual matrix-based board state*
+      - `puzzle.css`
+        - *css file used for the puzzle editor*
+      - `puzzleCommands.js`
+        - *handles commands for the puzzle editor*
+        - *in effect, allows undos and redos*
+      - `puzzleFunctionUI.js`
+        - *creates the ui for puzzle functions*
+      - `puzzleMenu.js`
+        - *contains the functions used to render the menus for `PuzzleMenuHandler`*
+      - `puzzleMenuHandler.js`
+        - *contains the core definition of `PuzzleMenuHandler` as an extension of `MenuHandler`*
+      - `puzzleModification.js`
+        - *contains class that can be directly modified and then converted to a puzzle*
+    - `converter.js`
+      - *converts formats between the `MenuHandler` and the game engine, particularly `Stacker`.*
+    - `defaultValues.js`
+      - *contains the default values `MenuHandler` will contain, which it can then use to generate values for the game engine*
+    - `menu.js`
+      - *contains the functions used to render the menus for `MenuHandler`*
+    - `menuHandler.js`
+      - *contains the core definition of `MenuHandler`*
+  - `skins`
+    - *contains images with texture data*
+    - *ghost.png also contains images for the next piece spawn*
+    - `TETRIO`
+      - `ghost.png`
+      - `minos.png`
+    - `TETRIOconnected` (unused)
+      - `ghost.png`
+      - `minos.png`
+  - `style.css`
+    - *page style for html*
+  - `util.js`
+    - *utility scripts for menu*
+- `unified`
+  - *contains scripts that pertains to the entire game*
+  - *may be modified frequently*
+  - `gameHandler.js`
+    - *handles running a game*
+      - *attaches game, canvas, input handlers, etc.*
+- `unitTests`
+  - *contains scripts to perform unit tests.*
+  - `copyObjByTraversal.js`
+    - *performs various unit tests on the function `copyObjByTraversal` in `util.js`. it is a bit redundant now, but it is good to keep!*
+  - `docs.md`
+    - *provides information about how to use the unit tests*
+  - `jsonSerialization.js`
+    - *performs unit tests on the `JSONSerialization` class*
+- `util`
+  - *contains utility scripts that are used across the entire project*
+  - `eventEmitter.js`
+    - *contains a class to emit events much like `addEventListener` but for objects*
+  - `jsonSerialization.js`
+    - *contains class `JSONSerialization` that provides utility functions to serialize JSON*
+  - `util.js`
+    - *contains general utility scripts that are somewhat small and don't warrant another file*
+- `index.html`
+  - *the web page with the actual game on it*
+- `main.js`
+  - *the only script `index.html` imports, should load everything else*
+- `README.md`
+  - *GitHub readme*
