@@ -94,4 +94,31 @@ class JSONSerialization {
       default: return coersions;
     }
   }
+  
+  /**
+   * generates json with keys in alphabetical order and minified
+   * @param {Object} obj - object to stringify
+   * @returns {string} - minified json with keys in alphabetical order
+   */
+  static stableStringify(obj) {
+    // primitive
+    if (typeof obj !== "object" || obj === null) {
+      return JSON.stringify(obj);
+    }
+    
+    // array
+    if (Array.isArray(obj)) {
+      const arr = obj.map((e) => JSONSerialization.stableStringify(e));
+      return `[${arr.join(",")}]`;
+    }
+    
+    // object
+    const keys = Object.keys(obj).sort();
+    const keyValuePairs = keys.map(
+      (key) => `${JSON.stringify(key)}:${JSONSerialization.stableStringify(obj[key])}`
+    );
+    return `{${keyValuePairs.join(",")}}`;
+  }
 }
+
+export { JSONSerialization };
