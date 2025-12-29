@@ -89,7 +89,18 @@ class Board {
     const width = data.width;
     const height = data.height;
     
-    const board = new Board(width, height, arr);
+    const board = new Board(width, height);
+    
+    /**
+     * note that arr doesn't have to be full height
+     * so we only fill in what we have and assume the rest is empty
+     */
+    for (let i=0; i<height; i++) {
+      if (!arr[i]) break;
+      for (let j=0; j<width; j++) {
+        board.matrix[i][j] = arr[i][j];
+      }
+    };
     
     return board;
   }

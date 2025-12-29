@@ -188,18 +188,18 @@ const puzzleFunctions = {
     },
   },
   
-  piecesLoss: {
+  piecesFinish: {
     /**
      * @param {PuzzleFunction} puzzleFunction
-     * @param {number} puzzleFunction.pieces - number of pieces placed before losing
+     * @param {number} puzzleFunction.pieces - number of pieces placed before trigger
      * @param {string} puzzleFunction.endType - type of end event to emit
      */
     func: function (puzzleFunction) {
       const pieces = puzzleFunction.parameters.pieces;
-      const endType = puzzleFunction.parameters.endType ?? "piecesLoss";
+      const endType = puzzleFunction.parameters.endType ?? "piecesFinish";
       return function (game) {
         game.event.on("place", (e) => {
-          if (game.pieces >= pieces) {
+          if (game.piecesPlaced >= pieces) {
             game.event.emit("end", {
               time: game.time,
               type: endType,
@@ -210,7 +210,7 @@ const puzzleFunctions = {
       }
     },
     specifications: {
-      key: "piecesLoss",
+      key: "piecesFinish",
       parameters: {
         pieces: {
           type: "number",
@@ -220,7 +220,7 @@ const puzzleFunctions = {
         },
         endType: {
           type: "string",
-          default: "piecesLoss"
+          default: "piecesFinish"
         },
       }
     },

@@ -39,7 +39,7 @@ const gameStart = async (
   const initData = values.initData;
   const initFunction = values.initFunction;
   
-  console.log(initData);
+  console.log("Initialization Data", initData);
   
   // create game
   const game = new Stacker(initData);

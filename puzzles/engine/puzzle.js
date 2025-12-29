@@ -62,7 +62,7 @@ class Puzzle {
   
   /**
    * constructs all functions that are used in the puzzle
-   * @returns {void}
+   * @returns {Puzzle} the puzzle itself for chaining
    */
   makeAllFunctions() {
     const functions = this.puzzleFunctions.map((e) => e.makeFunction());
@@ -73,6 +73,8 @@ class Puzzle {
         await func(game);
       }
     };
+    
+    return this;
   }
   
   /**

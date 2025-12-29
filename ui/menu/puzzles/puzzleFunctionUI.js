@@ -163,7 +163,6 @@ class PuzzleFunctionElement {
         const data = {};
         
         data.callback = (data) => {
-          console.log(data.value);
           this.commands.setValue(parameters, key, data.value);
         }
         

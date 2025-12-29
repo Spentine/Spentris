@@ -23,9 +23,10 @@ const jsonDebugPuzzles = {
               
               gravity: Infinity, lockDelay: Infinity, maxLockDelay: Infinity,
               startingLevel: 1, levelling: false, masterLevels: false,
+              
+              nextQueue: ["I", "O", "O", "O", "T", "O"],
             },
             
-            nextQueue: ["I", "O", "O", "O", "T", "O"],
             board: {
               type: "simpleArray",
               width: 10,
@@ -50,10 +51,6 @@ const jsonDebugPuzzles = {
         },
       },
     ],
-    initFunction: {
-      version: 1,
-      type: "none",
-    },
     metadata: {
       name: "Debug Puzzle 0",
       author: "Spentine",
@@ -66,6 +63,7 @@ const jsonDebugPuzzles = {
 
 const debugPuzzles = {
   0: new Puzzle({
+    version: 1,
     parameters: {
       settings: {
         functionLocations: standardFunctionLocations,
@@ -84,9 +82,10 @@ const debugPuzzles = {
               
               gravity: Infinity, lockDelay: Infinity, maxLockDelay: Infinity,
               startingLevel: 1, levelling: false, masterLevels: false,
+              
+              nextQueue: ["O", "O", "O", "O", "O", "T", "O"],
             },
             
-            nextQueue: ["O", "O", "O", "O", "O", "T", "O"],
             board: Board.fromSimpleArray({
               width: 10,
               height: 40,
@@ -110,10 +109,6 @@ const debugPuzzles = {
         },
       }),
     ],
-    initFunction: new PuzzleFunction({
-      version: 1,
-      type: "none",
-    }),
     metadata: {
       name: "Debug Puzzle 0",
       author: "Spentine",
@@ -124,5 +119,7 @@ const debugPuzzles = {
   }).makeAllFunctions(),
   1: Puzzle.fromJSON(jsonDebugPuzzles[0]).makeAllFunctions(),
 };
+
+console.log(debugPuzzles[0]);
 
 export { debugPuzzles };
