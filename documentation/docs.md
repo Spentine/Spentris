@@ -337,7 +337,7 @@ const puzzleFunction = {
 ### `Stacker.generateSettings` Data Format
 
 ```js
-static generateSettings(data) {} ==> result
+static generateSettings(data) {} => result
 ```
 
 ```js
