@@ -17,6 +17,9 @@ const ttMap = {
     "I": "I",
     "J": "J",
     "T": "T",
+    "hold": "hold",
+    "garbage": "garbage",
+    "unclearableGarbage": "unclearableGarbage",
   },
 }
 
@@ -95,7 +98,11 @@ class RenderGameState {
         for (let columnIndex=0; columnIndex<piece.matrix[0].length; columnIndex++) {
           const mino = piece.matrix[rowIndex][columnIndex];
           
-          row.push(ttMap[mino.type][mino.texture]);
+          row.push(
+            ttMap[mino.type].hasOwnProperty(mino.texture)
+            ? ttMap[mino.type][mino.texture]
+            : mino.texture
+          );
         }
         
         matrix.push(row);
@@ -126,7 +133,11 @@ class RenderGameState {
         for (let columnIndex=0; columnIndex<game.board.width; columnIndex++) {
           const mino = game.board.matrix[rowIndex][columnIndex];
           
-          row.push(ttMap[mino.type][mino.texture]);
+          row.push(
+            ttMap[mino.type].hasOwnProperty(mino.texture)
+            ? ttMap[mino.type][mino.texture]
+            : mino.texture
+          );
         }
         
         matrix.push(row);

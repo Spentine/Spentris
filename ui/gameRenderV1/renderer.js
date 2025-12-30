@@ -76,9 +76,8 @@ class GameRenderer {
         const mino = board.matrix[row][column];
         
         if (mino === null) {
-          
+          // future logic here
         } else {
-          
           // get data for tile
           const tile = this.skin.tilemaps.minos.getTile(mino, 0);
           
